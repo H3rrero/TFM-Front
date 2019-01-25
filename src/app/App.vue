@@ -1,15 +1,78 @@
 <template>
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6 offset-sm-3">
-                    <div v-if="alert.message" :class="`alert ${alert.type}`">{{alert.message}}</div>
-                    <router-view></router-view>
-                </div>
-            </div>
-        </div>
+     <div class="container">
+        <navigator ></navigator>
+        <div v-if="alert.message" :class="`alert ${alert.type}`">{{alert.message}}</div>
+        <router-view class="content"></router-view>
     </div>
+       
 </template>
+<style>
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+  font-family: 'Titillium Web', sans-serif;
+}
+html{
+    height: 100%;
+}
+body {
+  line-height: 1;
+  background-color: #fafafa;
+  height: 100%;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+:focus {
+  outline: 0;
+}
+ 
+ins {
+  text-decoration: none;
+}
+del {
+  text-decoration: line-through;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.container{
+    display: grid;
+    grid-template-areas:
+       'header '
+        'content '
+        ' footer ';
+    grid-gap: 10px;
+    height: 100%;
+}
+.content{
+    grid-area: content;
+    height: 97%;
+}
+</style>
 
 <script>
 import { mapState, mapActions } from 'vuex'

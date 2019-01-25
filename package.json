@@ -10,6 +10,8 @@
     "start": "webpack-dev-server --open"
   },
   "dependencies": {
+    "highcharts": "^7.0.2",
+    "highcharts-vue": "^1.2.0",
     "vee-validate": "^2.1.0-beta.6",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",
