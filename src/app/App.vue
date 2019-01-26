@@ -28,6 +28,14 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 html{
     height: 100%;
 }
+.highcharts-axis-labels > text >tspan{
+    color:#E0E0E3;
+    fill: #E0E0E3;
+}
+.highcharts-axis-labels > text{
+    color:#E0E0E3 !important; 
+    fill: #E0E0E3 !important;
+}
 body {
   line-height: 1;
   background-color: #fafafa;

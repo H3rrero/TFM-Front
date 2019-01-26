@@ -1,5 +1,5 @@
 <template>
-    <div class="menu">
+    <div class="menu" v-if="account.status.loggedIn">
                 <div class="normal">
                     <div class="logo">
                         <img alt="logo" src="src/img/logo.png" 
