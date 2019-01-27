@@ -27,6 +27,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 }
 html{
     height: 100%;
+    background-color: #eee;
 }
 .highcharts-axis-labels > text >tspan{
     color:#E0E0E3;
@@ -75,6 +76,7 @@ table {
         ' footer ';
     grid-gap: 10px;
     height: 100%;
+    background-color: #eee;
 }
 .content{
     grid-area: content;

@@ -14,7 +14,7 @@ function getAll() {
         method: 'GET',
         headers: authHeader()
     };
-
+    console.log("service phases");
     return fetch(`${config.apiUrl}/phases`, requestOptions).then(handleResponse);
 }
 

@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import HomePage from '../home/HomePage'
 import LoginPage from '../login/LoginPage'
 import RegisterPage from '../register/RegisterPage'
+import GanttState from '../projectState/GanttState'
 import ProjectState from '../projectState/ProjectState'
 
 Vue.use(Router);
@@ -14,6 +15,7 @@ export const router = new Router({
     { path: '/', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
+    { path: '/gantt', component:  GanttState},
     { path: '/state', component:  ProjectState},
 
     // otherwise redirect to home

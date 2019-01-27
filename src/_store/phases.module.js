@@ -22,7 +22,21 @@ const mutations = {
         state.all = { loading: true };
     },
     getAllSuccess(state, phases) {
-        state.all = { items: phases };
+        var series=[{name:'prueba gantt',data:[]}];
+        console.log("getAllSucces-->phases.module;")
+        for (const phase   in phases) {
+            if (phases.hasOwnProperty(phase)) {
+                const element = phases[phase];
+                series[0].data[phase] ={
+                    start: Date.UTC(parseFloat(element.yeari),parseFloat(element.monthi),parseFloat(element.dayi)),
+                    end: Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf)),
+                    name:element.name,
+                    completed: parseFloat (element.completed),
+                    y:parseFloat (phase)
+                }
+            }
+        }
+        state.all = { items: series };
     },
     getAllFailure(state, error) {
         state.all = { error };
