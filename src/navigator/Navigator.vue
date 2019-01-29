@@ -8,8 +8,8 @@
                     <div class="main-menu">
                         <ul class="list-menu">
                             <li><router-link to="/state">Estado del proyecto</router-link></li>
-                            <li><router-link to="/">kamban</router-link></li>
-                            <li><router-link to="/">Tareas</router-link></li>
+                            <li><router-link to="/kanban">kamban</router-link></li>
+                            <li><router-link to="/kanban">Tareas</router-link></li>
                         </ul>
                     </div>
                 </div>
