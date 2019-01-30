@@ -1,195 +1,150 @@
 <template>
-    <div class="container">  
+    <div class="container" v-if="haveData">  
         <div class="item" >
            <div class="text-container">
-                <p>Diagrama tareas</p>
+                <p>Desarrollo</p>
             </div>
             <div class="task-container">
-                <div class="task">
-                    <div class="task-title">
-                        <p>Title task</p>
-                    </div>
-                    <div class="task-body">
-                        <div class="assigned">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-user-circle"></i>
-                                </span> 
+                <div v-for="task in tasks" :key="task.id">
+                    <div class="task" v-if="task.phase == 'desarrollo'" >
+                        <div class="task-title">
+                            <p>{{task.title}}</p>
+                        </div>
+                        <div class="task-body">
+                            <div class="assigned">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-user-circle"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.assigned}}</p>
+                                </div>
                             </div>
-                            <div class="name">
-                                <p>Alejandro Fernández Herrero</p>
+                            <div class="time">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                </div>
+                                
                             </div>
                         </div>
-                        <div class="time">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-calendar-alt"></i>
-                                </span> 
-                            </div>
-                            <div class="name">
-                                <p>27-Dec to 09-Jan</p>
-                            </div>
-                             
-                        </div>
                     </div>
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
                 </div>
             </div>
         </div>
         <div class="item">
            <div class="text-container">
-                <p>Diagrama tareas</p>
+                <p>Pruebas</p>
             </div>
             <div class="task-container">
-                <div class="task">
-                    <div class="task-title">
-                        <p>Title task</p>
-                    </div>
-                    <div class="task-body">
-                        <div class="assigned">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-user-circle"></i>
-                                </span> 
+                <div v-for="task in tasks" :key="task.id">
+                    <div class="task" v-if="task.phase == 'pruebas'" >
+                        <div class="task-title">
+                            <p>{{task.title}}</p>
+                        </div>
+                        <div class="task-body">
+                            <div class="assigned">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-user-circle"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.assigned}}</p>
+                                </div>
                             </div>
-                            <div class="name">
-                                <p>Alejandro Fernández Herrero</p>
+                            <div class="time">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                </div>
+                                
                             </div>
                         </div>
-                        <div class="time">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-calendar-alt"></i>
-                                </span> 
-                            </div>
-                            <div class="name">
-                                <p>27-Dec to 09-Jan</p>
-                            </div>
-                             
-                        </div>
                     </div>
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
                 </div>
             </div>
         </div>
         <div class="item">
            <div class="text-container">
-                <p>Diagrama tareas</p>
+                <p>Producción</p>
             </div>
             <div class="task-container">
-                 <div class="task">
-                    <div class="task-title">
-                        <p>Title task</p>
-                    </div>
-                    <div class="task-body">
-                        <div class="assigned">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-user-circle"></i>
-                                </span> 
+                  <div v-for="task in tasks" :key="task.id">
+                    <div class="task" v-if="task.phase == 'produccion'" >
+                        <div class="task-title">
+                            <p>{{task.title}}</p>
+                        </div>
+                        <div class="task-body">
+                            <div class="assigned">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-user-circle"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.assigned}}</p>
+                                </div>
                             </div>
-                            <div class="name">
-                                <p>Alejandro Fernández Herrero</p>
+                            <div class="time">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                </div>
+                                
                             </div>
                         </div>
-                        <div class="time">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-calendar-alt"></i>
-                                </span> 
-                            </div>
-                            <div class="name">
-                                <p>27-Dec to 09-Jan</p>
-                            </div>
-                             
-                        </div>
                     </div>
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
                 </div>
             </div>
         </div>
         <div class="item">
             <div class="text-container">
-                <p>Diagrama tareas</p>
+                <p>Pruebas finalizadas</p>
             </div>
             <div class="task-container">
-                 <div class="task">
-                    <div class="task-title">
-                        <p>Title task</p>
-                    </div>
-                    <div class="task-body">
-                        <div class="assigned">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-user-circle"></i>
-                                </span> 
+                  <div v-for="task in tasks" :key="task.id">
+                    <div class="task" v-if="task.phase == 'pruebas finalizadas'" >
+                        <div class="task-title">
+                            <p>{{task.title}}</p>
+                        </div>
+                        <div class="task-body">
+                            <div class="assigned">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-user-circle"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.assigned}}</p>
+                                </div>
                             </div>
-                            <div class="name">
-                                <p>Alejandro Fernández Herrero</p>
+                            <div class="time">
+                                <div class="icon">
+                                    <span style="font-size: 2em;">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span> 
+                                </div>
+                                <div class="name">
+                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                </div>
+                                
                             </div>
                         </div>
-                        <div class="time">
-                            <div class="icon">
-                                <span style="font-size: 2em;">
-                                    <i class="far fa-calendar-alt"></i>
-                                </span> 
-                            </div>
-                            <div class="name">
-                                <p>27-Dec to 09-Jan</p>
-                            </div>
-                             
-                        </div>
                     </div>
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
-                </div>
-                <div class="task">
-
                 </div>
             </div>
         </div>
@@ -197,23 +152,36 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 
+ import { taskService } from '../_services/task.service';
 export default {
+    data(){
+       return{ tasks:[],
+       haveData: false
+       }
+    },
     computed: {
-        ...mapState({
-            account: state => state.account,
-            users: state => state.users.all
-        })
     },
     created () {
-        this.getAllUsers();
+        this.getSeries();
     },
     methods: {
-        ...mapActions('users', {
-            getAllUsers: 'getAll',
-            deleteUser: 'delete'
-        })
+       getSeries: function () {
+          taskService.getAll().then(
+            taskss=>{
+              this.updateData(taskss);
+             
+            }
+       );
+        },
+        updateData: function (taskss) {
+          console.log("fases2")
+          console.log(this.tasks)
+         
+      this.haveData = true;
+        this.tasks = taskss;
+      
+        }
     }
 };
 </script>
