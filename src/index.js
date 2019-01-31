@@ -5,6 +5,7 @@ import { store } from './_store';
 import { router } from './_helpers';
 import App from './app/App';
 import Navigator from './navigator/Navigator';
+import TaskData from './home/TaskData';
 import HighchartsVue from 'highcharts-vue';
 import Highcharts from 'highcharts';
 import gantt from 'highcharts/modules/gantt';
@@ -18,6 +19,7 @@ stockInit(Highcharts);
 Vue.use(VeeValidate);
 Vue.use(HighchartsVue)
 Vue.component('navigator',Navigator);
+Vue.component('taskdata',TaskData);
 
 new Vue({
     el: '#app',

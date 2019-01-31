@@ -1,5 +1,9 @@
 <template>
-    <div class="container" v-if="haveData">  
+    <div class="container" v-if="haveData">
+        <button @click="show = !show">
+            Toggle render
+        </button>
+       <div class="tasks">
         <div class="item" >
            <div class="text-container">
                 <p>Desarrollo</p>
@@ -148,6 +152,10 @@
                 </div>
             </div>
         </div>
+       </div>
+         <transition name="slide-fade">
+            <taskdata v-if="show"></taskdata>  
+        </transition>
     </div>
 </template>
 
@@ -157,7 +165,8 @@
 export default {
     data(){
        return{ tasks:[],
-       haveData: false
+       haveData: false,
+       show :false
        }
     },
     computed: {
@@ -195,6 +204,19 @@ export default {
     min-height: 600px;
     height: 100%;
     margin-bottom: 20px;
+}
+.tasks{
+    /* width: 100%; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 95%;
+    margin: 0 auto;
+    min-height: 600px;
+    /* height: 100%; */
+    margin-bottom: 20px;
+    height: 100%;
+    z-index: 1;
 }
 .item{
     margin-left: 10px;
@@ -252,5 +274,15 @@ a{
     justify-content: center;
     display: flex;
     flex-direction: column;
+}
+.slide-fade-enter-active {
+  transition: all 2.3s ease;
+}
+.slide-fade-leave-active {
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(100%);
+  opacity: 0;
 }
 </style>
