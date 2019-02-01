@@ -26,6 +26,13 @@ table, caption, tbody, tfoot, thead, tr, th, td {
   background: transparent;
   font-family: 'Titillium Web', sans-serif;
 }
+.vdatetime >input{width: 100%;
+  box-sizing: border-box;
+  height: 35px;
+  border: 3px solid #2F96EF;
+  border-radius: 5px;
+  padding: 0 15px;
+  margin: 10px 0;}
 html{
     height: 100%;
     background-color: #eee;
