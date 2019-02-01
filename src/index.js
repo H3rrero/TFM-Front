@@ -11,6 +11,7 @@ import Highcharts from 'highcharts';
 import gantt from 'highcharts/modules/gantt';
 import mapInit from 'highcharts/modules/map';
 import stockInit from 'highcharts/modules/stock';
+import Datetime from 'vue-datetime'
 
 gantt(Highcharts);
 mapInit(Highcharts)
@@ -18,6 +19,8 @@ stockInit(Highcharts);
 
 Vue.use(VeeValidate);
 Vue.use(HighchartsVue)
+Vue.use(Datetime)
+
 Vue.component('navigator',Navigator);
 Vue.component('taskdata',TaskData);
 

@@ -16,6 +16,7 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
+ 
   margin: 0;
   padding: 0;
   border: 0;
@@ -28,6 +29,9 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 html{
     height: 100%;
     background-color: #eee;
+}
+textarea{
+    resize: none;
 }
 .highcharts-axis-labels > text >tspan{
     color:#E0E0E3;

@@ -1,8 +1,6 @@
 <template>
-    <div class="container" v-if="haveData">
-        <button @click="show = !show">
-            Toggle render
-        </button>
+    <div class="container" v-if="haveData"  >
+        <div class="mask" v-if="show" v-on:click="hideMenu()"></div>
        <div class="tasks">
         <div class="item" >
            <div class="text-container">
@@ -10,7 +8,7 @@
             </div>
             <div class="task-container">
                 <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'desarrollo'" >
+                    <div class="task" v-if="task.phase == 'desarrollo'"  v-on:click="showMenu()">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -47,7 +45,7 @@
             </div>
             <div class="task-container">
                 <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'pruebas'" >
+                    <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu()">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -84,7 +82,7 @@
             </div>
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'produccion'" >
+                    <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu()">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -121,7 +119,7 @@
             </div>
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'pruebas finalizadas'" >
+                    <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu()">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -166,7 +164,7 @@ export default {
     data(){
        return{ tasks:[],
        haveData: false,
-       show :false
+       show :true
        }
     },
     computed: {
@@ -184,12 +182,21 @@ export default {
        );
         },
         updateData: function (taskss) {
-          console.log("fases2")
-          console.log(this.tasks)
+            console.log("fases2")
+            console.log(this.tasks)
          
-      this.haveData = true;
-        this.tasks = taskss;
+            this.haveData = true;
+            this.tasks = taskss;
       
+        },
+        showMenu: function () {
+            console.log("showMenu");
+            this.show = true;
+        },
+        hideMenu: function () {
+             console.log("hideMenu");
+            if(this.show)
+            this.show = false;
         }
     }
 };
@@ -275,14 +282,24 @@ a{
     display: flex;
     flex-direction: column;
 }
+.mask{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #3D3A3F;
+    top: 0;
+    z-index: 5;
+    opacity: 0.8;
+}
 .slide-fade-enter-active {
   transition: all 2.3s ease;
 }
 .slide-fade-leave-active {
+    transition: all 2.3s ease;
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(100%);
-  opacity: 0;
+ 
 }
 </style>
