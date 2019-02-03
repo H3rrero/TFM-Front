@@ -3,6 +3,7 @@ import { authHeader } from '../_helpers';
 
 export const taskService = {
     getAll,
+    changeTask
 };
 
 
@@ -20,7 +21,15 @@ function getAll() {
     console.log("service task");
     return fetch(`${config.apiUrl}/tasks`, requestOptions).then(handleResponse);
 }
-
+function changeTask(task) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify(task)
+    };
+    console.log(task);
+    return fetch(`${config.apiUrl}/tasks/${task.id}`, requestOptions).then(handleResponse);
+}
 
 function handleResponse(response) {
     
@@ -30,8 +39,8 @@ function handleResponse(response) {
             if (response.status === 401) {
                 console.log(response);
                 // auto logout if 401 response returned from api
-                logout();
-                location.reload(true);
+                //logout();
+                //location.reload(true);
             }
 
             const error = (data && data.message) || response.statusText;

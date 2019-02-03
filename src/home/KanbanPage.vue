@@ -1,5 +1,5 @@
 <template>
-    <div class="container" v-if="haveData"  >
+    <div class="container-Kanban" v-if="haveData"  >
         <div class="mask" v-if="show" v-on:click="hideMenu()"></div>
        <div class="tasks">
         <div class="item" >
@@ -8,7 +8,7 @@
             </div>
             <div class="task-container">
                 <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'desarrollo'"  v-on:click="showMenu()">
+                    <div class="task" v-if="task.phase == 'desarrollo'"  v-on:click="showMenu(task)">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -30,7 +30,7 @@
                                     </span> 
                                 </div>
                                 <div class="name">
-                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                    <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
                                 </div>
                                 
                             </div>
@@ -45,7 +45,7 @@
             </div>
             <div class="task-container">
                 <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu()">
+                    <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu(task)">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -67,7 +67,7 @@
                                     </span> 
                                 </div>
                                 <div class="name">
-                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                    <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
                                 </div>
                                 
                             </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu()">
+                    <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu(task)">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -104,7 +104,7 @@
                                     </span> 
                                 </div>
                                 <div class="name">
-                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                     <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
                                 </div>
                                 
                             </div>
@@ -119,7 +119,7 @@
             </div>
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu()">
+                    <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu(task)">
                         <div class="task-title">
                             <p>{{task.title}}</p>
                         </div>
@@ -141,7 +141,7 @@
                                     </span> 
                                 </div>
                                 <div class="name">
-                                    <p>{{task.dateI}} to {{task.dateF}}</p>
+                                     <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
                                 </div>
                                 
                             </div>
@@ -152,7 +152,7 @@
         </div>
        </div>
          <transition name="slide-fade">
-            <taskdata v-if="show"></taskdata>  
+            <taskdata v-if="show" :myTask="sendTask"></taskdata>  
         </transition>
     </div>
 </template>
@@ -164,7 +164,8 @@ export default {
     data(){
        return{ tasks:[],
        haveData: false,
-       show :true
+       show :false,
+       sendTask: {},
        }
     },
     computed: {
@@ -189,9 +190,11 @@ export default {
             this.tasks = taskss;
       
         },
-        showMenu: function () {
+        showMenu: function (task) {
             console.log("showMenu");
             this.show = true;
+            this.sendTask = task;
+            console.log(task.title);
         },
         hideMenu: function () {
              console.log("hideMenu");
@@ -202,7 +205,7 @@ export default {
 };
 </script>
 <style scoped>
-.container{
+.container-Kanban{
      display: flex;
     flex-direction: row;
     justify-content: center;
@@ -210,18 +213,14 @@ export default {
     margin: 0 auto;
     min-height: 600px;
     height: 100%;
-    margin-bottom: 20px;
 }
 .tasks{
-    /* width: 100%; */
     display: flex;
     flex-direction: row;
     justify-content: center;
     width: 95%;
     margin: 0 auto;
     min-height: 600px;
-    /* height: 100%; */
-    margin-bottom: 20px;
     height: 100%;
     z-index: 1;
 }
@@ -229,9 +228,11 @@ export default {
     margin-left: 10px;
     display: flex;
     flex-direction: column;
-    background-color: #6B6FCE;
-    color: white;
+    background-color: white;
+    color: #2F96EF;
     flex-grow: 1;
+    border-radius: 1rem;
+    border: 2px solid #2F96EF;
 }
 
 .text-container{
@@ -249,8 +250,10 @@ a{
     height: 200px;
     width: 90%;
     margin: 0 auto;
-    background-color: crimson;
+    color: white;
+    background-color: #2F96EF;
     margin-top: 8px;
+    border-radius: 1rem;
 }
 .task-title{
     padding: 2%;
@@ -301,5 +304,9 @@ a{
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(100%);
  
+}
+p{
+    margin-bottom: 2px;
+    font-family: 'Roboto', sans-serif;
 }
 </style>
