@@ -22,29 +22,39 @@
             </div>
             <div class="item-task-data">
                 <p>Descripción:</p>
-                <textarea v-model="myTask.description" placeholder="add multiple lines"></textarea>
+                <textarea-autosize v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
             </div>
             <div class="item-task-data">
-                <p>Fecha Inicio:</p>
-                <datetime v-model="myTask.dateI"></datetime>
-            </div>
-            <div class="item-task-data">
-                <p>Fecha Fin:</p>
-                <datetime v-model="myTask.dateF"></datetime>
-            </div>
-            <div class="item-task-data">
-                <p>Añadir horas dedicadas:</p>
-                <input value="0"  v-model="hours" type="number">
-            </div>
-            <div class="item-text-data">
-                <span>Horas dedicadas totales:</span>
-                <div>
-                    <p>{{myTask.hours}}</p>
+                <div class="dates">
+                    <div class="dateIni">
+                        <p>Fecha Inicio:</p>
+                        <datetime v-model="myTask.dateI"></datetime>
+                    </div>
+                    <div class="dateEnd">
+                        <p>Fecha Fin:</p>
+                        <datetime v-model="myTask.dateF"></datetime>
+                    </div>
                 </div>
             </div>
             <div class="item-task-data">
+                 <div class="dates">
+                    <div class="dateIni">
+                       <p>Añadir horas dedicadas:</p>
+                        <input value="0"  v-model="hours" type="number">    
+                    </div>
+                    <div class="item-text-data">
+                        <span>Horas dedicadas totales:</span>
+                        <div>
+                            <p>{{myTask.hours}}</p>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+            <div class="item-task-data">
                 <p>Dejar comentario:</p>
-                <textarea v-model="coment"></textarea>
+                <textarea-autosize v-model="coment"></textarea-autosize>
             </div>
             <div class="item-textarea-data">
                 <span>Comentarios:</span>
@@ -52,7 +62,7 @@
                     <p v-for="coment in  this.myTask.coments" :key="coment.id">{{coment}}</p>
                 </div>
             </div>
-            <div class="item-task-data">
+            <div class="item-button-data">
                 <p>{{result}}</p>
                 <a class="button" v-on:click="updateTask()">Actualizar tarea</a>
                 
@@ -164,10 +174,14 @@ export default {
     margin: 0 auto;
     margin-top: 10px;
 }
+.item-button-data{  
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 40px;
+}
 .item-text-data{  
     width: 95%;
     margin: 0 auto;
-    margin-top: 10px;
 
 }
 .item-text-data > div{
@@ -201,6 +215,13 @@ export default {
 .item-task-data *{
    width: 100%;
 }
+.dates{
+    display: flex;
+    flex-direction: row;
+}
+.dateIni{
+    margin-right: 10px;
+}
 input, select, textarea{
     box-sizing: border-box;
     height: 35px;
@@ -208,9 +229,6 @@ input, select, textarea{
     border-radius: 5px;
     padding: 0 15px;
     margin: 10px 0;
-}
-textarea{
-    height: 120px;
 }
 p{
     margin-bottom: 2px;

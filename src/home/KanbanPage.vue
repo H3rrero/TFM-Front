@@ -2,154 +2,121 @@
     <div class="container-Kanban" v-if="haveData"  >
         <div class="mask" v-if="show" v-on:click="hideMenu()"></div>
        <div class="tasks">
-        <div class="item" >
-           <div class="text-container">
-                <p>Desarrollo</p>
-            </div>
-            <div class="task-container">
-                <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'desarrollo'"  v-on:click="showMenu(task)">
-                        <div class="task-title">
-                            <p>{{task.title}}</p>
-                        </div>
-                        <div class="task-body">
-                            <div class="assigned">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-user-circle"></i>
-                                    </span> 
+        <drop @dragover="changePhase('desarrollo')" class="item">
+            <div class="text-container">
+                    <p>Desarrollo</p>
+                </div>
+                <div class="task-container">
+                    <div v-for="task in tasks" :key="task.id">
+                        <drag @dragend="handleDrop" :transfer-data="task">
+                            <div class="task" v-if="task.phase == 'desarrollo'"  v-on:click="showMenu(task)">
+                                <div class="task-title">
+                                    <p>{{task.title}}</p>
                                 </div>
-                                <div class="name">
-                                    <p>{{task.assigned}}</p>
+                                <div class="task-body">
+                                    <div class="assigned">
+                                        <div class="icon">
+                                            <span style="font-size: 2em;">
+                                                <i class="far fa-user-circle"></i>
+                                            </span> 
+                                        </div>
+                                        <div class="name">
+                                            <p>{{task.assigned}}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="time">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-calendar-alt"></i>
-                                    </span> 
-                                </div>
-                                <div class="name">
-                                    <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
-                                </div>
-                                
-                            </div>
-                        </div>
+                        </drag>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="item">
-           <div class="text-container">
-                <p>Pruebas</p>
-            </div>
-            <div class="task-container">
-                <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu(task)">
-                        <div class="task-title">
-                            <p>{{task.title}}</p>
-                        </div>
-                        <div class="task-body">
-                            <div class="assigned">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-user-circle"></i>
-                                    </span> 
+        </drop>
+        <drop @dragover="changePhase('pruebas')"  class="item">
+             <div class="text-container">
+                    <p>Pruebas</p>
+                </div>
+                <div class="task-container">
+                    <div v-for="task in tasks" :key="task.id">
+                        <drag @dragend="handleDrop"  :transfer-data="task">
+                            <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu(task)">
+                                <div class="task-title">
+                                    <p>{{task.title}}</p>
                                 </div>
-                                <div class="name">
-                                    <p>{{task.assigned}}</p>
+                                <div class="task-body">
+                                    <div class="assigned">
+                                        <div class="icon">
+                                            <span style="font-size: 2em;">
+                                                <i class="far fa-user-circle"></i>
+                                            </span> 
+                                        </div>
+                                        <div class="name">
+                                            <p>{{task.assigned}}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="time">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-calendar-alt"></i>
-                                    </span> 
-                                </div>
-                                <div class="name">
-                                    <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
-                                </div>
-                                
-                            </div>
-                        </div>
+                        </drag>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="item">
+           
+        </drop>
+        <drop @dragover="changePhase('produccion')" class="item">
            <div class="text-container">
                 <p>Producción</p>
             </div>
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu(task)">
-                        <div class="task-title">
-                            <p>{{task.title}}</p>
-                        </div>
-                        <div class="task-body">
-                            <div class="assigned">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-user-circle"></i>
-                                    </span> 
-                                </div>
-                                <div class="name">
-                                    <p>{{task.assigned}}</p>
-                                </div>
+                    <drag @dragend="handleDrop"  :transfer-data="task">
+                        <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu(task)">
+                            <div class="task-title">
+                                <p>{{task.title}}</p>
                             </div>
-                            <div class="time">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-calendar-alt"></i>
-                                    </span> 
+                            <div class="task-body">
+                                <div class="assigned">
+                                    <div class="icon">
+                                        <span style="font-size: 2em;">
+                                            <i class="far fa-user-circle"></i>
+                                        </span> 
+                                    </div>
+                                    <div class="name">
+                                        <p>{{task.assigned}}</p>
+                                    </div>
                                 </div>
-                                <div class="name">
-                                     <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
-                                </div>
-                                
+                            
                             </div>
                         </div>
-                    </div>
+                    </drag>
                 </div>
             </div>
-        </div>
-        <div class="item">
+        </drop>
+        <drop @dragover="changePhase('pruebas finalizadas')"  class="item">
             <div class="text-container">
                 <p>Pruebas finalizadas</p>
             </div>
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
-                    <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu(task)">
-                        <div class="task-title">
-                            <p>{{task.title}}</p>
-                        </div>
-                        <div class="task-body">
-                            <div class="assigned">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-user-circle"></i>
-                                    </span> 
-                                </div>
-                                <div class="name">
-                                    <p>{{task.assigned}}</p>
-                                </div>
+                    <drag @dragend="handleDrop"  :transfer-data="task">
+                        <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu(task)">
+                            <div class="task-title">
+                                <p>{{task.title}}</p>
                             </div>
-                            <div class="time">
-                                <div class="icon">
-                                    <span style="font-size: 2em;">
-                                        <i class="far fa-calendar-alt"></i>
-                                    </span> 
+                            <div class="task-body">
+                                <div class="assigned">
+                                    <div class="icon">
+                                        <span style="font-size: 2em;">
+                                            <i class="far fa-user-circle"></i>
+                                        </span> 
+                                    </div>
+                                    <div class="name">
+                                        <p>{{task.assigned}}</p>
+                                    </div>
                                 </div>
-                                <div class="name">
-                                     <p>{{task.dateI.split("T")[0]}} to {{task.dateF.split("T")[0]}}</p>
-                                </div>
-                                
+                            
                             </div>
                         </div>
-                    </div>
+                    </drag>
                 </div>
             </div>
-        </div>
+        </drop>
        </div>
          <transition name="slide-fade">
             <taskdata v-if="show" :myTask="sendTask"></taskdata>  
@@ -166,6 +133,7 @@ export default {
        haveData: false,
        show :false,
        sendTask: {},
+       phase:""
        }
     },
     computed: {
@@ -195,6 +163,12 @@ export default {
             this.show = true;
             this.sendTask = task;
             console.log(task.title);
+        },
+        handleDrop(data, event) {
+            data.phase = this.phase;
+        },
+        changePhase: function (phase) {
+            this.phase = phase;
         },
         hideMenu: function () {
              console.log("hideMenu");
@@ -247,7 +221,7 @@ a{
     text-decoration: none;
 }
 .task{
-    height: 200px;
+    height: 100px;
     width: 90%;
     margin: 0 auto;
     color: white;
@@ -263,7 +237,6 @@ a{
     text-align: center;
 }
 .task-body{
-    padding: 10px;
     display: flex;
     flex-direction: column;
     height: 70%;
@@ -272,6 +245,7 @@ a{
 .assigned{
     display: flex;
     flex-direction: row;
+    margin-left: 10px;
 }
 .time{
     margin-top: 30px;

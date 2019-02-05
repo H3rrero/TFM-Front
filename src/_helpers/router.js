@@ -19,7 +19,7 @@ export const router = new Router({
     { path: '/state', component:  ProjectState},
 
     // otherwise redirect to home
-    { path: '*', redirect: '/state' }
+    { path: '*', redirect: '/kanban' }
   ]
 });
 
