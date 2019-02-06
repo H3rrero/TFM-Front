@@ -6,6 +6,7 @@ import { router } from './_helpers';
 import App from './app/App';
 import Navigator from './navigator/Navigator';
 import TaskData from './home/TaskData';
+import ChangeHours from './home/ChangeHours';
 import HighchartsVue from 'highcharts-vue';
 import Highcharts from 'highcharts';
 import gantt from 'highcharts/modules/gantt';
@@ -28,6 +29,7 @@ Vue.component('drag', Drag);
 Vue.component('drop', Drop);
 Vue.component('navigator',Navigator);
 Vue.component('taskdata',TaskData);
+Vue.component('changehours',ChangeHours);
 
 new Vue({
     el: '#app',

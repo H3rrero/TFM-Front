@@ -74,15 +74,14 @@ export default {
 }
 .item:hover{
     color:#58BB45;
+    transform: scale(1.05,1.05);
+    transition:  0.3s ease-out;
 }
 .img-container{
     padding: 4%;
     padding-bottom: 0;
 }
-.img-container:hover{
-    padding: 0%;
-    transition:  0.5s ease-out;
-}
+
 .img-container > img{
     height: 100%;
     width: 100%;

@@ -1,6 +1,6 @@
 <template>
     <div class="container-Kanban" v-if="haveData"  >
-        <div class="mask" v-if="show" v-on:click="hideMenu()"></div>
+        <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
        <div class="tasks">
         <drop @dragover="changePhase('desarrollo')" class="item">
             <div class="text-container">
@@ -8,10 +8,16 @@
                 </div>
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
-                        <drag @dragend="handleDrop" :transfer-data="task">
-                            <div class="task" v-if="task.phase == 'desarrollo'"  v-on:click="showMenu(task)">
+                        <drag @dragend="handleDrop" :transfer-data="task" >
+                            <div class="task" v-if="task.phase == 'desarrollo'" >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
+                                    <span   v-on:click="showMenu(task)">
+                                        <i class="fas fa-edit"></i>
+                                    </span> 
+                                    <span v-on:click="showHours(task)">
+                                        <i class="far fa-clock"></i>
+                                    </span>
                                 </div>
                                 <div class="task-body">
                                     <div class="assigned">
@@ -40,6 +46,12 @@
                             <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu(task)">
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
+                                    <span  v-on:click="showMenu(task)">
+                                        <i class="fas fa-edit"></i>
+                                    </span> 
+                                    <span v-on:click="showHours(task)">
+                                        <i class="far fa-clock"></i>
+                                    </span>
                                 </div>
                                 <div class="task-body">
                                     <div class="assigned">
@@ -69,6 +81,12 @@
                         <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu(task)">
                             <div class="task-title">
                                 <p>{{task.title}}</p>
+                                <span  v-on:click="showMenu(task)">
+                                        <i class="fas fa-edit"></i>
+                                </span> 
+                                <span v-on:click="showHours(task)">
+                                        <i class="far fa-clock"></i>
+                                </span>
                             </div>
                             <div class="task-body">
                                 <div class="assigned">
@@ -98,6 +116,12 @@
                         <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu(task)">
                             <div class="task-title">
                                 <p>{{task.title}}</p>
+                                <span  v-on:click="showMenu(task)">
+                                        <i class="fas fa-edit"></i>
+                                </span> 
+                                <span v-on:click="showHours(task)">
+                                        <i class="far fa-clock"></i>
+                                </span>
                             </div>
                             <div class="task-body">
                                 <div class="assigned">
@@ -121,6 +145,9 @@
          <transition name="slide-fade">
             <taskdata v-if="show" :myTask="sendTask"></taskdata>  
         </transition>
+        <transition name="fade">
+            <changehours v-if="showH" :myTask="sendTask"></changehours>  
+        </transition>
     </div>
 </template>
 
@@ -132,6 +159,7 @@ export default {
        return{ tasks:[],
        haveData: false,
        show :false,
+       showH:false,
        sendTask: {},
        phase:""
        }
@@ -164,6 +192,12 @@ export default {
             this.sendTask = task;
             console.log(task.title);
         },
+        showHours: function (task) {
+            console.log("showMenu");
+            this.showH = true;
+            this.sendTask = task;
+            console.log(task.title);
+        },
         handleDrop(data, event) {
             data.phase = this.phase;
         },
@@ -174,6 +208,11 @@ export default {
              console.log("hideMenu");
             if(this.show)
             this.show = false;
+        },
+        hideMenuH: function () {
+             console.log("hideMenu");
+            if(this.showH)
+            this.showH = false;
         }
     }
 };
@@ -208,7 +247,10 @@ export default {
     border-radius: 1rem;
     border: 2px solid #2F96EF;
 }
+.item:hover{
+    border-color: #17DA17;
 
+}
 .text-container{
     border-top: 1px solid #EDEDED;
     text-align: center;
@@ -228,13 +270,26 @@ a{
     background-color: #2F96EF;
     margin-top: 8px;
     border-radius: 1rem;
+    cursor: move;
+}
+.task:hover{
+    transition:  0.5s ease-out;
+    transform: scale(1.1,1.1);
 }
 .task-title{
     padding: 2%;
     border-bottom: 1px solid black;
+    display: flex;
+
 }
 .task-title > p{
     text-align: center;
+    width: 80%;
+}
+.task-title > span{
+    margin-left: 15px;
+    cursor: auto;
+    font-size: 1em;
 }
 .task-body{
     display: flex;
