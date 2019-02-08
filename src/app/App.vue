@@ -1,6 +1,6 @@
 <template>
      <div class="container">
-        <navigator ></navigator>
+        <navigator class="navigator"></navigator>
         <div v-if="alert.message" :class="`alert ${alert.type}`">{{alert.message}}</div>
         <router-view class="content"></router-view>
     </div>
@@ -92,6 +92,10 @@ table {
 .content{
     grid-area: content;
     height: 97%;
+}
+.navigator{
+    grid-area: 'header';
+    height: 25%;
 }
 </style>
 

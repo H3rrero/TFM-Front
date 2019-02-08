@@ -71,12 +71,38 @@ export default {
     margin-left: 30px;
     cursor: pointer;
 }
+.button:before {
+  content: "";
+  background-color: rgba(255, 255, 255, 0.5);
+  height: 100%;
+  width: 3em;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -4.5em;
+  transform: skewX(-45deg) translateX(0);
+  transition: none;
+}
+.button:hover {
+  background-color: #2194e0;
+  color: #fff;
+  border-bottom: 4px solid #1977b5;
+}
+.button:hover:before {
+  transform: skewX(-45deg) translateX(13.5em);
+  transition: all 0.5s ease-in-out;
+}
 .container-task-hours{
     z-index: 99;
-    height: 100px;
+    height: 150px;
     width: 400px;
     background-color: #eee;
     position: absolute;
+    border-radius: 1rem;
+    border: 2px solid #2F96EF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .second-container{
 display: flex;
