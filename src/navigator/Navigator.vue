@@ -23,7 +23,8 @@
 </template>
 
 <style>
-#logo{float:left; font-size:24px; text-transform:uppercase; color:#002e5b; font-weight:600; padding:20px 0px;}
+#logo{float:left; font-size:24px; text-transform:uppercase; 
+    color: #2F96EF; font-weight:600; padding:20px 0px;}
 nav{width:auto; float:right;}
 .menu{
     background-color: white;
@@ -46,11 +47,13 @@ nav{width:auto; float:right;}
 }
 header > a{
     text-decoration: none;
-    color: black;
+    
+    color: #2F96EF;
 }
 li > a{
         text-decoration: none;
-    color: black;
+    
+    color: #2F96EF;
 }
 
 label {float:right; padding:8px 0px; display:inline-block; cursor:pointer; }
@@ -69,7 +72,6 @@ input[type=checkbox] {position: absolute; top: -9999px; left: -9999px; backgroun
 input[type=checkbox]:fous{background:none;}
 label { padding:8px 0px; display:inline-block; cursor:pointer; }
 input[type=checkbox]:checked ~ nav {display:block;}
-input[type=checkbox]:checked ~ .navigator {height: 50%;}
 
 nav{display:none; position:absolute; right: 0px; top: 53px}
 .ul-menu{
