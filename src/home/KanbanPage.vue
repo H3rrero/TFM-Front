@@ -22,7 +22,7 @@
                                 <div class="task-body">
                                     <div class="assigned">
                                         <div class="icon">
-                                            <span style="font-size: 2em;">
+                                            <span style="font-size: 1em;">
                                                 <i class="far fa-user-circle"></i>
                                             </span> 
                                         </div>
@@ -43,7 +43,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-if="task.phase == 'pruebas'"   v-on:click="showMenu(task)">
+                            <div class="task" v-if="task.phase == 'pruebas'" >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -56,7 +56,7 @@
                                 <div class="task-body">
                                     <div class="assigned">
                                         <div class="icon">
-                                            <span style="font-size: 2em;">
+                                            <span style="font-size: 1em;">
                                                 <i class="far fa-user-circle"></i>
                                             </span> 
                                         </div>
@@ -78,7 +78,7 @@
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task">
-                        <div class="task" v-if="task.phase == 'produccion'"   v-on:click="showMenu(task)">
+                        <div class="task" v-if="task.phase == 'produccion'"  >
                             <div class="task-title">
                                 <p>{{task.title}}</p>
                                 <span  v-on:click="showMenu(task)">
@@ -91,7 +91,7 @@
                             <div class="task-body">
                                 <div class="assigned">
                                     <div class="icon">
-                                        <span style="font-size: 2em;">
+                                        <span style="font-size: 1em;">
                                             <i class="far fa-user-circle"></i>
                                         </span> 
                                     </div>
@@ -113,7 +113,7 @@
             <div class="task-container">
                   <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task">
-                        <div class="task" v-if="task.phase == 'pruebas finalizadas'"   v-on:click="showMenu(task)">
+                        <div class="task" v-if="task.phase == 'pruebas finalizadas'"  >
                             <div class="task-title">
                                 <p>{{task.title}}</p>
                                 <span  v-on:click="showMenu(task)">
@@ -126,7 +126,7 @@
                             <div class="task-body">
                                 <div class="assigned">
                                     <div class="icon">
-                                        <span style="font-size: 2em;">
+                                        <span style="font-size: 1em;">
                                             <i class="far fa-user-circle"></i>
                                         </span> 
                                     </div>
@@ -263,7 +263,7 @@ a{
     text-decoration: none;
 }
 .task{
-    height: 100px;
+    height: 80px;
     width: 90%;
     margin: 0 auto;
     color: white;
@@ -313,6 +313,7 @@ a{
     justify-content: center;
     display: flex;
     flex-direction: column;
+    font-size: 1em;
 }
 .mask{
     position: absolute;

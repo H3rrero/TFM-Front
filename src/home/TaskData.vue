@@ -234,4 +234,9 @@ p{
     margin-bottom: 2px;
     font-family: 'Roboto', sans-serif;
 }
+@media only screen and (max-width: 980px) {
+    .container-task-data{
+        width: 80%;
+    }
+}
 </style>

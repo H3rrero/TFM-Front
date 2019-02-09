@@ -1,7 +1,7 @@
 <template>
-<div class="container">
+<div class="container-state">
     <router-link to="/gantt">
-<div class="item" >
+<div class="item first" >
     <div class="img-container">
         <img src="src/img/gantt.png" alt="diagrama de gantt">
     </div>
@@ -54,12 +54,11 @@ export default {
 </script>
 
 <style scoped>
-.container{
-     display: flex;
+.container-state{
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    width: 70%;
     margin: 0 auto;
 }
 .item{
@@ -97,5 +96,28 @@ export default {
 }
 a{
     text-decoration: none;
+}
+@media only screen and (max-width: 980px) {
+    .container-state{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .item{
+        height: auto;
+        width: 100%;
+        margin-left: 0px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        color: #6B6FCE;
+    }
+    .first{
+        margin-top: 50px;
+    }
 }
 </style>

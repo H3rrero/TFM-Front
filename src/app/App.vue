@@ -85,6 +85,7 @@ table {
        'header '
         'content '
         ' footer ';
+    grid-template-rows: 1fr 8fr 1fr;
     grid-gap: 10px;
     height: 100%;
     background-color: #eee;
@@ -94,8 +95,9 @@ table {
     height: 97%;
 }
 .navigator{
-    grid-area: 'header';
-    height: 25%;
+    grid-area: header;
+    height: 75px;
+   
 }
 </style>
 
