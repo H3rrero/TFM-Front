@@ -1,56 +1,99 @@
 <template>
-    <div class="container-Kanban" v-if="haveData"  >
-        <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
-       <div class="tasks">
-        <drop @dragover="changePhase('desarrollo')" class="item">
-            <div class="text-container">
-                    <p>Desarrollo</p>
-                </div>
-                <div class="task-container">
-                    <div v-for="task in tasks" :key="task.id">
-                        <drag @dragend="handleDrop" :transfer-data="task" >
-                            <div class="task" v-if="task.phase == 'desarrollo'" >
-                                <div class="task-title">
-                                    <p>{{task.title}}</p>
-                                    <span   v-on:click="showMenu(task)">
-                                        <i class="fas fa-edit"></i>
-                                    </span> 
-                                    <span v-on:click="showHours(task)">
-                                        <i class="far fa-clock"></i>
-                                    </span>
-                                </div>
-                                <div class="task-body">
-                                    <div class="assigned">
-                                        <div class="icon">
-                                            <span style="font-size: 1em;">
-                                                <i class="far fa-user-circle"></i>
-                                            </span> 
-                                        </div>
-                                        <div class="name">
-                                            <p>{{task.assigned}}</p>
+    <div class="filter-kamban">
+        <div class="filter">
+            <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
+            <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
+            <select  class="filterUser" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
+                    <option v-on:click="showTaskSelectedUser(user.id)"  v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
+            </select>
+        </div>
+        <div class="container-Kanban" v-if="haveData"  >
+            <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
+        <div class="tasks">
+            <drop @dragover="changePhase('desarrollo')" class="item">
+                <div class="text-container">
+                        <p>Desarrollo</p>
+                    </div>
+                    <div class="task-container">
+                        <div v-for="task in tasks" :key="task.id">
+                            <drag @dragend="handleDrop" :transfer-data="task" >
+                                <div class="task" v-if="task.phase == 'desarrollo' && showTaskUser(task.userId)" >
+                                    <div class="task-title">
+                                        <p>{{task.title}}</p>
+                                        <span   v-on:click="showMenu(task)">
+                                            <i class="fas fa-edit"></i>
+                                        </span> 
+                                        <span v-on:click="showHours(task)">
+                                            <i class="far fa-clock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="task-body">
+                                        <div class="assigned">
+                                            <div class="icon">
+                                                <span style="font-size: 1em;">
+                                                    <i class="far fa-user-circle"></i>
+                                                </span> 
+                                            </div>
+                                            <div class="name">
+                                                <p>{{task.assigned}}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </drag>
+                            </drag>
+                        </div>
                     </div>
-                </div>
-        </drop>
-        <drop @dragover="changePhase('pruebas')"  class="item">
-             <div class="text-container">
-                    <p>Pruebas</p>
+            </drop>
+            <drop @dragover="changePhase('pruebas')"  class="item">
+                <div class="text-container">
+                        <p>Pruebas</p>
+                    </div>
+                    <div class="task-container">
+                        <div v-for="task in tasks" :key="task.id">
+                            <drag @dragend="handleDrop"  :transfer-data="task">
+                                <div class="task" v-if="task.phase == 'pruebas' && showTaskUser(task.userId)" >
+                                    <div class="task-title">
+                                        <p>{{task.title}}</p>
+                                        <span  v-on:click="showMenu(task)">
+                                            <i class="fas fa-edit"></i>
+                                        </span> 
+                                        <span v-on:click="showHours(task)">
+                                            <i class="far fa-clock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="task-body">
+                                        <div class="assigned">
+                                            <div class="icon">
+                                                <span style="font-size: 1em;">
+                                                    <i class="far fa-user-circle"></i>
+                                                </span> 
+                                            </div>
+                                            <div class="name">
+                                                <p>{{task.assigned}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </drag>
+                        </div>
+                    </div>
+            
+            </drop>
+            <drop @dragover="changePhase('produccion')" class="item">
+            <div class="text-container">
+                    <p>Producción</p>
                 </div>
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-if="task.phase == 'pruebas'" >
+                            <div class="task" v-if="task.phase == 'produccion' && showTaskUser(task.userId)"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
-                                        <i class="fas fa-edit"></i>
+                                            <i class="fas fa-edit"></i>
                                     </span> 
                                     <span v-on:click="showHours(task)">
-                                        <i class="far fa-clock"></i>
+                                            <i class="far fa-clock"></i>
                                     </span>
                                 </div>
                                 <div class="task-body">
@@ -64,116 +107,103 @@
                                             <p>{{task.assigned}}</p>
                                         </div>
                                     </div>
+                                
                                 </div>
                             </div>
                         </drag>
                     </div>
                 </div>
-           
-        </drop>
-        <drop @dragover="changePhase('produccion')" class="item">
-           <div class="text-container">
-                <p>Producción</p>
-            </div>
-            <div class="task-container">
-                  <div v-for="task in tasks" :key="task.id">
-                    <drag @dragend="handleDrop"  :transfer-data="task">
-                        <div class="task" v-if="task.phase == 'produccion'"  >
-                            <div class="task-title">
-                                <p>{{task.title}}</p>
-                                <span  v-on:click="showMenu(task)">
-                                        <i class="fas fa-edit"></i>
-                                </span> 
-                                <span v-on:click="showHours(task)">
-                                        <i class="far fa-clock"></i>
-                                </span>
-                            </div>
-                            <div class="task-body">
-                                <div class="assigned">
-                                    <div class="icon">
-                                        <span style="font-size: 1em;">
-                                            <i class="far fa-user-circle"></i>
-                                        </span> 
-                                    </div>
-                                    <div class="name">
-                                        <p>{{task.assigned}}</p>
-                                    </div>
-                                </div>
-                            
-                            </div>
-                        </div>
-                    </drag>
+            </drop>
+            <drop @dragover="changePhase('pruebas finalizadas')"  class="item">
+                <div class="text-container">
+                    <p>Pruebas finalizadas</p>
                 </div>
-            </div>
-        </drop>
-        <drop @dragover="changePhase('pruebas finalizadas')"  class="item">
-            <div class="text-container">
-                <p>Pruebas finalizadas</p>
-            </div>
-            <div class="task-container">
-                  <div v-for="task in tasks" :key="task.id">
-                    <drag @dragend="handleDrop"  :transfer-data="task">
-                        <div class="task" v-if="task.phase == 'pruebas finalizadas'"  >
-                            <div class="task-title">
-                                <p>{{task.title}}</p>
-                                <span  v-on:click="showMenu(task)">
-                                        <i class="fas fa-edit"></i>
-                                </span> 
-                                <span v-on:click="showHours(task)">
-                                        <i class="far fa-clock"></i>
-                                </span>
-                            </div>
-                            <div class="task-body">
-                                <div class="assigned">
-                                    <div class="icon">
-                                        <span style="font-size: 1em;">
-                                            <i class="far fa-user-circle"></i>
-                                        </span> 
-                                    </div>
-                                    <div class="name">
-                                        <p>{{task.assigned}}</p>
-                                    </div>
+                <div class="task-container">
+                    <div v-for="task in tasks" :key="task.id">
+                        <drag @dragend="handleDrop"  :transfer-data="task">
+                            <div class="task" v-if="task.phase == 'pruebas finalizadas' && showTaskUser(task.userId)"  >
+                                <div class="task-title">
+                                    <p>{{task.title}}</p>
+                                    <span  v-on:click="showMenu(task)">
+                                            <i class="fas fa-edit"></i>
+                                    </span> 
+                                    <span v-on:click="showHours(task)">
+                                            <i class="far fa-clock"></i>
+                                    </span>
                                 </div>
-                            
+                                <div class="task-body">
+                                    <div class="assigned">
+                                        <div class="icon">
+                                            <span style="font-size: 1em;">
+                                                <i class="far fa-user-circle"></i>
+                                            </span> 
+                                        </div>
+                                        <div class="name">
+                                            <p>{{task.assigned}}</p>
+                                        </div>
+                                    </div>
+                                
+                                </div>
                             </div>
-                        </div>
-                    </drag>
+                        </drag>
+                    </div>
                 </div>
-            </div>
-        </drop>
-       </div>
-         <transition name="slide-fade">
-            <taskdata v-if="show" :myTask="sendTask"></taskdata>  
-        </transition>
-        <transition name="fade">
-            <changehours v-if="showH" :myTask="sendTask"></changehours>  
-        </transition>
+            </drop>
+        </div>
+            <transition name="slide-fade">
+                <taskdata v-if="show" :myTask="sendTask"></taskdata>  
+            </transition>
+            <transition name="fade">
+                <changehours v-if="showH" :myTask="sendTask"></changehours>  
+            </transition>
+        </div>
     </div>
 </template>
 
 <script>
 
  import { taskService } from '../_services/task.service';
+ import { userService} from '../_services/user.service';
 export default {
     data(){
-       return{ tasks:[],
-       haveData: false,
-       show :false,
-       showH:false,
-       sendTask: {},
-       phase:""
+       return{ 
+        currentUser: JSON.parse(localStorage.getItem('user')),
+        selectUser: 0,
+        tasks:[],
+        haveData: false,
+        show :false,
+        showH:false,
+        isActive:false,
+        isActiveR:false,
+        isActiveA:false,
+        sendTask: {},
+        usersId:[],
+        userss:[],
+        phase:""
        }
     },
     computed: {
     },
     created () {
         this.getSeries();
+        this.getUsers();
     },
     methods: {
        getSeries: function () {
           taskService.getAll().then(
             taskss=>{
               this.updateData(taskss);
+             
+            }
+       );
+        },
+         getUsers: function () {
+          userService.getAll().then(
+            users=>{
+                users.forEach(element => {
+                    this.usersId.push(element.id);
+                    this.userss = users;
+                });
              
             }
        );
@@ -213,19 +243,94 @@ export default {
              console.log("hideMenu");
             if(this.showH)
             this.showH = false;
+        },
+        showTaskUser: function (id) {
+           return this.usersId.includes(id);
+        },
+        showTaskCurrentUser: function () {
+            this.isActive = !this.isActive;
+            if(this.isActive)
+                this.usersId = [this.currentUser.id];
+            else
+                this.showAllTask();
+           console.log(this.usersId);        
+        },
+        showTaskSelectedUser: function () {
+            console.log("selected: "+this.selectUser)
+           this.usersId = [this.selectUser];     
+        },
+        showTaskRetard: function () {
+           this.isActiveR = !this.isActiveR;   
+        },
+        showAllTask:function () {
+            this.isActiveA = !this.isActiveA;
+            userService.getAll().then(
+            users=>{
+                users.forEach(element => {
+                    this.usersId.push(element.id);
+                    this.userss = users;
+                });
+             
+            }
+       );
         }
+
     }
 };
 </script>
 <style scoped>
+.myTaskBt{
+    margin-left: 10px;
+    border-radius: 1rem;
+    border: 1px solid white;
+    background-color: white;
+    color: #2f96ef;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 1s ease;
+    transition: color 1.2s ease;
+}
+.filterUser{
+    box-sizing: border-box;
+    height: 35px;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: 0 15px;
+    margin-left: 10px;
+    color: #2f96ef;
+}
+.myTaskBtSelected{
+    background-color: #2f96ef;
+    color: white;
+}
+.myTaskBt:hover{
+    background-color: #2f96ef;
+    color: white;
+}
+.filter-kamban{
+    display: flex;
+    flex-direction:column;
+}
+.filter{
+    height: 60px;
+    width: 89%;
+    border-radius: 1rem;
+    border: 2px solid #2F96EF;
+    background-color: #eee;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+}
 .container-Kanban{
-     display: flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     width: 95%;
     margin: 0 auto;
     min-height: 600px;
     height: 100%;
+    margin-top: 10px;
 }
 .tasks{
     display: flex;
@@ -290,6 +395,7 @@ a{
     margin-left: 15px;
     cursor: auto;
     font-size: 1em;
+    cursor: pointer;
 }
 .task-body{
     display: flex;
@@ -338,5 +444,10 @@ a{
 p{
     margin-bottom: 2px;
     font-family: 'Roboto', sans-serif;
+}
+@media only screen and (max-width: 980px) {
+    .task{
+         height: 100px;
+    }
 }
 </style>

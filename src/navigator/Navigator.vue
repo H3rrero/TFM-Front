@@ -2,7 +2,7 @@
     <div class="menu" v-if="account.status.loggedIn">  
         <section>
             <header>
-                <a href="https://www.linkedin.com/in/sutharmayur" class="logo" target="_blank">Organizador</a>
+                <a  class="logo" target="_blank">Organizador</a>
                 <label for="toggle-1" class="toggle-menu"><ul><li></li> <li></li> <li></li></ul></label>
                 <input type="checkbox" id="toggle-1">
                 <nav>
