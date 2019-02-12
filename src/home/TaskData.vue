@@ -108,89 +108,88 @@ export default {
 <style scoped>
 
 .button {
+    border: 2px solid #2F96EF;
+    border-radius: 0.3em;
+    color: #2F96EF;
+    display: inline-block;
+    font-size: 17px;
+    overflow: hidden;
     padding: 0.75em 2em;
+    position: relative;
     text-align: center;
     text-decoration: none;
-    width: 50% !important;
-    margin: 0 auto;
-    color: #2F96EF;
-    border: 2px solid #2F96EF;
-    font-size: 17px;
-    display: inline-block;
-    border-radius: 0.3em;
     transition: all 0.2s ease-in-out;
-    position: relative;
-    overflow: hidden;
+    margin: 0 auto;
+    width: 50% !important;
 }
 .button:before {
-  content: "";
   background-color: rgba(255, 255, 255, 0.5);
+  content: "";
   height: 100%;
-  width: 3em;
   display: block;
+  left: -4.5em;
   position: absolute;
   top: 0;
-  left: -4.5em;
   transform: skewX(-45deg) translateX(0);
   transition: none;
+  width: 3em;
 }
 .button:hover {
   background-color: #2194e0;
-  color: #fff;
   border-bottom: 4px solid #1977b5;
+  color: #fff;
 }
 .button:hover:before {
   transform: skewX(-45deg) translateX(13.5em);
   transition: all 0.5s ease-in-out;
 }
 .container-task-data{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 500px;
     background-color: #eee;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    margin:0;
     overflow: scroll;
     position: absolute;
     right: 0;
     top:0;
-    margin:0;
+    width: 500px;
     z-index: 99;
 }
 .title-task-data{
-    text-align: center;
-    font-weight: 700;
-    vertical-align: cen;
-    vertical-align: middle;
-    line-height: 50px;
     border-bottom: 1px solid #6B6FCE;
     color: #2F96EF;
+    line-height: 50px;
+    text-align: center;
+    font-weight: 700;
+    vertical-align: middle;
 }
-.form-task-data{
     display: flex;
     flex-direction: column;
+.form-task-data{
 }
 .item-task-data{  
-    width: 95%;
-    margin: 0 auto;
     margin-top: 10px;
+    margin: 0 auto;
+    width: 95%;
 }
 .item-button-data{  
     width: 95%;
+}
     margin: 0 auto;
     margin-top: 40px;
-}
+    margin: 0 auto;
 .item-text-data{  
     width: 95%;
-    margin: 0 auto;
 
 }
 .item-text-data > div{
-    box-sizing: border-box;
-    height: 35px;
     border: 2px solid #2F96EF;
     border-radius: 5px;
-    padding: 0 15px;
+    box-sizing: border-box;
+    height: 35px;
     margin: 10px 0;
+    padding: 0 15px;
 }
 .item-text-data > div >p{
     margin-top: 7px;
@@ -202,12 +201,12 @@ export default {
 
 }
 .item-textarea-data > div{
-    box-sizing: border-box;
-    height: 100%;
     border: 2px solid #2F96EF;
     border-radius: 5px;
-    padding: 0 15px;
+    box-sizing: border-box;
+    height: 100%;
     margin: 10px 0;
+    padding: 0 15px;
 }
 .item-textarea-data > div >p{
     margin-top: 7px;
@@ -223,16 +222,16 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    box-sizing: border-box;
-    height: 35px;
     border: 2px solid #2F96EF;
     border-radius: 5px;
-    padding: 0 15px;
+    box-sizing: border-box;
+    height: 35px;
     margin: 10px 0;
+    padding: 0 15px;
 }
 p{
-    margin-bottom: 2px;
     font-family: 'Roboto', sans-serif;
+    margin-bottom: 2px;
 }
 @media only screen and (max-width: 980px) {
     .container-task-data{

@@ -25,15 +25,17 @@
 
 <style>
 .logo{
-    float:left;
-    font-size:24px; 
-    text-transform:uppercase; 
     color: #2F96EF; 
+    font-size:24px; 
     font-weight:600; 
-    padding:20px 0px;}
+    float:left;
+    margin-left: 30px;
+    padding:20px 0px;
+    text-transform:uppercase; 
+    }
 nav{
-    width:auto;
     float:right;
+    width:auto;
  }
 .menu{
     background-color: white;
@@ -43,20 +45,20 @@ nav{
     flex-direction: row;
 }
 .ul-menu > li {
+    display: inline-block;
     font-size: 18px;
     padding: 25px 20px;
-    display: inline-block;
     transition: all 0.5s ease 0s;
 }
 
 header > a{
-    text-decoration: none;
-    
     color: #2F96EF;
+    text-decoration: none;
 }
+    
 li > a{
-    text-decoration: none;
     color: #2F96EF;
+    text-decoration: none;
 }
 
 li > a:hover{
@@ -64,20 +66,20 @@ li > a:hover{
 }
 
 label {
+    cursor:pointer; 
+    display:inline-block; 
     float:right; 
     padding:8px 0px; 
-    display:inline-block; 
-    cursor:pointer; 
 }
 .toggle-menu ul{
     display:table; 
     width:25px;
 }
 .toggle-menu ul li{
-    width:100%; 
-    height:3px; 
     background-color:#002e5b; 
+    height:3px; 
     margin-bottom:4px;
+    width:100%; 
 }
 .toggle-menu ul li:last-child{
     margin-bottom:0px;
@@ -95,18 +97,18 @@ input[type=checkbox],  label{display:none;}
         padding:20px 0px;
         }
     input[type=checkbox] {
+        background:none;
+        left: -9999px; 
         position: absolute; 
         top: -9999px; 
-        left: -9999px; 
-        background:none;
     }
     input[type=checkbox]:fous{
         background:none;
     }
     label { 
-        padding:8px 0px; 
-        display:inline-block; 
         cursor:pointer; 
+        display:inline-block; 
+        padding:8px 0px; 
     }
     input[type=checkbox]:checked ~ nav {
         display:block;
@@ -115,12 +117,12 @@ input[type=checkbox],  label{display:none;}
         color:white;
     }
     nav{
+        background-color: #2F96EF;
+        color: white; 
         display:none; 
         position:absolute; 
         right: 0px; 
         top: 53px; 
-        background-color: #2F96EF;
-        color: white; 
         z-index: 80;
     }
     .ul-menu{

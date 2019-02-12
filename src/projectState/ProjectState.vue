@@ -62,14 +62,14 @@ export default {
     margin: 0 auto;
 }
 .item{
-    height: 330px;
-    width: 450px;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
     background-color: white;
     color: #6B6FCE;
+    display: flex;
+    flex-direction: column;
+    height: 330px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    width: 450px;
 }
 .item:hover{
     color:#58BB45;
@@ -83,16 +83,16 @@ export default {
 
 .img-container > img{
     height: 100%;
-    width: 100%;
     margin-bottom: 10px;
+    width: 100%;
 }
 .text-container{
     border-top: 1px solid #EDEDED;
+    font-weight: 700;
+    line-height: 50px;
     text-align: center;
     text-transform: none;
-    font-weight: 700;
     vertical-align: middle;
-    line-height: 50px;
 }
 a{
     text-decoration: none;
@@ -103,18 +103,18 @@ a{
         flex-direction: column;
         flex-wrap: nowrap;
         justify-content: center;
-        width: 100%;
         margin: 0 auto;
+        width: 100%;
     }
     .item{
-        height: auto;
-        width: 100%;
-        margin-left: 0px;
-        margin-bottom: 20px;
-        display: flex;
-        flex-direction: column;
         background-color: white;
         color: #6B6FCE;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        margin-left: 0px;
+        margin-bottom: 20px;
+        width: 100%;
     }
     .first{
         margin-top: 50px;

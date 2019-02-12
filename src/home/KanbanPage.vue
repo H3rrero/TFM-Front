@@ -4,6 +4,7 @@
             <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
             <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
             <select  class="filterUser" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
+                    <option value="-1" selected>Todas</option>
                     <option v-on:click="showTaskSelectedUser(user.id)"  v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
             </select>
         </div>
@@ -168,7 +169,7 @@ export default {
     data(){
        return{ 
         currentUser: JSON.parse(localStorage.getItem('user')),
-        selectUser: 0,
+        selectUser: -1,
         tasks:[],
         haveData: false,
         show :false,
@@ -249,6 +250,8 @@ export default {
         },
         showTaskCurrentUser: function () {
             this.isActive = !this.isActive;
+            this.isActiveA = false;   
+            this.isActiveR = false;
             if(this.isActive)
                 this.usersId = [this.currentUser.id];
             else
@@ -257,10 +260,20 @@ export default {
         },
         showTaskSelectedUser: function () {
             console.log("selected: "+this.selectUser)
-           this.usersId = [this.selectUser];     
+            this.isActiveR = false;
+            this.isActiveA = false;   
+            this.isActive = false;
+            if(this.selectUser < 0){
+                this.showAllTask(); 
+            }
+            else{
+                this.usersId = [this.selectUser];
+            }
         },
         showTaskRetard: function () {
-           this.isActiveR = !this.isActiveR;   
+            this.isActiveR = !this.isActiveR;
+            this.isActiveA = false;   
+            this.isActive = false;
         },
         showAllTask:function () {
             this.isActiveA = !this.isActiveA;
@@ -280,24 +293,30 @@ export default {
 </script>
 <style scoped>
 .myTaskBt{
-    margin-left: 10px;
-    border-radius: 1rem;
-    border: 1px solid white;
     background-color: white;
+    border: none;
+    border-radius: 1rem;
     color: #2f96ef;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
+    margin-left: 10px;
     transition: background-color 1s ease;
     transition: color 1.2s ease;
 }
 .filterUser{
-    box-sizing: border-box;
-    height: 35px;
-    border: 2px solid white;
+    border: none;
     border-radius: 5px;
-    padding: 0 15px;
-    margin-left: 10px;
+    box-sizing: border-box;
     color: #2f96ef;
+    font-family: 'Roboto', sans-serif;
+    margin-left: 10px;
+    padding: 0 15px;
+    transition: background-color 1s ease;
+    transition: color 1.2s ease;
+}
+.filterUser:hover{
+    background-color:#2f96ef;
+    color: white;
 }
 .myTaskBtSelected{
     background-color: #2f96ef;
@@ -312,45 +331,45 @@ export default {
     flex-direction:column;
 }
 .filter{
-    height: 60px;
-    width: 89%;
-    border-radius: 1rem;
+    background-color: #D8E1FF;
     border: 2px solid #2F96EF;
-    background-color: #eee;
-    margin: 0 auto;
+    border-radius: 1rem;
     display: flex;
     flex-direction: row;
+    height: 60px;
+    margin: 0 auto;
     padding: 0.5rem;
+    width: 87%;
 }
 .container-Kanban{
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    width: 95%;
-    margin: 0 auto;
-    min-height: 600px;
     height: 100%;
+    justify-content: center;
+    margin: 0 auto;
     margin-top: 10px;
+    min-height: 600px;
+    width: 95%;
 }
 .tasks{
     display: flex;
     flex-direction: row;
+    height: 100%;
     justify-content: center;
-    width: 95%;
     margin: 0 auto;
     min-height: 600px;
-    height: 100%;
+    width: 95%;
     z-index: 1;
 }
 .item{
-    margin-left: 10px;
+    background-color: white;
+    border: 2px solid #2F96EF;
+    border-radius: 1rem;
+    color: #2F96EF;
     display: flex;
     flex-direction: column;
-    background-color: white;
-    color: #2F96EF;
     flex-grow: 1;
-    border-radius: 1rem;
-    border: 2px solid #2F96EF;
+    margin-left: 10px;
 }
 .item:hover{
     border-color: #17DA17;
@@ -358,33 +377,33 @@ export default {
 }
 .text-container{
     border-top: 1px solid #EDEDED;
+    font-weight: 700;
+    line-height: 50px;
     text-align: center;
     text-transform: none;
-    font-weight: 700;
     vertical-align: middle;
-    line-height: 50px;
 }
 a{
     text-decoration: none;
 }
 .task{
-    height: 80px;
-    width: 90%;
-    margin: 0 auto;
-    color: white;
     background-color: #2F96EF;
-    margin-top: 8px;
     border-radius: 1rem;
+    color: white;
     cursor: move;
+    height: 80px;
+    margin: 0 auto;
+    margin-top: 8px;
+    width: 90%;
 }
 .task:hover{
     transition:  0.5s ease-out;
     transform: scale(1.1,1.1);
 }
 .task-title{
-    padding: 2%;
     border-bottom: 1px solid black;
     display: flex;
+    padding: 2%;
 
 }
 .task-title > p{
@@ -392,15 +411,15 @@ a{
     width: 80%;
 }
 .task-title > span{
-    margin-left: 15px;
     cursor: auto;
-    font-size: 1em;
     cursor: pointer;
+    font-size: 1em;
+    margin-left: 15px;
 }
 .task-body{
     display: flex;
-    flex-direction: column;
     height: 70%;
+    flex-direction: column;
     justify-content: center;
 }
 .assigned{
@@ -409,26 +428,26 @@ a{
     margin-left: 10px;
 }
 .time{
-    margin-top: 30px;
     display: flex;
     flex-direction: row;
+    margin-top: 30px;
 
 }
 .name{
-    margin-left: 10px;
-    justify-content: center;
     display: flex;
     flex-direction: column;
     font-size: 1em;
+    justify-content: center;
+    margin-left: 10px;
 }
 .mask{
-    position: absolute;
-    height: 100%;
-    width: 100%;
     background-color: #3D3A3F;
-    top: 0;
-    z-index: 5;
+    height: 100%;
     opacity: 0.8;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 5;
 }
 .slide-fade-enter-active {
   transition: all 2.3s ease;
@@ -436,14 +455,13 @@ a{
 .slide-fade-leave-active {
     transition: all 2.3s ease;
 }
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
+.slide-fade-enter, .slide-fade-leave-to {
   transform: translateX(100%);
  
 }
 p{
-    margin-bottom: 2px;
     font-family: 'Roboto', sans-serif;
+    margin-bottom: 2px;
 }
 @media only screen and (max-width: 980px) {
     .task{

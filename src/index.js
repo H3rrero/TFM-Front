@@ -12,6 +12,7 @@ import Highcharts from 'highcharts';
 import gantt from 'highcharts/modules/gantt';
 import mapInit from 'highcharts/modules/map';
 import stockInit from 'highcharts/modules/stock';
+import exporting from 'highcharts/modules/exporting';
 import Datetime from 'vue-datetime';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import { Drag, Drop } from 'vue-drag-drop';
@@ -19,6 +20,7 @@ import { Drag, Drop } from 'vue-drag-drop';
 gantt(Highcharts);
 mapInit(Highcharts);
 stockInit(Highcharts);
+exporting(Highcharts);
 
 Vue.use(VeeValidate);
 Vue.use(HighchartsVue);

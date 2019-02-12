@@ -1,7 +1,7 @@
 <template>
 <div v-if="phases.items">
 <div class="scrolling-container" v-if="haveData">
-  <highcharts class="container" :constructor-type="'ganttChart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
+  <highcharts class="container-gantt" :constructor-type="'ganttChart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 </div>
 
@@ -188,6 +188,8 @@ export default {
       },
 
       navigator: {
+          enabled: true,
+          liveRedraw: true,
           handles: {
               backgroundColor: '#666',
               borderColor: '#AAA'
@@ -195,15 +197,29 @@ export default {
           outlineColor: '#CCC',
           maskFill: 'rgba(255,255,255,0.1)',
           series: {
+               type: 'gantt',
+               pointPlacement: 0.5,
+               pointPadding: 0.25,
               color: '#7798BF',
               lineColor: '#A6C7ED'
           },
+          yAxis: {
+            min: 0,
+            max: 3,
+            reversed: true,
+            categories: []
+        },
           xAxis: {
               gridLineColor: '#505053'
           }
       },
-
+        rangeSelector: {
+        enabled: true,
+        selected: 0
+        },
+        
       scrollbar: {
+          enabled: true,
           barBackgroundColor: '#808083',
           barBorderColor: '#808083',
           buttonArrowColor: '#CCC',
@@ -277,12 +293,13 @@ export default {
 </script>
 
 <style scoped>
-#container {
-    height: 100%;
+.container-gantt {
+    height: 80%;
     margin: 1em auto;
 }
 .scrolling-container {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: auyo;
+  width: 99%;
+  padding: 0.5rem;
 }
 </style>

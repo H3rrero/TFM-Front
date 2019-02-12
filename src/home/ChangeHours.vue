@@ -56,57 +56,57 @@ export default {
 <style scoped>
 
 .button {
+    border: 2px solid #2F96EF;
+    border-radius: 0.3em;
+    color: #2F96EF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 17px;
+    margin: 0 auto;
+    margin-left: 30px;
+    overflow: hidden;
     padding: 0.75em 0.2em;
+    position: relative;
     text-align: center;
     text-decoration: none;
-    margin: 0 auto;
-    color: #2F96EF;
-    border: 2px solid #2F96EF;
-    font-size: 17px;
-    display: inline-block;
-    border-radius: 0.3em;
     transition: all 0.2s ease-in-out;
-    position: relative;
-    overflow: hidden;
-    margin-left: 30px;
-    cursor: pointer;
 }
 .button:before {
-  content: "";
   background-color: rgba(255, 255, 255, 0.5);
-  height: 100%;
-  width: 3em;
+  content: "";
   display: block;
+  height: 100%;
+  left: -4.5em;
   position: absolute;
   top: 0;
-  left: -4.5em;
   transform: skewX(-45deg) translateX(0);
   transition: none;
+  width: 3em;
 }
 .button:hover {
   background-color: #2194e0;
-  color: #fff;
   border-bottom: 4px solid #1977b5;
+  color: #fff;
 }
 .button:hover:before {
   transform: skewX(-45deg) translateX(13.5em);
   transition: all 0.5s ease-in-out;
 }
 .container-task-hours{
-    z-index: 99;
-    height: 150px;
-    width: 400px;
     background-color: #eee;
-    position: absolute;
-    border-radius: 1rem;
     border: 2px solid #2F96EF;
+    border-radius: 1rem;
     display: flex;
-    flex-direction: column;
+    height: 150px;
     justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    width: 400px;
+    z-index: 99;
 }
 .second-container{
-display: flex;
-margin: 0 auto;
+    display: flex;
+    margin: 0 auto;
     padding: 10px;
 }
 .hours{
@@ -117,16 +117,16 @@ margin: 0 auto;
     margin-right: 30px;
 }
 .change-hours >input{
-    box-sizing: border-box;
-    height: 35px;
     border: 2px solid #2F96EF;
     border-radius: 5px;
-    padding: 0 15px;
+    box-sizing: border-box;
+    height: 35px;
     margin: 10px 0;
+    padding: 0 15px;
     width: 100px;
 }
 p{
-    margin-bottom: 2px;
     font-family: 'Roboto', sans-serif;
+    margin-bottom: 2px;
 }
 </style>
