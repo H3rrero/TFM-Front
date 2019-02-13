@@ -164,9 +164,9 @@ export default {
     font-weight: 700;
     vertical-align: middle;
 }
+.form-task-data{
     display: flex;
     flex-direction: column;
-.form-task-data{
 }
 .item-task-data{  
     margin-top: 10px;
@@ -174,12 +174,12 @@ export default {
     width: 95%;
 }
 .item-button-data{  
-    width: 95%;
-}
     margin: 0 auto;
     margin-top: 40px;
-    margin: 0 auto;
+    width: 95%;
+}
 .item-text-data{  
+    margin: 0 auto;
     width: 95%;
 
 }

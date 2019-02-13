@@ -18,7 +18,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop" :transfer-data="task" >
-                                <div class="task" v-if="task.phase == 'desarrollo' && showTaskUser(task.userId)" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'desarrollo' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span   v-on:click="showMenu(task)">
@@ -52,7 +52,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task">
-                                <div class="task" v-if="task.phase == 'pruebas' && showTaskUser(task.userId)" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'pruebas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span  v-on:click="showMenu(task)">
@@ -87,7 +87,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-if="task.phase == 'produccion' && showTaskUser(task.userId)"  >
+                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'produccion' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -122,7 +122,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-if="task.phase == 'pruebas finalizadas' && showTaskUser(task.userId)"  >
+                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'pruebas finalizadas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -171,6 +171,7 @@ export default {
         currentUser: JSON.parse(localStorage.getItem('user')),
         selectUser: -1,
         tasks:[],
+        retard:[],
         haveData: false,
         show :false,
         showH:false,
@@ -215,6 +216,17 @@ export default {
          
             this.haveData = true;
             this.tasks = taskss;
+            this.tasks.forEach(element => {
+                let dateTask = new Date(element.dateF);
+                let date = new Date();
+                console.log(dateTask + ">" + date);
+                if(dateTask < date){
+                    console.log("Llego tarde:")
+                    console.log(dateTask + ">" + date);
+                    this.retard.push(element.id);
+                    console.log(this.retard);
+                    }
+            });
       
         },
         showMenu: function (task) {
@@ -248,10 +260,18 @@ export default {
         showTaskUser: function (id) {
            return this.usersId.includes(id);
         },
+        showTaskRetard: function (id) {
+            console.log("isActiveR: "+this.isActiveR);
+            if(this.isActiveR)
+                return this.retard.includes(id);
+            else
+                return true;
+        },
         showTaskCurrentUser: function () {
             this.isActive = !this.isActive;
             this.isActiveA = false;   
             this.isActiveR = false;
+            this.selectUser = -1;
             if(this.isActive)
                 this.usersId = [this.currentUser.id];
             else
@@ -395,6 +415,9 @@ a{
     margin: 0 auto;
     margin-top: 8px;
     width: 90%;
+}
+.taskRetard{
+    background-color: red;
 }
 .task:hover{
     transition:  0.5s ease-out;
