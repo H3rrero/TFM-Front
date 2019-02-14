@@ -18,7 +18,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop" :transfer-data="task" >
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'desarrollo' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'desarrollo' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span   v-on:click="showMenu(task)">
@@ -52,7 +52,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task">
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'pruebas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span  v-on:click="showMenu(task)">
@@ -87,7 +87,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'produccion' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
+                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'produccion' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -122,7 +122,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.phase == 'pruebas finalizadas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
+                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas finalizadas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -181,7 +181,7 @@ export default {
         sendTask: {},
         usersId:[],
         userss:[],
-        phase:""
+        state:""
        }
     },
     computed: {
@@ -242,10 +242,10 @@ export default {
             console.log(task.title);
         },
         handleDrop(data, event) {
-            data.phase = this.phase;
+            data.state = this.state;
         },
-        changePhase: function (phase) {
-            this.phase = phase;
+        changePhase: function (state) {
+            this.state = state;
         },
         hideMenu: function () {
              console.log("hideMenu");

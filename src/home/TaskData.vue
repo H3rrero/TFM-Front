@@ -13,7 +13,7 @@
             </div>
              <div class="item-task-data">
                 <p>Cambiar fase:</p>
-                <select v-model="myTask.phase" >
+                <select v-model="myTask.state" >
                     <option value="desarrollo">Desarrollo</option>
                     <option value="pruebas">Pruebas</option>
                     <option value="pruebas finalizadas">Pruebas finalizadas</option>

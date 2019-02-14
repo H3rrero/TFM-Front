@@ -47,6 +47,12 @@ export default {
           }
       },
     xAxis: {
+         plotLines: [{
+        color: 'red', // Color value
+        dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+        value: new Date(), // Value of where the line will appear
+        width: 2 // Width of the line    
+        }],
           gridLineColor: '#707073',
           labels: {
               style: {
@@ -237,11 +243,17 @@ export default {
       contrastTextColor: '#F0F0F3',
       maskColor: 'rgba(255,255,255,0.3)',
         tooltip: {
-          xDateFormat: '%e %b %Y, %H:%M',
-          backgroundColor: 'rgba(0, 0, 0, 0.85)',
-          style: {
+            formatter: function() {
+                return  '<b>'+this.point.name+'<b>' 
+                +'<br> start: '+this.point.dateIni 
+                + '<br> end: '+this.point.dateEnd
+                +'<br> Horas :'+this.point.hours+'/'+this.point.totalHours;
+            },
+            xDateFormat: '%e %b %Y, %H:%M',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            style: {
               color: '#F0F0F0'
-          }
+            }
       },
     series: [{
       name: 'Project 1',
