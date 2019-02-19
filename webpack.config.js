@@ -6,6 +6,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue']
     },
+    
     module: {
         rules: [
             {
