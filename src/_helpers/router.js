@@ -11,6 +11,7 @@ Vue.use(Router);
 
 export const router = new Router({
   mode: 'history',
+  base: '/TFM-Front/',
   routes: [
     { path: '/kanban', component: KanbanPage },
     { path: '/login', component: LoginPage },
