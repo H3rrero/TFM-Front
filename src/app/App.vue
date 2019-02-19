@@ -92,7 +92,7 @@ table {
 }
 .content{
     grid-area: content;
-    height: 97%;
+    height: 100%;
 }
 .navigator{
     grid-area: header;

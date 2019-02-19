@@ -29,7 +29,7 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: 'http://localhost:3000'
+            apiUrl: 'https://damp-plateau-51975.herokuapp.com'
         })
     }
 }
