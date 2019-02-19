@@ -10,7 +10,7 @@ import ProjectState from '../projectState/ProjectState'
 Vue.use(Router);
 
 export const router = new Router({
-  mode: 'history',
+  mode: 'hash',
   base: '/TFM-Front/',
   routes: [
     { path: '/kanban', component: KanbanPage },
