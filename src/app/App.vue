@@ -96,7 +96,7 @@ table {
 }
 .navigator{
     grid-area: header;
-    height: 75px;
+    height: 55px;
    
 }
 </style>

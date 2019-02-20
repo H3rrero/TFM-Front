@@ -195,7 +195,7 @@ export default {
           taskService.getAll().then(
             taskss=>{
               this.updateData(taskss);
-             
+               this.haveData = true;
             }
        );
         },
@@ -356,7 +356,7 @@ export default {
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
-    height: 60px;
+    height: 35px;
     margin: 0 auto;
     padding: 0.5rem;
     width: 87%;
@@ -368,7 +368,6 @@ export default {
     justify-content: center;
     margin: 0 auto;
     margin-top: 10px;
-    min-height: 600px;
     width: 95%;
 }
 .tasks{
@@ -377,7 +376,6 @@ export default {
     height: 100%;
     justify-content: center;
     margin: 0 auto;
-    min-height: 600px;
     width: 95%;
     z-index: 1;
 }
@@ -407,7 +405,7 @@ a{
     text-decoration: none;
 }
 .task{
-    background-color: #2F96EF;
+    background-color: #6F9CEB;
     border-radius: 1rem;
     color: white;
     cursor: move;
@@ -417,7 +415,7 @@ a{
     width: 90%;
 }
 .taskRetard{
-    background-color: red;
+    background-color: #FF4646;
 }
 .task:hover{
     transition:  0.5s ease-out;

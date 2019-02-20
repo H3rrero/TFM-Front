@@ -149,7 +149,7 @@ export default {
     height: 100%;
     flex-direction: column;
     margin:0;
-    overflow: scroll;
+    overflow: auto;
     position: absolute;
     right: 0;
     top:0;
