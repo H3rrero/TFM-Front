@@ -6,6 +6,7 @@ import LoginPage from '../login/LoginPage'
 import RegisterPage from '../register/RegisterPage'
 import GanttState from '../projectState/GanttState'
 import ProjectState from '../projectState/ProjectState'
+import TasksPage from '../tasks/TasksPage'
 
 Vue.use(Router);
 
@@ -14,6 +15,7 @@ export const router = new Router({
   base: '/TFM-Front/',
   routes: [
     { path: '/kanban', component: KanbanPage },
+    { path: '/tasks', component: TasksPage },
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
     { path: '/gantt', component:  GanttState},

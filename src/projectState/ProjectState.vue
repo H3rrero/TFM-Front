@@ -1,45 +1,45 @@
 <template>
 <div class="container-state">
     <router-link to="/gantt">
-<div class="item first" >
-    <div class="img-container">
-        <img src="src/img/gantt.png" alt="diagrama de gantt">
-    </div>
-    <div class="text-container">
-        <p>Diagrama de Gantt</p>
-    </div>
-</div>
+        <div class="item first" >
+            <div class="img-container">
+                <img src="src/img/gantt.png" alt="diagrama de gantt">
+            </div>
+            <div class="text-container">
+                <p>Diagrama de Gantt</p>
+            </div>
+        </div>
     </router-link>
-<router-link to="/gantt">
-<div class="item">
-       <div class="img-container">
-        <img src="src/img/gantt.png" alt="diagrama de gantt">
-    </div>
-      <div class="text-container">
-          <p>Diagrama valor ganado</p>
-    </div>
-</div>
-</router-link>
-<router-link to="/gantt">
-<div class="item">
-      <div class="img-container">
-        <img src="src/img/gantt.png" alt="diagrama de gantt">
-    </div>
-      <div class="text-container">
-          <p>Diagrama tareas</p>
-      </div>
-</div>
-</router-link>
-<router-link to="/gantt">
-<div class="item">
-       <div class="img-container">
-        <img src="src/img/gantt.png" alt="diagrama de gantt">
-    </div>
-      <div class="text-container">
-          <p>Diagrama economico</p>
-    </div>
-</div>
-</router-link>
+    <router-link to="/gantt">
+        <div class="item">
+            <div class="img-container">
+                <img src="src/img/gantt.png" alt="diagrama de gantt">
+            </div>
+            <div class="text-container">
+                <p>Diagrama valor ganado</p>
+            </div>
+        </div>
+    </router-link>
+    <router-link to="/gantt">
+        <div class="item">
+            <div class="img-container">
+                <img src="src/img/gantt.png" alt="diagrama de gantt">
+            </div>
+            <div class="text-container">
+                <p>Diagrama tareas</p>
+            </div>
+        </div>
+    </router-link>
+    <router-link to="/gantt">
+        <div class="item">
+            <div class="img-container">
+                <img src="src/img/gantt.png" alt="diagrama de gantt">
+            </div>
+            <div class="text-container">
+                <p>Diagrama economico</p>
+            </div>
+        </div>
+    </router-link>
 </div>
 
 </template>
