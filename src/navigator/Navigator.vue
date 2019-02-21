@@ -25,7 +25,7 @@
 
 <style>
 .logo{
-    color: #2F96EF; 
+    color: #333399; 
     font-size:24px; 
     font-weight:600; 
     float:left;
@@ -52,17 +52,17 @@ nav{
 }
 
 header > a{
-    color: #2F96EF;
+    color: #333399;
     text-decoration: none;
 }
     
 li > a{
-    color: #2F96EF;
+    color: #333399;
     text-decoration: none;
 }
 
 li > a:hover{
-    color: #462255;
+    color:  #3399FF;
 }
 
 label {
@@ -117,7 +117,7 @@ input[type=checkbox],  label{display:none;}
         color:white;
     }
     nav{
-        background-color: #2F96EF;
+        background-color: #333399;
         color: white; 
         display:none; 
         position:absolute; 
@@ -133,9 +133,7 @@ input[type=checkbox],  label{display:none;}
 
 }
 
-@media only screen and (max-width: 980px) {
-    .content{width:90%;}
-}
+
 
 @media only screen and (max-width: 568px) {
     h1{
