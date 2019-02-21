@@ -316,7 +316,7 @@ export default {
     background-color: white;
     border: none;
     border-radius: 1rem;
-    color: #2f96ef;
+    color: #333399;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
@@ -327,7 +327,7 @@ export default {
     border: none;
     border-radius: 5px;
     box-sizing: border-box;
-    color: #2f96ef;
+    color: #333399;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
     padding: 0 15px;
@@ -335,15 +335,15 @@ export default {
     transition: color 1.2s ease;
 }
 .filterUser:hover{
-    background-color:#2f96ef;
+    background-color:#333399;
     color: white;
 }
 .myTaskBtSelected{
-    background-color: #2f96ef;
+    background-color: #333399;
     color: white;
 }
 .myTaskBt:hover{
-    background-color: #2f96ef;
+    background-color: #333399;
     color: white;
 }
 .filter-kamban{
@@ -352,7 +352,7 @@ export default {
 }
 .filter{
     background-color: #D8E1FF;
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -381,9 +381,9 @@ export default {
 }
 .item{
     background-color: white;
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 1rem;
-    color: #2F96EF;
+    color: #333399;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -405,7 +405,7 @@ a{
     text-decoration: none;
 }
 .task{
-    background-color: #6F9CEB;
+    background-color: #333399;
     border-radius: 1rem;
     color: white;
     cursor: move;
