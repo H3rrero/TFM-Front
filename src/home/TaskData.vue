@@ -6,9 +6,8 @@
         <div class="form-task-data">
             <div class="item-task-data">
                 <p>Reasignar tarea:</p>
-                <select v-model="myTask.assigned" >
-                    <option value="Alejandro Fernandez Herrero">Alejandro Fernández Herrero</option>
-                    <option value="Pedro picapiedra">Pedro picapiedra</option>
+                 <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" >
+                    <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
                 </select>
             </div>
              <div class="item-task-data">
@@ -74,6 +73,7 @@
 <script>
 
  import { taskService } from '../_services/task.service';
+ import { userService} from '../_services/user.service';
 export default {
     props: {
    myTask: Object
@@ -83,12 +83,14 @@ export default {
        haveData: false,
        result: "",
        hours:0,
-       coment:""
+       coment:"",
+       userss:[],
        }
     },
     created () {
         console.log(this.myTask);
         console.log(this.myTask.assigned);
+        this.getUsers();
     },
     methods:{
         updateTask: function () {
@@ -101,6 +103,23 @@ export default {
                     this.result = "La tarea ha sido actualizada.";
                 }
             );
+        },
+        getUsers: function () {
+          userService.getAll().then(
+            users=>{
+                users.forEach(element => {
+                    this.userss = users;
+                });
+             
+            }
+       );
+        },
+        showTaskSelectedUser: function () {
+           this.userss.forEach(element => {
+               if(element.id == this.myTask.userId){
+                   this.myTask.assigned = element.firstname +" "+element.lastname
+               }
+           });
         }
     }
 };

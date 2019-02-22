@@ -1,32 +1,24 @@
 <template>
     <div>
-        <div class="task-container">
+        <div class="task_container">
             
-            <drop @dragover="asignedTask(-1,'','')"  class="un-assigned-task"  v-if="haveData" >
+            <drop @dragover="asignedTask(-1,'','')"  class="unassigned_task"  v-if="haveData" >
                 <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task" >
-                        <div class="tasksPage-task-unassigned" v-if="task.userId == -1" >
-                            <div class="tasksPage-task-title">
-                                <p>{{task.title}}</p>
-                            </div>
-                        </div>
+                         <task v-if="task.userId == -1" :task="task"></task>  
                     </drag>
                 </div>
             </drop>
 
             <div class="programmers">
-                <div class="programmers-item"  v-for="user in userss" :key="user.id">
-                    <div class="programmers-item-title">
+                <div class="programmers_item"  v-for="user in userss" :key="user.id">
+                    <div class="programmers_item_title">
                         {{user.firstname + ' '+ user.lastname}}
                     </div>
-                    <drop @dragover="asignedTask(user.id,user.firstname,user.lastname)" class="programmers-item-task">
+                    <drop @dragover="asignedTask(user.id,user.firstname,user.lastname)" class="programmers_item_task">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task" >
-                                <div class="tasksPage-task"  v-if="task.userId == user.id">
-                                    <div class="tasksPage-task-title">
-                                        <p>{{task.title}}</p>
-                                    </div>
-                                </div>
+                               <task v-if="task.userId == user.id" :task="task"></task>
                             </drag>
                         </div>
                     </drop>
@@ -95,12 +87,12 @@ export default {
 };
 </script>
 <style scoped>
-.task-container{
+.task_container{
     display: flex;
     flex-direction: row;
     height: 100%;
 }
-.un-assigned-task{
+.unassigned_task{
     background-color: white;
     border: 2px solid #333399;
     border-radius: 1rem;
@@ -120,7 +112,7 @@ export default {
     margin-right: 10px;
     padding: 1rem;
 }
-.programmers-item{
+.programmers_item{
     background-color: white;
     color: #6B6FCE;
     display: flex;
@@ -130,11 +122,11 @@ export default {
     min-height: 50px;
     width: 300px;
 }
-.programmers-item:hover{
+.programmers_item:hover{
     transform: scale(1.03,1.03);
     transition:  0.3s ease-out;
 }
-.programmers-item-title{
+.programmers_item_title{
     height: 20px;
     color: white;
     font-family: 'Roboto', sans-serif;
@@ -143,39 +135,9 @@ export default {
     border-bottom: 1px solid white;
     background-color: #333399;
 }
-.programmers-item-task{
+.programmers_item_task{
     height: 90%;
     background-color: #333399;
 }
-.tasksPage-task{
-    background-color: white;
-    border-radius: 1rem;
-    color: #333399;
-    cursor: move;
-    margin: 0 auto;
-    margin-top: 8px;
-    width: 95%;
-    text-align: center;
-}
-.tasksPage-task-unassigned{
-    background-color: #333399;
-    border-radius: 1rem;
-    color: white;
-    cursor: move;
-    margin: 0 auto;
-    margin-top: 8px;
-    width: 95%;
-    text-align: center;
-}
-.tasksPage-task-unassigned:hover{
-    transform: scale(1.03,1.03);
-    transition:  0.3s ease-out;
-}
-.tasksPage-task:hover{
-    transform: scale(1.03,1.03);
-    transition:  0.3s ease-out;
-}
-.tasksPage-task-title{
-    padding: 2%;
-}
+
 </style>
