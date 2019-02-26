@@ -10,10 +10,10 @@
             </div>
         </div>
     </router-link>
-    <router-link to="/gantt">
+    <router-link to="/burndown">
         <div class="item">
             <div class="img-container">
-                <img src="src/img/gantt.png" alt="diagrama de gantt">
+                <img src="src/img/vg.png" alt="diagrama de gantt">
             </div>
             <div class="text-container">
                 <p>Diagrama valor ganado</p>

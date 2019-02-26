@@ -7,6 +7,7 @@ import RegisterPage from '../register/RegisterPage'
 import GanttState from '../projectState/GanttState'
 import ProjectState from '../projectState/ProjectState'
 import TasksPage from '../tasks/TasksPage'
+import BurndownState from '../projectState/BurndownState'
 
 Vue.use(Router);
 
@@ -19,6 +20,7 @@ export const router = new Router({
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
     { path: '/gantt', component:  GanttState},
+    { path: '/burndown', component:  BurndownState},
     { path: '/state', component:  ProjectState},
 
     // otherwise redirect to home

@@ -3,6 +3,7 @@
         <div class="filter">
             <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
             <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
+            <input type="text" class="myTaskInput" v-model="taskTitle">
             <select  class="filterUser" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
                     <option value="-1" selected>Todas</option>
                     <option v-on:click="showTaskSelectedUser(user.id)"  v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
@@ -18,7 +19,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop" :transfer-data="task" >
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'desarrollo' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'desarrollo' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span   v-on:click="showMenu(task)">
@@ -52,7 +53,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task">
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span  v-on:click="showMenu(task)">
@@ -87,7 +88,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'produccion' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
+                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'produccion' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -122,7 +123,7 @@
                 <div class="task-container">
                     <div v-for="task in tasks" :key="task.id">
                         <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas finalizadas' && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
+                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas finalizadas' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
                                 <div class="task-title">
                                     <p>{{task.title}}</p>
                                     <span  v-on:click="showMenu(task)">
@@ -172,6 +173,7 @@ export default {
         selectUser: -1,
         tasks:[],
         retard:[],
+        taskTitle:"",
         haveData: false,
         show :false,
         showH:false,
@@ -260,6 +262,29 @@ export default {
         showTaskUser: function (id) {
            return this.usersId.includes(id);
         },
+        showTaskfilter:function (id) {
+            console.log(this.taskTitle)
+            var ret = false;
+          if(this.taskTitle == ""){
+              return true;
+          } else{
+               console.log("else")
+              this.tasks.forEach(element => {
+                  console.log("title: "+element.title);
+                  console.log("id: "+element.id);
+                  console.log("id recibido: "+id);
+                  console.log(element.title.includes(this.taskTitle))
+                  console.log(element.id == id)
+                if(element.id == id && (element.title.toUpperCase().includes(this.taskTitle.toUpperCase()) 
+                || element.assigned.toUpperCase().includes(this.taskTitle.toUpperCase()))){
+                    console.log("if")
+                    ret = true;
+                }
+              });
+              console.log("Final:"+ret);
+              return ret;
+          }
+        },
         showTaskRetard: function (id) {
             console.log("isActiveR: "+this.isActiveR);
             if(this.isActiveR)
@@ -322,6 +347,22 @@ export default {
     margin-left: 10px;
     transition: background-color 1s ease;
     transition: color 1.2s ease;
+}
+.myTaskInput{
+     background-color: white;
+    border: none;
+    border-radius: 1rem;
+    padding-left: 5px;
+    color: #333399;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    margin-left: 10px;
+    transition: background-color 1s ease;
+    transition: color 1.2s ease;
+}
+.myTaskInput:hover{
+    background-color: #333399;
+    color: white;
 }
 .filterUser{
     border: none;
