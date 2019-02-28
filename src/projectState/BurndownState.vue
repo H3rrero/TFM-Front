@@ -1,18 +1,22 @@
 <template>
-<div v-if="phases.items">
+
 <div class="scrolling_container" v-if="haveDataCh">
   <highcharts class="container_chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
-</div>
+
 
 </template>
 <script>
  import { mapState, mapActions } from 'vuex'
  import { phaseService } from '../_services/phase.service';
+ import { projectService } from '../_services/project.service';
 export default {
   data () {
     return {
-        fasesg:[],
+        project:{},
+        fasesB:[],
+        realData:[],
+        estData:[],
         prueba: 'haha',
         haveDataCh : false,
         updateArgs: [true, true, true],
@@ -37,7 +41,7 @@ export default {
          title: {
             text: 'Sprint'
         },
-        categories: [1,2,3,4,5,6,7,8,9,10,11]
+        categories: [1,2,3,4,5,6,7,8,9,10]
     },
     plotOptions: {
         series: {
@@ -49,11 +53,11 @@ export default {
 
     series: [{
         name: 'Finalizacion estimada',
-        data: [500,450,400,350,300,250,200,150,100,50,0]
+        data: []
     },
     {
         name: 'Real',
-        data: [500,475,410,375,325,275,220,155,95,40,0]
+        data: [540,510]
     }],
 
     responsive: {
@@ -74,36 +78,46 @@ export default {
     }
   },
  
-    computed: {
-        ...mapState({
-            account: state => state.account,
-            phases: state => state.phases.all
-        })
-    },
+   
     created () {
-      console.log("created porjectstate");
-        this.getAllPhases()
+      this.getSeries();
        
-    },
-    mounted(){
-      console.log("mounted porjectstate");
-      this.getSeries()
     },
     methods: {
       
-        ...mapActions('phases', {
-            getAllPhases: 'getAll',
-        }),
         getSeries: function () {
           phaseService.getAll().then(
             fases=>{
+            this.fasesB=fases;
+              this.getProject();
+             
+            }
+       );
+        },
+        getProject: function () {
+          projectService.getById(0).then(
+            element=>{
+            this.project=element;
               this.updateData();
              
             }
        );
         },
         updateData: function () {
-         
+         let estTotal = this.project.planHours;
+         let realEst = this.project.planHours;
+         this.fasesB.forEach(element => {
+             let end= Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf));
+             let date = new Date();
+             estTotal = estTotal-element.totalHours;
+             realEst = realEst - element.completedHours;
+             this.estData.push(estTotal);
+             if(end < date){
+                this.realData.push(realEst);
+             }
+             this.stockOptions.series[0].data = this.estData;
+             this.stockOptions.series[1].data = this.realData;
+         });
       this.haveDataCh = true;
       
         }
