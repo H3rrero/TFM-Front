@@ -3,7 +3,7 @@
         <div class="filter">
             <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
             <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
-            <input type="text" class="myTaskInput" v-model="taskTitle">
+            <input type="text" class="myTaskInput" v-model="taskTitle" >
             <select  class="filterUser" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
                     <option value="-1" selected>Todas</option>
                     <option v-on:click="showTaskSelectedUser(user.id)"  v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
@@ -12,14 +12,14 @@
         <div class="container-Kanban" v-if="haveData"  >
             <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
         <div class="tasks">
-            <drop @dragover="changePhase('desarrollo')" class="item">
+            <drop @dragover="changePhase(state.name)" class="item" v-for="state in states" :key="state.id">
                 <div class="text-container">
-                        <p>Desarrollo</p>
+                        <p>{{state.name}}</p>
                     </div>
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop" :transfer-data="task" >
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'desarrollo' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == state.name && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span   v-on:click="showMenu(task)">
@@ -46,111 +46,6 @@
                         </div>
                     </div>
             </drop>
-            <drop @dragover="changePhase('pruebas')"  class="item">
-                <div class="text-container">
-                        <p>Pruebas</p>
-                    </div>
-                    <div class="task-container">
-                        <div v-for="task in tasks" :key="task.id">
-                            <drag @dragend="handleDrop"  :transfer-data="task">
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
-                                    <div class="task-title">
-                                        <p>{{task.title}}</p>
-                                        <span  v-on:click="showMenu(task)">
-                                            <i class="fas fa-edit"></i>
-                                        </span> 
-                                        <span v-on:click="showHours(task)">
-                                            <i class="far fa-clock"></i>
-                                        </span>
-                                    </div>
-                                    <div class="task-body">
-                                        <div class="assigned">
-                                            <div class="icon">
-                                                <span style="font-size: 1em;">
-                                                    <i class="far fa-user-circle"></i>
-                                                </span> 
-                                            </div>
-                                            <div class="name">
-                                                <p>{{task.assigned}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </drag>
-                        </div>
-                    </div>
-            
-            </drop>
-            <drop @dragover="changePhase('produccion')" class="item">
-            <div class="text-container">
-                    <p>Producción</p>
-                </div>
-                <div class="task-container">
-                    <div v-for="task in tasks" :key="task.id">
-                        <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'produccion' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
-                                <div class="task-title">
-                                    <p>{{task.title}}</p>
-                                    <span  v-on:click="showMenu(task)">
-                                            <i class="fas fa-edit"></i>
-                                    </span> 
-                                    <span v-on:click="showHours(task)">
-                                            <i class="far fa-clock"></i>
-                                    </span>
-                                </div>
-                                <div class="task-body">
-                                    <div class="assigned">
-                                        <div class="icon">
-                                            <span style="font-size: 1em;">
-                                                <i class="far fa-user-circle"></i>
-                                            </span> 
-                                        </div>
-                                        <div class="name">
-                                            <p>{{task.assigned}}</p>
-                                        </div>
-                                    </div>
-                                
-                                </div>
-                            </div>
-                        </drag>
-                    </div>
-                </div>
-            </drop>
-            <drop @dragover="changePhase('pruebas finalizadas')"  class="item">
-                <div class="text-container">
-                    <p>Pruebas finalizadas</p>
-                </div>
-                <div class="task-container">
-                    <div v-for="task in tasks" :key="task.id">
-                        <drag @dragend="handleDrop"  :transfer-data="task">
-                            <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == 'pruebas finalizadas' && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )"  >
-                                <div class="task-title">
-                                    <p>{{task.title}}</p>
-                                    <span  v-on:click="showMenu(task)">
-                                            <i class="fas fa-edit"></i>
-                                    </span> 
-                                    <span v-on:click="showHours(task)">
-                                            <i class="far fa-clock"></i>
-                                    </span>
-                                </div>
-                                <div class="task-body">
-                                    <div class="assigned">
-                                        <div class="icon">
-                                            <span style="font-size: 1em;">
-                                                <i class="far fa-user-circle"></i>
-                                            </span> 
-                                        </div>
-                                        <div class="name">
-                                            <p>{{task.assigned}}</p>
-                                        </div>
-                                    </div>
-                                
-                                </div>
-                            </div>
-                        </drag>
-                    </div>
-                </div>
-            </drop>
         </div>
             <transition name="slide-fade">
                 <taskdata v-if="show" :myTask="sendTask"></taskdata>  
@@ -164,6 +59,7 @@
 
 <script>
 
+ import { stateService } from '../_services/states.service';
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
 export default {
@@ -172,6 +68,7 @@ export default {
         currentUser: JSON.parse(localStorage.getItem('user')),
         selectUser: -1,
         tasks:[],
+        states:[],
         retard:[],
         taskTitle:"",
         haveData: false,
@@ -191,6 +88,7 @@ export default {
     created () {
         this.getSeries();
         this.getUsers();
+        this.getStates();
     },
     methods: {
        getSeries: function () {
@@ -198,6 +96,20 @@ export default {
             taskss=>{
               this.updateData(taskss);
                this.haveData = true;
+            }
+       );
+        },
+        updateTask: function (task) {
+            taskService.changeTask(task).then(
+                resp => {
+                    this.result = "La tarea ha sido actualizada.";
+                }
+            );
+        },
+        getStates: function () {
+          stateService.getAll().then(
+            elements=>{
+              this.states = elements;
             }
        );
         },
@@ -245,6 +157,7 @@ export default {
         },
         handleDrop(data, event) {
             data.state = this.state;
+            this.updateTask(data);
         },
         changePhase: function (state) {
             this.state = state;

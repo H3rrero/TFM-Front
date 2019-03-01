@@ -42,7 +42,8 @@ export default {
        userss:[],
     haveData: false,
     userAsignedId:-1,
-    assigned:""
+    assigned:"",
+    phase:""
        }
     },
     created () {
@@ -74,11 +75,17 @@ export default {
             console.log(data.userId)
             data.userId = this.userAsignedId;
             data.assigned = this.assigned;
+            data.state = this.phase;
             taskService.changeTask(data);
         },
         asignedTask: function (id,name,lastName) {
             this.userAsignedId = id;
             this.assigned = name + " " + lastName;
+            if(id == -1){
+                this.phase = 'sin asignar';
+            }else{
+                this.phase = 'Backlog';
+            }
             console.log(id);
         }
       
