@@ -1,7 +1,10 @@
 <template>
 
 <div class="scrolling_container" v-if="haveDataCh">
-  <highcharts class="container_chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
+    <select  class="filterUser" v-model="selectPhase" v-on:change="updateData()" >
+        <option  v-for="phase in fasesB" :key="phase.id" :value="phase.id">{{phase.name}}</option>
+    </select>
+    <highcharts class="container_chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 
 
@@ -10,11 +13,14 @@
  import { mapState, mapActions } from 'vuex'
  import { phaseService } from '../_services/phase.service';
  import { projectService } from '../_services/project.service';
+ import { taskService } from '../_services/task.service';
 export default {
   data () {
     return {
         project:{},
         fasesB:[],
+        taskb:[],
+        selectPhase:0,
         realData:[],
         estData:[],
         prueba: 'haha',
@@ -84,7 +90,14 @@ export default {
        
     },
     methods: {
-      
+      getTasks: function () {
+          taskService.getAll().then(
+            taskss=>{
+             this.taskb = taskss;
+             this.updateData();
+            }
+       );
+        },
         getSeries: function () {
           phaseService.getAll().then(
             fases=>{
@@ -98,28 +111,34 @@ export default {
           projectService.getById(0).then(
             element=>{
             this.project=element;
-              this.updateData();
+              this.getTasks();
              
             }
        );
         },
         updateData: function () {
-         let estTotal = this.project.planHours;
-         let realEst = this.project.planHours;
+         var oneDay = 24*60*60*1000;
+         this.estData = [];
          this.fasesB.forEach(element => {
-             let end= Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf));
-             let date = new Date();
-             estTotal = estTotal-element.totalHours;
-             realEst = realEst - element.completedHours;
-             console.log(element);
-             console.log(realEst);
-             this.estData.push(estTotal);
-             if(end < date){
-                this.realData.push(realEst);
-                console.log(this.realData);
-             }
-             this.stockOptions.series[0].data = this.estData;
-             this.stockOptions.series[1].data = this.realData;
+             let estTotal = element.totalHours;
+             let end=new Date(Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf)));
+             let start = new Date(Date.UTC(parseFloat(element.yeari),parseFloat(element.monthi),parseFloat(element.dayi)));
+            var diffDays = Math.round(Math.abs((start.getTime() - end.getTime())/(oneDay)));
+            let time = element.totalHours/diffDays;
+           
+            if(element.id == this.selectPhase){
+                for (let index = 0; index < diffDays; index++) {
+                     console.log(estTotal);
+                    if(index+1 == diffDays)
+                        estTotal = 0;
+                    else
+                        estTotal = (estTotal - time)
+                   this.estData.push(parseInt(estTotal));
+                    
+                }
+                this.stockOptions.series[0].data = this.estData;
+                 this.stockOptions.series[1].data = this.estData;
+            }
          });
       this.haveDataCh = true;
       
