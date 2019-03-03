@@ -3,6 +3,7 @@ import { authHeader } from '../_helpers';
 
 export const phaseService = {
     getAll,
+    getById
 };
 
 
@@ -20,7 +21,14 @@ function getAll() {
     console.log("service phases");
     return fetch(`${config.apiUrl}/phases`, requestOptions).then(handleResponse);
 }
-
+function getById(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+    console.log("service phases");
+    return fetch(`${config.apiUrl}/phases/${id}`, requestOptions).then(handleResponse);
+}
 
 function handleResponse(response) {
     

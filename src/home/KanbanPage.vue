@@ -19,7 +19,7 @@
                     <div class="task-container">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop" :transfer-data="task" >
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == state.name && showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
+                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == state.name && !task.deleted &&showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
                                     <div class="task-title">
                                         <p>{{task.title}}</p>
                                         <span   v-on:click="showMenu(task)">
@@ -28,6 +28,9 @@
                                         <span v-on:click="showHours(task)">
                                             <i class="far fa-clock"></i>
                                         </span>
+                                         <span class="trash"  v-on:click="deletedTask(task)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span> 
                                     </div>
                                     <div class="task-body">
                                         <div class="assigned">
@@ -134,7 +137,7 @@ export default {
                 let dateTask = new Date(element.dateF);
                 let date = new Date();
                 console.log(dateTask + ">" + date);
-                if(dateTask < date){
+                if(dateTask < date && element.state != "Terminada"){
                     console.log("Llego tarde:")
                     console.log(dateTask + ">" + date);
                     this.retard.push(element.id);
@@ -154,6 +157,11 @@ export default {
             this.showH = true;
             this.sendTask = task;
             console.log(task.title);
+        },
+        deletedTask: function (task) {
+            console.log("deletedTask");
+            task.deleted=true;
+            this.updateTask(task);
         },
         handleDrop(data, event) {
             data.state = this.state;
@@ -363,10 +371,9 @@ a{
     border-radius: 1rem;
     color: white;
     cursor: move;
-    height: 80px;
     margin: 0 auto;
     margin-top: 8px;
-    width: 90%;
+    width: 97%;
 }
 .taskRetard{
     background-color: #FF4646;
@@ -389,11 +396,14 @@ a{
     cursor: auto;
     cursor: pointer;
     font-size: 1em;
-    margin-left: 15px;
+    margin-left: 7px;
+}
+.trash{
+    margin-right: 5px;
 }
 .task-body{
     display: flex;
-    height: 70%;
+    margin-top: 10px;
     flex-direction: column;
     justify-content: center;
 }

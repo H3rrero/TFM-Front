@@ -3,7 +3,8 @@ import { authHeader } from '../_helpers';
 
 export const taskService = {
     getAll,
-    changeTask
+    changeTask,
+    getByPhase
 };
 
 
@@ -20,6 +21,14 @@ function getAll() {
     };
     console.log("service task");
     return fetch(`${config.apiUrl}/tasks`, requestOptions).then(handleResponse);
+}
+function getByPhase(idPhase) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+    console.log("service task");
+    return fetch(`${config.apiUrl}/tasks/tasksByPhase/${idPhase}`, requestOptions).then(handleResponse);
 }
 function changeTask(task) {
     const requestOptions = {
