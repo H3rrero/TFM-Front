@@ -7,14 +7,17 @@
                 <input type="checkbox" id="toggle-1">
                 <nav>
                     <ul class="ul-menu">
-                        <li>
+                        <li title="DIferentes diagramas del estado del proyecto">
                             <router-link to="/state">Estado del proyecto</router-link>
                         </li>
-                        <li>
-                            <router-link to="/kanban">kamban</router-link>
+                        <li title="ver kamban actual del proyecto">
+                            <router-link to="/kanban/-1">kamban</router-link>
                         </li>
-                        <li>
+                        <li title="asignar o reasignar las tareas">
                             <router-link to="/tasks">Tareas</router-link>
+                        </li>
+                        <li title=" añadir tareas a un sprint">
+                            <router-link to="/sprints">Sprints</router-link>
                         </li>
                     </ul>
                 </nav>

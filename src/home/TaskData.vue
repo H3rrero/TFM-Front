@@ -25,11 +25,11 @@
             </div>
             <div class="item-task-data">
                 <div class="dates">
-                    <div class="dateIni">
+                    <div class="dateini">
                         <p>Fecha Inicio:</p>
                         <datetime v-model="myTask.dateI"></datetime>
                     </div>
-                    <div class="dateEnd">
+                    <div class="dateend">
                         <p>Fecha Fin:</p>
                         <datetime v-model="myTask.dateF"></datetime>
                     </div>
@@ -37,7 +37,7 @@
             </div>
             <div class="item-task-data">
                  <div class="dates">
-                    <div class="dateIni">
+                    <div class="dateini">
                        <p>Añadir horas dedicadas:</p>
                         <input value="0"  v-model="hours" type="number">    
                     </div>
@@ -88,8 +88,6 @@ export default {
        }
     },
     created () {
-        console.log(this.myTask);
-        console.log(this.myTask.assigned);
         this.getUsers();
     },
     methods:{
@@ -132,13 +130,13 @@ export default {
     color: #2F96EF;
     display: inline-block;
     font-size: 17px;
+    margin: 0 auto;
     overflow: hidden;
     padding: 0.75em 2em;
     position: relative;
     text-align: center;
     text-decoration: none;
     transition: all 0.2s ease-in-out;
-    margin: 0 auto;
     width: 50% !important;
 }
 .button:before {
@@ -237,7 +235,7 @@ export default {
     display: flex;
     flex-direction: row;
 }
-.dateIni{
+.dateini{
     margin-right: 10px;
 }
 input, select, textarea{

@@ -311,7 +311,7 @@ export default {
 }
 .scrolling-container {
   overflow-x: auyo;
-  width: 99%;
   padding: 0.5rem;
+  width: 99%;
 }
 </style>

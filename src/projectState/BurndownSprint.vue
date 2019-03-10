@@ -1,10 +1,10 @@
 <template>
 
-<div class="scrolling_container" v-if="haveDataCh">
-    <select  class="filterUserS" v-model="selectPhase" v-on:change="updateData()" >
+<div class="scrolling-container" v-if="haveDataCh">
+    <select  class="filter-users" v-model="selectPhase" v-on:change="updateData()" >
         <option  v-for="phase in fasesB" :key="phase.id" :value="phase.id">{{phase.name}}</option>
     </select>
-    <highcharts class="container_chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
+    <highcharts class="container-chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 
 
@@ -20,7 +20,7 @@ export default {
         project:{},
         fasesB:[],
         taskb:[],
-        selectPhase:0,
+        selectPhase:this.$route.params.id,
         realData:[],
         estData:[],
         prueba: 'haha',
@@ -116,6 +116,13 @@ export default {
             }
        );
         },
+        isActual:function (phase) {
+             let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
+             let start= Date.UTC(parseFloat(phase.yeari),parseFloat(phase.monthi),parseFloat(phase.dayi));
+             let date = new Date();
+
+             return (end>=date && start<date) ? true : false;
+        },
         updateData: function () {
             var oneDay = 24*60*60*1000;
             this.estData = [];
@@ -128,9 +135,8 @@ export default {
                 let start = new Date(Date.UTC(parseFloat(element.yeari),parseFloat(element.monthi),parseFloat(element.dayi)));
                 var diffDays = Math.round(Math.abs((start.getTime() - end.getTime())/(oneDay)))+1;
                 let time = element.totalHours/diffDays;
-                if(end < new Date()){
+                if(end < new Date() || this.isActual(element)){
                     for (let index = 0; index < diffDays; index++) {
-                            console.log(estTotal);
                             if(index+1 == diffDays)
                                 estTotal = 0;
                             else
@@ -151,8 +157,8 @@ export default {
                                     }else if(this.realData[index] == 0){
                                         this.realData[index] = realEstTotal;
                                     }
-                                    
-                                    
+                                }else{
+                                    this.realData[index] = realEstTotal;
                                 }
                             }  
                         });
@@ -175,16 +181,16 @@ export default {
 </script>
 
 <style scoped>
-.container_chart {
+.container-chart {
     height: 80%;
     margin: 1em auto;
 }
-.scrolling_container {
+.scrolling-container {
   overflow-x: auyo;
-  width: 99%;
   padding: 0.5rem;
+  width: 99%;
 }
-.filterUserS{
+.filter-users{
     border: none;
     border-radius: 5px;
     box-sizing: border-box;
@@ -195,7 +201,7 @@ export default {
     transition: background-color 1s ease;
     transition: color 1.2s ease;
 }
-.filterUserS:hover{
+.filter-users:hover{
     background-color:#333399;
     color: white;
 }
