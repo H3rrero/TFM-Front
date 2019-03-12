@@ -1,7 +1,7 @@
 <template>
 
-<div class="scrolling_container" v-if="haveDataCh">
-  <highcharts class="container_chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
+<div class="scrolling-container" v-if="haveDataCh">
+  <highcharts class="container-chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 
 
@@ -111,12 +111,9 @@ export default {
              let date = new Date();
              estTotal = estTotal-element.totalHours;
              realEst = realEst - element.completedHours;
-             console.log(element);
-             console.log(realEst);
              this.estData.push(estTotal);
              if(end < date){
                 this.realData.push(realEst);
-                console.log(this.realData);
              }
              this.stockOptions.series[0].data = this.estData;
              this.stockOptions.series[1].data = this.realData;
@@ -130,13 +127,13 @@ export default {
 </script>
 
 <style scoped>
-.container_chart {
+.container-chart {
     height: 80%;
     margin: 1em auto;
 }
-.scrolling_container {
+.scrolling-container {
   overflow-x: auyo;
-  width: 99%;
   padding: 0.5rem;
+  width: 99%;
 }
 </style>

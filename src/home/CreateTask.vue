@@ -1,22 +1,17 @@
 <template>
     <div class="container-task-data" >  
         <div class="title-task-data">
-            <p>{{this.myTask.title}}</p>
+            <p>Introduce los datos de la tarea</p>
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
-                <p>Reasignar tarea:</p>
-                 <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" >
-                    <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
-                </select>
+                <p>Titulo:</p>
+                <input v-model="myTask.title">
             </div>
-             <div class="item-task-data">
-                <p>Cambiar fase:</p>
-                <select v-model="myTask.state" >
-                    <option value="desarrollo">Desarrollo</option>
-                    <option value="pruebas">Pruebas</option>
-                    <option value="pruebas finalizadas">Pruebas finalizadas</option>
-                    <option value="produccion">Produccion</option>
+            <div class="item-task-data">
+                <p>Reasignar tarea:</p>
+                 <select  v-model="myTask.userId"  >
+                    <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
                 </select>
             </div>
             <div class="item-task-data">
@@ -38,32 +33,17 @@
             <div class="item-task-data">
                  <div class="dates">
                     <div class="dateini">
-                       <p>Añadir horas dedicadas:</p>
-                        <input value="0"  v-model="hours" type="number">    
-                    </div>
-                    <div class="item-text-data">
-                        <span>Horas dedicadas totales:</span>
-                        <div>
-                            <p>{{myTask.hours}}</p>
-                        </div>
+                       <p>Horas planificadas:</p>
+                        <input value="0"  v-model="myTask.planHours" type="number">    
                     </div>
                 </div>
-               
             </div>
-
             <div class="item-task-data">
                 <p>Dejar comentario:</p>
-                <textarea-autosize v-model="coment"></textarea-autosize>
-            </div>
-            <div class="item-textarea-data">
-                <span>Comentarios:</span>
-                <div>
-                    <p v-for="coment in  this.myTask.coments" :key="coment.id">{{coment}}</p>
-                </div>
+                <input v-model="coment">
             </div>
             <div class="item-button-data">
-                <p>{{result}}</p>
-                <a class="button" v-on:click="updateTask()">Actualizar tarea</a>
+                <a class="button" v-on:click="updateTask()">Añadir tarea</a>
                 
             </div>
         </div>
@@ -75,33 +55,18 @@
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
 export default {
-    props: {
-   myTask: Object
-  },
     data(){
        return{ 
        haveData: false,
-       result: "",
-       hours:0,
-       coment:"",
        userss:[],
+       coment:"",
+       myTask:{},
        }
     },
     created () {
         this.getUsers();
     },
     methods:{
-        updateTask: function () {
-            if(isNaN(parseInt(this.hours)))
-                this.hours = 0;
-            this.myTask.hours = parseInt(this.myTask.hours) + parseInt(this.hours);
-            this.myTask.coments.push(this.coment);
-            taskService.changeTask(this.myTask).then(
-                resp => {
-                    this.result = "La tarea ha sido actualizada.";
-                }
-            );
-        },
         getUsers: function () {
           userService.getAll().then(
             users=>{
@@ -112,22 +77,15 @@ export default {
             }
        );
         },
-        showTaskSelectedUser: function () {
-           this.userss.forEach(element => {
-               if(element.id == this.myTask.userId){
-                   this.myTask.assigned = element.firstname +" "+element.lastname
-               }
-           });
-        }
     }
 };
 </script>
 <style scoped>
 
 .button {
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 0.3em;
-    color: #2F96EF;
+    color: #333399;
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -153,7 +111,7 @@ export default {
 }
 .button:hover {
   background-color: #2194e0;
-  border-bottom: 4px solid #1977b5;
+  border-bottom: 4px solid #333399;
   color: #fff;
 }
 .button:hover:before {
@@ -161,25 +119,23 @@ export default {
   transition: all 0.5s ease-in-out;
 }
 .container-task-data{
-    background-color: #eee;
     display: flex;
-    height: 100%;
     flex-direction: column;
-    margin:0;
-    overflow: auto;
-    position: absolute;
-    right: 0;
-    top:0;
-    width: 500px;
-    z-index: 99;
+    width: 50%;
+    margin: 0 auto;
+    background-color: white;
+    border: 2px solid #333399;
+    border-radius: 1rem;
+    margin-top: 20px;
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #2F96EF;
+    color: #333399;
     line-height: 50px;
     text-align: center;
     font-weight: 700;
     vertical-align: middle;
+        margin-bottom: 5px;
 }
 .form-task-data{
     display: flex;
@@ -201,7 +157,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -218,7 +174,7 @@ export default {
 
 }
 .item-textarea-data > div{
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -239,7 +195,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -252,7 +208,11 @@ p{
 }
 @media only screen and (max-width: 980px) {
     .container-task-data{
-        width: 80%;
+        width: 100%;
+    }
+    .dates{
+        display: flex;
+        flex-direction: column;
     }
 }
 </style>

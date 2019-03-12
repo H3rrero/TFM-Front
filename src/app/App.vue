@@ -29,7 +29,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 .vdatetime >input{width: 100%;
   box-sizing: border-box;
   height: 35px;
-  border: 2px solid #2F96EF;
+  border: 2px solid #333399;
   border-radius: 5px;
   padding: 0 15px;
   margin: 10px 0;}

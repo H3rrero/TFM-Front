@@ -35,10 +35,6 @@ export default {
        hours:0,
        }
     },
-    created () {
-        console.log(this.myTask);
-        console.log(this.myTask.assigned);
-    },
     methods:{
         updateTask: function () {
             if(isNaN(parseInt(this.hours)))

@@ -1,24 +1,24 @@
 <template>
     <div>
-        <div class="task_container">
+        <div class="task-container">
             
-            <drop @dragover="asignedTask(-1,'','')"  class="unassigned_task"  v-if="haveData" >
+            <drop @dragover="asignedTask(-1,'','')"  class="unassigned-task"  v-if="haveData" >
                 <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task" >
-                         <task v-if="task.userId == -1" :task="task"></task>  
+                         <task v-if="task.userId == -1 && task.phase == phaseId" :task="task"></task>  
                     </drag>
                 </div>
             </drop>
 
             <div class="programmers">
-                <div class="programmers_item"  v-for="user in userss" :key="user.id">
-                    <div class="programmers_item_title">
+                <div class="programmers-item"  v-for="user in userss" :key="user.id">
+                    <div class="programmers-item-title">
                         {{user.firstname + ' '+ user.lastname}}
                     </div>
-                    <drop @dragover="asignedTask(user.id,user.firstname,user.lastname)" class="programmers_item_task">
+                    <drop @dragover="asignedTask(user.id,user.firstname,user.lastname)" class="programmers-item-task">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task" >
-                               <task v-if="task.userId == user.id" :task="task"></task>
+                               <task v-if="task.userId == user.id && task.phase == phaseId" :task="task"></task>
                             </drag>
                         </div>
                     </drop>
@@ -34,16 +34,18 @@
 
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
+ import { phaseService } from '../_services/phase.service';
 export default {
     data(){
        return{ 
-       tasks:[],
-       usersId:[],
-       userss:[],
-    haveData: false,
-    userAsignedId:-1,
-    assigned:"",
-    phase:""
+        tasks:[],
+        usersId:[],
+        userss:[],
+        phaseId:-1,
+        haveData: false,
+        userAsignedId:-1,
+        assigned:"",
+        phase:""
        }
     },
     created () {
@@ -56,7 +58,18 @@ export default {
             taskss=>{
              this.haveData = true;
              this.tasks = taskss;
-             console.log(taskss);
+            }
+       );
+        },
+        getPhases: function () {
+          phaseService.getAll().then(
+            fases=>{
+            fases.forEach(element => {
+                if(this.isActua(element)){
+                    this.phaseId = element.id;
+                }
+            });
+             
             }
        );
         },
@@ -72,7 +85,6 @@ export default {
        );
         },
         handleDrop(data, event) {
-            console.log(data.userId)
             data.userId = this.userAsignedId;
             data.assigned = this.assigned;
             data.state = this.phase;
@@ -86,7 +98,13 @@ export default {
             }else{
                 this.phase = 'Backlog';
             }
-            console.log(id);
+        },
+        isActual:function (phase) {
+             let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
+             let start= Date.UTC(parseFloat(phase.yeari),parseFloat(phase.monthi),parseFloat(phase.dayi));
+             let date = new Date();
+
+             return (end>=date && start<date) ? true : false;
         }
       
 
@@ -94,32 +112,32 @@ export default {
 };
 </script>
 <style scoped>
-.task_container{
+.task-container{
     display: flex;
     flex-direction: row;
     height: 100%;
 }
-.unassigned_task{
+.unassigned-task{
     background-color: white;
     border: 2px solid #333399;
     border-radius: 1rem;
-    width: 20%;
     margin-right: 10px;
+    width: 20%;
 }
 .programmers{
-    width: 80%;
+    background-color: white;
+    border: 2px solid #333399;
+    border-radius: 1rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     margin: 0 auto;
-    background-color: white;
-    border: 2px solid #333399;
-    border-radius: 1rem;
     margin-right: 10px;
     padding: 1rem;
+    width: 80%;
 }
-.programmers_item{
+.programmers-item{
     background-color: white;
     color: #6B6FCE;
     display: flex;
@@ -129,20 +147,20 @@ export default {
     min-height: 50px;
     width: 300px;
 }
-.programmers_item:hover{
+.programmers-item:hover{
     transform: scale(1.03,1.03);
     transition:  0.3s ease-out;
 }
-.programmers_item_title{
-    height: 20px;
+.programmers-item-title{
+    background-color: #333399;
+    border-bottom: 1px solid white;
     color: white;
     font-family: 'Roboto', sans-serif;
+    height: 20px;
     padding: 0.3rem;
     text-align: center;
-    border-bottom: 1px solid white;
-    background-color: #333399;
 }
-.programmers_item_task{
+.programmers-item-task{
     height: 90%;
     background-color: #333399;
 }

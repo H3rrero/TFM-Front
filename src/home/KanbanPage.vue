@@ -1,55 +1,64 @@
 <template>
     <div class="filter-kamban">
         <div class="filter">
-            <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
-            <button class="myTaskBt" v-bind:class="{ myTaskBtSelected: isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
-            <input type="text" class="myTaskInput" v-model="taskTitle" >
-            <select  class="filterUser" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
+            <button class="mytask-bt" title="filtrar por tus tareas asignadas" v-bind:class="{ 'mytaskbt-selected': isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
+            <button class="mytask-bt" title="filtrar por tareas retrasadas" v-bind:class="{ 'mytaskbt-selected': isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
+            <input type="text" title="filtrar por titulo o descripcion" class="mytask-input" v-model="taskTitle" >
+            <select  class="filter-user" title="Filtar or usuario asignado" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
                     <option value="-1" selected>Todas</option>
                     <option v-on:click="showTaskSelectedUser(user.id)"  v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
             </select>
+            <select  class="filter-user" title="filtrar por fase" v-model="selectPhase" v-on:change="getCurrentPhases()" >
+                    <option value="-1" selected>Actual</option>
+                    <option   v-for="phase in phasesKb" :key="phase.id" :value="phase.id">{{phase.name}}</option>
+            </select>
+            <button class="newtask-bt plus" title="añadir nueva tarea" v-on:click="openNewTask()">
+                <span>
+                    <i class="fas fa-plus-circle"></i>
+                </span>
+            </button>
         </div>
-        <div class="container-Kanban" v-if="haveData"  >
+        <div class="container-kanban" v-if="haveData"  >
             <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
-        <div class="tasks">
-            <drop @dragover="changePhase(state.name)" class="item" v-for="state in states" :key="state.id">
-                <div class="text-container">
-                        <p>{{state.name}}</p>
-                    </div>
-                    <div class="task-container">
-                        <div v-for="task in tasks" :key="task.id">
-                            <drag @dragend="handleDrop" :transfer-data="task" >
-                                <div class="task" v-bind:class="{ taskRetard: retard.includes(task.id) }" v-if="task.state == state.name && !task.deleted &&showTaskfilter(task.id) && showTaskUser(task.userId) && (isActiveR ? retard.includes(task.id):true )" >
-                                    <div class="task-title">
-                                        <p>{{task.title}}</p>
-                                        <span   v-on:click="showMenu(task)">
-                                            <i class="fas fa-edit"></i>
-                                        </span> 
-                                        <span v-on:click="showHours(task)">
-                                            <i class="far fa-clock"></i>
-                                        </span>
-                                         <span class="trash"  v-on:click="deletedTask(task)">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </span> 
-                                    </div>
-                                    <div class="task-body">
-                                        <div class="assigned">
-                                            <div class="icon">
-                                                <span style="font-size: 1em;">
-                                                    <i class="far fa-user-circle"></i>
-                                                </span> 
-                                            </div>
-                                            <div class="name">
-                                                <p>{{task.assigned}}</p>
+            <div class="tasks">
+                <drop @dragover="changePhase(state.name)" class="item" v-for="state in states" :key="state.id">
+                    <div class="text-container">
+                            <p>{{state.name}}</p>
+                        </div>
+                        <div class="task-container">
+                            <div v-for="task in tasks" :key="task.id">
+                                <drag @dragend="handleDrop" :transfer-data="task" >
+                                    <div class="task" v-bind:class="{ 'task-retard': retard.includes(task.id) }" v-if="task.state == state.name && !task.deleted &&showTaskfilter(task.id) && (isActive ? usersId.includes(task.userId):true)&&(isActiveS ? usersId.includes(task.userId):true)&& isCurrent(task.phase) && (isActiveR ? retard.includes(task.id):true )" >
+                                        <div class="task-title">
+                                            <p>{{task.title}}</p>
+                                            <span   v-on:click="showMenu(task)" title="editar la tarea">
+                                                <i class="fas fa-edit"></i>
+                                            </span> 
+                                            <span v-on:click="showHours(task)" title="imputar horas en la tarea">
+                                                <i class="far fa-clock"></i>
+                                            </span>
+                                            <span class="trash" title="quitar tarea del kamban"  v-on:click="deletedTask(task)" v-if="state.name=='Terminada'">
+                                                <i class="fas fa-eye-slash"></i>
+                                            </span> 
+                                        </div>
+                                        <div class="task-body">
+                                            <div class="assigned">
+                                                <div class="icon">
+                                                    <span style="font-size: 1em;">
+                                                        <i class="far fa-user-circle"></i>
+                                                    </span> 
+                                                </div>
+                                                <div class="name">
+                                                    <p>{{task.assigned}}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </drag>
+                                </drag>
+                            </div>
                         </div>
-                    </div>
-            </drop>
-        </div>
+                </drop>
+            </div>
             <transition name="slide-fade">
                 <taskdata v-if="show" :myTask="sendTask"></taskdata>  
             </transition>
@@ -65,6 +74,7 @@
  import { stateService } from '../_services/states.service';
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
+ import { phaseService } from '../_services/phase.service';
 export default {
     data(){
        return{ 
@@ -73,6 +83,9 @@ export default {
         tasks:[],
         states:[],
         retard:[],
+        phasesKb:[],
+        currentPhases:[],
+        selectPhase:-1,
         taskTitle:"",
         haveData: false,
         show :false,
@@ -80,6 +93,7 @@ export default {
         isActive:false,
         isActiveR:false,
         isActiveA:false,
+        isActiveS:false,
         sendTask: {},
         usersId:[],
         userss:[],
@@ -92,6 +106,7 @@ export default {
         this.getSeries();
         this.getUsers();
         this.getStates();
+        this.getPhases();
     },
     methods: {
        getSeries: function () {
@@ -116,6 +131,14 @@ export default {
             }
        );
         },
+        getPhases: function () {
+          phaseService.getAll().then(
+            fases=>{
+            this.phasesKb=fases;
+             this.getCurrentPhases();
+            }
+       );
+        },
          getUsers: function () {
           userService.getAll().then(
             users=>{
@@ -127,39 +150,54 @@ export default {
             }
        );
         },
+        openNewTask:function (id) {
+            this.$router.push('/newTask');
+        },
+        getCurrentPhases:function () {
+           if(this.$route.params.id == -1 && this.selectPhase ==-1){
+                this.currentPhases = [];
+                this.phasesKb.forEach(phase => {
+                let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
+                let start= Date.UTC(parseFloat(phase.yeari),parseFloat(phase.monthi),parseFloat(phase.dayi));
+                let date = new Date();
+
+                if(end>=date && start<date){
+                    this.currentPhases.push(phase.id)
+                }
+                });
+            }else if(this.selectPhase !=-1){
+                this.currentPhases = [];
+                this.currentPhases.push(this.selectPhase);
+            }else{
+                this.currentPhases = [];
+                this.currentPhases.push(parseInt(this.$route.params.id));
+                this.$route.params.id = -1;
+            }
+        },
+        isCurrent: function (phaseId){
+           return (this.currentPhases.includes(phaseId)) ? true : false;
+        },
         updateData: function (taskss) {
-            console.log("fases2")
-            console.log(this.tasks)
-         
             this.haveData = true;
             this.tasks = taskss;
             this.tasks.forEach(element => {
                 let dateTask = new Date(element.dateF);
                 let date = new Date();
-                console.log(dateTask + ">" + date);
-                if(dateTask < date && element.state != "Terminada"){
-                    console.log("Llego tarde:")
-                    console.log(dateTask + ">" + date);
+               if(dateTask < date && element.state != "Terminada"){
                     this.retard.push(element.id);
-                    console.log(this.retard);
                     }
             });
       
         },
         showMenu: function (task) {
-            console.log("showMenu");
             this.show = true;
             this.sendTask = task;
-            console.log(task.title);
         },
         showHours: function (task) {
-            console.log("showMenu");
             this.showH = true;
             this.sendTask = task;
-            console.log(task.title);
         },
         deletedTask: function (task) {
-            console.log("deletedTask");
             task.deleted=true;
             this.updateTask(task);
         },
@@ -171,75 +209,57 @@ export default {
             this.state = state;
         },
         hideMenu: function () {
-             console.log("hideMenu");
             if(this.show)
             this.show = false;
         },
         hideMenuH: function () {
-             console.log("hideMenu");
             if(this.showH)
             this.showH = false;
         },
-        showTaskUser: function (id) {
-           return this.usersId.includes(id);
-        },
         showTaskfilter:function (id) {
-            console.log(this.taskTitle)
             var ret = false;
           if(this.taskTitle == ""){
               return true;
           } else{
-               console.log("else")
               this.tasks.forEach(element => {
-                  console.log("title: "+element.title);
-                  console.log("id: "+element.id);
-                  console.log("id recibido: "+id);
-                  console.log(element.title.includes(this.taskTitle))
-                  console.log(element.id == id)
                 if(element.id == id && (element.title.toUpperCase().includes(this.taskTitle.toUpperCase()) 
                 || element.assigned.toUpperCase().includes(this.taskTitle.toUpperCase()))){
-                    console.log("if")
                     ret = true;
                 }
               });
-              console.log("Final:"+ret);
               return ret;
           }
-        },
-        showTaskRetard: function (id) {
-            console.log("isActiveR: "+this.isActiveR);
-            if(this.isActiveR)
-                return this.retard.includes(id);
-            else
-                return true;
         },
         showTaskCurrentUser: function () {
             this.isActive = !this.isActive;
             this.isActiveA = false;   
             this.isActiveR = false;
+            this.isActiveS = false;
             this.selectUser = -1;
             if(this.isActive)
                 this.usersId = [this.currentUser.id];
             else
-                this.showAllTask();
-           console.log(this.usersId);        
+                this.showAllTask();       
         },
         showTaskSelectedUser: function () {
-            console.log("selected: "+this.selectUser)
             this.isActiveR = false;
             this.isActiveA = false;   
             this.isActive = false;
+            this.isActiveS = !this.isActiveS;
+            console.log(this.selectUser);
             if(this.selectUser < 0){
                 this.showAllTask(); 
             }
             else{
                 this.usersId = [this.selectUser];
+                console.log(this.usersId);
             }
         },
         showTaskRetard: function () {
             this.isActiveR = !this.isActiveR;
             this.isActiveA = false;   
             this.isActive = false;
+            this.isActiveS = false;
         },
         showAllTask:function () {
             this.isActiveA = !this.isActiveA;
@@ -258,7 +278,7 @@ export default {
 };
 </script>
 <style scoped>
-.myTaskBt{
+.mytask-bt{
     background-color: white;
     border: none;
     border-radius: 1rem;
@@ -269,7 +289,25 @@ export default {
     transition: background-color 1s ease;
     transition: color 1.2s ease;
 }
-.myTaskInput{
+.newtask-bt{
+    background-color: #333399;
+    border: none;
+    border-radius: 1rem;
+    color: white;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    margin-left: 10px;
+    transition: background-color 1s ease;
+    transition: color 1.2s ease;
+}
+.plus{
+    padding: 5px;
+}
+.plus > span{
+    cursor: pointer;
+    font-size: 20px;
+}
+.mytask-input{
      background-color: white;
     border: none;
     border-radius: 1rem;
@@ -281,11 +319,15 @@ export default {
     transition: background-color 1s ease;
     transition: color 1.2s ease;
 }
-.myTaskInput:hover{
+.mytask-input:hover{
     background-color: #333399;
     color: white;
 }
-.filterUser{
+.mytaskbt-selected{
+    background-color: #333399;
+    color: white;
+}
+.filter-user{
     border: none;
     border-radius: 5px;
     box-sizing: border-box;
@@ -296,15 +338,11 @@ export default {
     transition: background-color 1s ease;
     transition: color 1.2s ease;
 }
-.filterUser:hover{
+.filter-user:hover{
     background-color:#333399;
     color: white;
 }
-.myTaskBtSelected{
-    background-color: #333399;
-    color: white;
-}
-.myTaskBt:hover{
+.mytask-bt:hover{
     background-color: #333399;
     color: white;
 }
@@ -323,7 +361,7 @@ export default {
     padding: 0.5rem;
     width: 87%;
 }
-.container-Kanban{
+.container-kanban{
     display: flex;
     flex-direction: row;
     height: 100%;
@@ -375,7 +413,7 @@ a{
     margin-top: 8px;
     width: 97%;
 }
-.taskRetard{
+.task-retard{
     background-color: #FF4646;
 }
 .task:hover{
@@ -393,7 +431,6 @@ a{
     width: 80%;
 }
 .task-title > span{
-    cursor: auto;
     cursor: pointer;
     font-size: 1em;
     margin-left: 7px;

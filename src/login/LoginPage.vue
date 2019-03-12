@@ -134,7 +134,6 @@ export default {
         ...mapState('account', ['status'])
     },
     created () {
-        // reset login status
         this.logout();
     },
     methods: {
@@ -142,7 +141,6 @@ export default {
         handleSubmit (e) {
             this.submitted = true;
             const { username, password } = this;
-            console.log(username);
             if (username && password) {
                 this.login({ username, password })
             }
