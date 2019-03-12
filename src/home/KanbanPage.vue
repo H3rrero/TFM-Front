@@ -12,6 +12,11 @@
                     <option value="-1" selected>Actual</option>
                     <option   v-for="phase in phasesKb" :key="phase.id" :value="phase.id">{{phase.name}}</option>
             </select>
+            <button class="newtask-bt plus" title="añadir nueva tarea" v-on:click="openNewTask()">
+                <span>
+                    <i class="fas fa-plus-circle"></i>
+                </span>
+            </button>
         </div>
         <div class="container-kanban" v-if="haveData"  >
             <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
@@ -144,6 +149,9 @@ export default {
              
             }
        );
+        },
+        openNewTask:function (id) {
+            this.$router.push('/newTask');
         },
         getCurrentPhases:function () {
            if(this.$route.params.id == -1 && this.selectPhase ==-1){
@@ -281,6 +289,24 @@ export default {
     transition: background-color 1s ease;
     transition: color 1.2s ease;
 }
+.newtask-bt{
+    background-color: #333399;
+    border: none;
+    border-radius: 1rem;
+    color: white;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    margin-left: 10px;
+    transition: background-color 1s ease;
+    transition: color 1.2s ease;
+}
+.plus{
+    padding: 5px;
+}
+.plus > span{
+    cursor: pointer;
+    font-size: 20px;
+}
 .mytask-input{
      background-color: white;
     border: none;
@@ -405,7 +431,6 @@ a{
     width: 80%;
 }
 .task-title > span{
-    cursor: auto;
     cursor: pointer;
     font-size: 1em;
     margin-left: 7px;

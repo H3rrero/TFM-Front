@@ -10,6 +10,7 @@ import TasksPage from '../tasks/TasksPage'
 import BurndownState from '../projectState/BurndownState'
 import BurndownSprint from '../projectState/BurndownSprint'
 import SprintPage from '../sprints/SprintPage'
+import CreateTask from '../home/CreateTask'
 
 Vue.use(Router);
 
@@ -26,6 +27,7 @@ export const router = new Router({
     { path: '/burndown', component:  BurndownState},
     { path: '/burndownSprint/:id', component:  BurndownSprint},
     { path: '/state', component:  ProjectState},
+    { path: '/newTask', component:  CreateTask},
 
     // otherwise redirect to home
     { path: '*', redirect: '/kanban/-1' }
