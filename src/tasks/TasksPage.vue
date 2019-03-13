@@ -5,7 +5,7 @@
             <drop @dragover="asignedTask(-1,'','')"  class="unassigned-task"  v-if="haveData" >
                 <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task" >
-                         <task v-if="task.userId == -1 && task.phase == phaseId" :task="task"></task>  
+                         <task v-if="task.userId == -1 && (task.phase == phaseId)" :task="task"></task>  
                     </drag>
                 </div>
             </drop>
@@ -51,6 +51,7 @@ export default {
     created () {
         this.getSeries();
         this.getUsers();
+        this.getPhases();
     },
     methods: {
        getSeries: function () {
@@ -65,7 +66,7 @@ export default {
           phaseService.getAll().then(
             fases=>{
             fases.forEach(element => {
-                if(this.isActua(element)){
+                if(this.isActual(element)){
                     this.phaseId = element.id;
                 }
             });

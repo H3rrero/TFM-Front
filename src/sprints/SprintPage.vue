@@ -87,6 +87,7 @@ export default {
         handleDrop(data, event) {
            
             data.phase = this.phaseAsignedId;
+            console.log(data);
             taskService.changeTask(data);
         },
         asignedTask: function (id) {

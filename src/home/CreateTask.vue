@@ -9,8 +9,9 @@
                 <input v-model="myTask.title">
             </div>
             <div class="item-task-data">
-                <p>Reasignar tarea:</p>
+                <p>Asignar tarea:</p>
                  <select  v-model="myTask.userId"  >
+                     <option value="-1" selected>No asignar</option>
                     <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
                 </select>
             </div>
@@ -43,7 +44,7 @@
                 <input v-model="coment">
             </div>
             <div class="item-button-data">
-                <a class="button" v-on:click="updateTask()">Añadir tarea</a>
+                <a class="button" v-on:click="createTask()">Añadir tarea</a>
                 
             </div>
         </div>
@@ -60,7 +61,7 @@ export default {
        haveData: false,
        userss:[],
        coment:"",
-       myTask:{},
+       myTask:{userId:-1,assigned:"",coments:[],phase:-1,hours:0,state:'sin asignar'},
        }
     },
     created () {
@@ -77,6 +78,25 @@ export default {
             }
        );
         },
+        createTask:function () {
+            
+            if(this.myTask.userId != -1){
+                userService.getById(this.myTask.userId).then(
+                    user =>{
+                        this.myTask.assigned = user.firstname +" "+user.lastname;
+                        console.log("eoooooooooooooooooo");
+                        console.log(this.myTask);
+                        this.myTask.state="Backlog";
+                        this.myTask.coments.push(this.coment);
+                        taskService.createTask(this.myTask);
+                    }
+                );
+            }else{
+                 this.myTask.coments.push(this.coment);
+                 userService.getById(this.myTask.userId);
+            }
+            
+        }
     }
 };
 </script>

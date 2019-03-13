@@ -4,7 +4,8 @@ import { authHeader } from '../_helpers';
 export const taskService = {
     getAll,
     changeTask,
-    getByPhase
+    getByPhase,
+    createTask
 };
 
 
@@ -39,7 +40,15 @@ function changeTask(task) {
     console.log(task);
     return fetch(`${config.apiUrl}/tasks/${task.id}`, requestOptions).then(handleResponse);
 }
-
+function createTask(task) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify(task)
+    };
+    console.log(task);
+    return fetch(`${config.apiUrl}/tasks/register`, requestOptions).then(handleResponse);
+}
 function handleResponse(response) {
     
     return response.text().then(text => {
