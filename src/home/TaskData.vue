@@ -12,11 +12,8 @@
             </div>
              <div class="item-task-data">
                 <p>Cambiar fase:</p>
-                <select v-model="myTask.state" >
-                    <option value="desarrollo">Desarrollo</option>
-                    <option value="pruebas">Pruebas</option>
-                    <option value="pruebas finalizadas">Pruebas finalizadas</option>
-                    <option value="produccion">Produccion</option>
+                 <select  v-model="myTask.state" >
+                    <option v-for="state in states" :key="state.id" :value="state.name">{{state.name}}</option>
                 </select>
             </div>
             <div class="item-task-data">
@@ -74,6 +71,7 @@
 
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
+ import { stateService } from '../_services/states.service';
 export default {
     props: {
    myTask: Object
@@ -85,10 +83,12 @@ export default {
        hours:0,
        coment:"",
        userss:[],
+       states:[],
        }
     },
     created () {
         this.getUsers();
+        this.getStates();
     },
     methods:{
         updateTask: function () {
@@ -101,6 +101,13 @@ export default {
                     this.result = "La tarea ha sido actualizada.";
                 }
             );
+        },
+        getStates: function () {
+          stateService.getAll().then(
+            elements=>{
+              this.states = elements;
+            }
+       );
         },
         getUsers: function () {
           userService.getAll().then(
@@ -125,9 +132,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 0.3em;
-    color: #2F96EF;
+    color: #333399;
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -152,8 +159,8 @@ export default {
   width: 3em;
 }
 .button:hover {
-  background-color: #2194e0;
-  border-bottom: 4px solid #1977b5;
+  background-color: #333399;
+  border-bottom: 4px solid #333399;
   color: #fff;
 }
 .button:hover:before {
@@ -175,7 +182,7 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #2F96EF;
+    color: #333399;
     line-height: 50px;
     text-align: center;
     font-weight: 700;
@@ -201,7 +208,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -218,7 +225,7 @@ export default {
 
 }
 .item-textarea-data > div{
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -239,7 +246,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #2F96EF;
+    border: 2px solid #333399;
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;

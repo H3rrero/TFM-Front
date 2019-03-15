@@ -5,8 +5,10 @@
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
-                <p>Titulo:</p>
+                <p>* Titulo:</p>
                 <input v-model="myTask.title">
+                <p v-if="validar && (myTask.title == undefined|| myTask.title.trim()=='')"
+                 v-bind:class="{ 'error': (myTask.title == undefined|| myTask.title.trim()=='')}" >* El campo titulo es obligatorio</p>
             </div>
             <div class="item-task-data">
                 <p>Asignar tarea:</p>
@@ -22,26 +24,35 @@
             <div class="item-task-data">
                 <div class="dates">
                     <div class="dateini">
-                        <p>Fecha Inicio:</p>
+                        <p>* Fecha Inicio:</p>
                         <datetime v-model="myTask.dateI"></datetime>
                     </div>
                     <div class="dateend">
-                        <p>Fecha Fin:</p>
+                        <p>* Fecha Fin:</p>
                         <datetime v-model="myTask.dateF"></datetime>
                     </div>
                 </div>
+                <p v-if="validar && (myTask.dateI == undefined|| myTask.dateF == undefined 
+                || this.myTask.dateI.trim() == '' || this.myTask.dateF.trim() == '')" v-bind:class="{ 'error': 
+                (myTask.dateI == undefined|| myTask.dateF == undefined|| 
+                this.myTask.dateI.trim() == '' || this.myTask.dateF.trim() == '')}" >Los campos fecha de inicio y fecha de fin son obligatorios.</p>
             </div>
             <div class="item-task-data">
                  <div class="dates">
                     <div class="dateini">
-                       <p>Horas planificadas:</p>
-                        <input value="0"  v-model="myTask.planHours" type="number">    
+                       <p>* Horas planificadas:</p>
+                        <input value="0"  v-model="myTask.planHours" type="number">  
+                        <p v-if="validar && (myTask.planHours == undefined|| myTask.planHours < 1)" v-bind:class="{ 'error': 
+                        (myTask.planHours == undefined|| myTask.planHours < 1)}" >El campo horas planificadas tiene que tener mínimo 1 hora.</p>  
                     </div>
                 </div>
             </div>
             <div class="item-task-data">
                 <p>Dejar comentario:</p>
                 <input v-model="coment">
+            </div>
+            <div class="item-task-data">
+                <p v-if="taskCreated" v-bind:class="{ 'correct':taskCreated}">La tarea se ha añadido correctamente, la puedes encontrar en la pestaña sprints</p>
             </div>
             <div class="item-button-data">
                 <a class="button" v-on:click="createTask()">Añadir tarea</a>
@@ -61,7 +72,18 @@ export default {
        haveData: false,
        userss:[],
        coment:"",
-       myTask:{userId:-1,assigned:"",coments:[],phase:-1,hours:0,state:'sin asignar'},
+       validar : false,
+       taskCreated:false,
+       myTask:{
+        title:"",
+        description:"",
+        userId:-1,
+        assigned:"",
+        coments:[],
+        phase:-1,
+        hours:0,
+        planHours:0,
+        state:'sin asignar'},
        }
     },
     created () {
@@ -78,24 +100,43 @@ export default {
             }
        );
         },
+        validate:function(){
+           if(this.myTask.title == undefined||
+            this.myTask.title.trim() == ""||
+            this.myTask.userId == undefined||
+            this.myTask.description == undefined||
+            this.myTask.dateI == undefined||
+            this.myTask.dateI.trim() == ""||
+            this.myTask.dateF.trim() == ""||
+            this.myTask.dateF == undefined||
+            this.myTask.planHours == undefined||
+            this.myTask.planHours < 1 ||
+            this.coment == undefined) {
+                return false;
+           }else{
+                return true;
+           }
+        },
         createTask:function () {
-            
-            if(this.myTask.userId != -1){
-                userService.getById(this.myTask.userId).then(
-                    user =>{
-                        this.myTask.assigned = user.firstname +" "+user.lastname;
-                        console.log("eoooooooooooooooooo");
-                        console.log(this.myTask);
-                        this.myTask.state="Backlog";
-                        this.myTask.coments.push(this.coment);
-                        taskService.createTask(this.myTask);
-                    }
-                );
+            if(this.validate()){
+                this.taskCreated = true;
+                this.validar = false;
+                if(this.myTask.userId != -1){
+                    userService.getById(this.myTask.userId).then(
+                        user =>{
+                            this.myTask.assigned = user.firstname +" "+user.lastname;
+                            this.myTask.state="Backlog";
+                            this.myTask.coments.push(this.coment);
+                            taskService.createTask(this.myTask);
+                        }
+                    );
+                }else{
+                    this.myTask.coments.push(this.coment);
+                    taskService.createTask(this.myTask);
+                }
             }else{
-                 this.myTask.coments.push(this.coment);
-                 userService.getById(this.myTask.userId);
+                this.validar =true;
             }
-            
         }
     }
 };
@@ -147,6 +188,14 @@ export default {
     border: 2px solid #333399;
     border-radius: 1rem;
     margin-top: 20px;
+}
+.error{
+    color: red;
+    margin-bottom: 10px;
+}
+.correct{
+    color: green;
+    margin-bottom: 10px;
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
