@@ -17,9 +17,12 @@
                     <i class="fas fa-plus-circle"></i>
                 </span>
             </button>
+            <span v-if="exclamation" title="tienes mensajes importantes" v-on:click="showMessagePage()">
+                 <i class="fas fa-exclamation-circle"></i>
+            </span>
         </div>
         <div class="container-kanban" v-if="haveData"  >
-            <div class="mask" v-if="show || showH" v-on:click="hideMenu();hideMenuH()"></div>
+            <div class="mask" v-if="show || showH || showMessages" v-on:click="hideMenu();hideMenuH();hideMenuM();"></div>
             <div class="tasks">
                 <drop @dragover="changePhase(state.name)" class="item" v-for="state in states" :key="state.id">
                     <div class="text-container">
@@ -62,6 +65,9 @@
             <transition name="slide-fade">
                 <taskdata v-if="show" :myTask="sendTask"></taskdata>  
             </transition>
+            <transition name="slide-fade">
+                <messages v-if="showMessages" :message="message"></messages>  
+            </transition>
             <transition name="fade">
                 <changehours v-if="showH" :myTask="sendTask"></changehours>  
             </transition>
@@ -85,6 +91,8 @@ export default {
         retard:[],
         phasesKb:[],
         currentPhases:[],
+        tasksMoved:[],
+        exclamation:false,
         selectPhase:-1,
         taskTitle:"",
         haveData: false,
@@ -94,7 +102,9 @@ export default {
         isActiveR:false,
         isActiveA:false,
         isActiveS:false,
+        showMessages:false,
         sendTask: {},
+        message:{},
         usersId:[],
         userss:[],
         state:""
@@ -136,8 +146,35 @@ export default {
             fases=>{
             this.phasesKb=fases;
              this.getCurrentPhases();
+             this.checkState();
             }
        );
+        },
+        checkState:function () {
+        console.log("checkState");
+         console.log( this.phasesKb)
+          this.phasesKb.forEach(element => {
+              if(this.isFinish(element))
+              taskService.getByPhase(element.id).then(
+                  tasks =>{
+                      tasks.forEach(task => {
+                          if(task.state!="Terminada"){
+                              this.tasksMoved.push(task.title);
+                              task.phase = -1;
+                              taskService.changeTask(task);
+                              console.log(this.tasksMoved);
+                              this.exclamation=true;
+                          }
+                      });
+                  }
+              );
+          });  
+        },
+        isFinish:function (phase) {
+            let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
+            let date = new Date();
+
+            return end<date ? true : false;
         },
          getUsers: function () {
           userService.getAll().then(
@@ -193,6 +230,17 @@ export default {
             this.show = true;
             this.sendTask = task;
         },
+        showMessagePage: function () {
+          this.showMessages = true;  
+          let title = "Tareas no acabadas"
+          let messageBody = `Las siguientes tareas no han sido acabadas durante el sprint anterior y se han añadido al backlog:\n`
+         this.tasksMoved.forEach(element => {
+             messageBody = messageBody + `\n${element}`
+         });
+         this.message.title = title;
+         this.message.body = messageBody;
+         console.log(this.message);
+        },
         showHours: function (task) {
             this.showH = true;
             this.sendTask = task;
@@ -215,6 +263,10 @@ export default {
         hideMenuH: function () {
             if(this.showH)
             this.showH = false;
+        },
+        hideMenuM: function () {
+            if(this.showMessages)
+            this.showMessages = false;
         },
         showTaskfilter:function (id) {
             var ret = false;
@@ -306,6 +358,11 @@ export default {
 .plus > span{
     cursor: pointer;
     font-size: 20px;
+}
+.filter > span{
+    cursor: pointer;
+    font-size: 28px;
+    margin-left: auto;
 }
 .mytask-input{
      background-color: white;

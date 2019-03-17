@@ -19,6 +19,11 @@
                         <li title=" añadir tareas a un sprint">
                             <router-link to="/sprints">Sprints</router-link>
                         </li>
+                        <li>
+                            <span>
+                                <i class="fas fa-user-circle"></i>
+                            </span>
+                        </li>
                     </ul>
                 </nav>
             </header>
@@ -63,7 +68,11 @@ li > a{
     color: #333399;
     text-decoration: none;
 }
-
+li > span{
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 7px;
+}
 li > a:hover{
     color:  #3399FF;
 }
