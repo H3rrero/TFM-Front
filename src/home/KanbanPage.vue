@@ -92,6 +92,7 @@ export default {
         phasesKb:[],
         currentPhases:[],
         tasksMoved:[],
+        tasksCreated:[],
         exclamation:false,
         selectPhase:-1,
         taskTitle:"",
@@ -151,24 +152,36 @@ export default {
        );
         },
         checkState:function () {
-        console.log("checkState");
-         console.log( this.phasesKb)
           this.phasesKb.forEach(element => {
               if(this.isFinish(element))
               taskService.getByPhase(element.id).then(
                   tasks =>{
                       tasks.forEach(task => {
-                          if(task.state!="Terminada"){
+                          if(task.state!="Terminada" && !task.finish){
                               this.tasksMoved.push(task.title);
-                              task.phase = -1;
+                              task.finish = true;
                               taskService.changeTask(task);
-                              console.log(this.tasksMoved);
+                              task.state = "sin asignar";
+                              task.phase = -1;
+                              task.userId = -1;
+                              this.tasksCreated.push(task);
                               this.exclamation=true;
                           }
                       });
                   }
               );
-          });  
+          });
+          setTimeout(() => {
+                          this.createTask(0)
+                      }, 100);  
+        },
+        createTask:function(counter){
+            taskService.createTask(this.tasksCreated[counter]).then(
+                task =>{
+                    if(this.tasksCreated[counter+1]!=undefined)
+                    this.createTask(counter+1);
+                }
+            );
         },
         isFinish:function (phase) {
             let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
@@ -239,7 +252,6 @@ export default {
          });
          this.message.title = title;
          this.message.body = messageBody;
-         console.log(this.message);
         },
         showHours: function (task) {
             this.showH = true;

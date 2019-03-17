@@ -1,5 +1,5 @@
 <template>
-   <div class="task-unassigned"  v-bind:class="{ 'taskspage-task': task.phase != -1, 'task-finish': task.state=='Terminada' }"   >
+   <div class="task-unassigned"  v-bind:class="{ 'taskspage-task': task.phase != -1, 'task-finish': task.state=='Terminada', 'task-not-finish': task.finish }"   >
         <div class="taskspage-task-title">
             <p>{{this.task.title}}</p>
         </div>
@@ -37,6 +37,9 @@ export default {
 }
 .task-finish{
     background-color: #A39898;
+}
+.task-not-finish{
+    background-color: #FF4646;
 }
 .task-unassigned:hover{
     transform: scale(1.03,1.03);
