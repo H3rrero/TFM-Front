@@ -111,12 +111,16 @@ export default {
              let date = new Date();
              estTotal = estTotal-element.totalHours;
              realEst = realEst - element.completedHours;
+             console.log("estTotal");
+             console.log(estTotal);
+             console.log(element)
              this.estData.push(estTotal);
              if(end < date){
                 this.realData.push(realEst);
              }
              this.stockOptions.series[0].data = this.estData;
              this.stockOptions.series[1].data = this.realData;
+             console.log( this.stockOptions.series);
          });
       this.haveDataCh = true;
       

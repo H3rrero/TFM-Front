@@ -37,7 +37,6 @@ function changeTask(task) {
         headers: authHeader(),
         body: JSON.stringify(task)
     };
-    console.log(task);
     return fetch(`${config.apiUrl}/tasks/${task.id}`, requestOptions).then(handleResponse);
 }
 function createTask(task) {
@@ -46,7 +45,6 @@ function createTask(task) {
         headers: authHeader(),
         body: JSON.stringify(task)
     };
-    console.log(task);
     return fetch(`${config.apiUrl}/tasks/register`, requestOptions).then(handleResponse);
 }
 function handleResponse(response) {
