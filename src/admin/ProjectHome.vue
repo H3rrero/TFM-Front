@@ -11,7 +11,7 @@
  import { userService } from '../_services/user.service';
 export default {
     data(){ 
-       return{ 
+       return{  
         selectProject:this.$route.params.id,
         nameProject:this.$route.params.name,
        }
