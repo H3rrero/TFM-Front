@@ -3,7 +3,7 @@ import { router } from '../_helpers';
 
 const user = JSON.parse(localStorage.getItem('user'));
 const state = user
-    ? { status: { loggedIn: true }, user }
+    ? { status: { loggedIn: true }, user,deleted: { deleted: user.deleted }}
     : { status: {}, user: null };
 
 const actions = {
@@ -14,7 +14,13 @@ const actions = {
             .then(
                 user => {
                     commit('loginSuccess', user);
+                    if(!user.deleted){
+                        console.log("per aqui")
                     router.push('/TFM-Front');
+                    }else{
+                        console.log("per alla")
+                    router.push('/login');
+                    }
                 },
                 error => {
                     commit('loginFailure', error);
@@ -55,6 +61,7 @@ const mutations = {
     loginSuccess(state, user) {
         state.status = { loggedIn: true };
         state.user = user;
+        state.deleted = { deleted: user.deleted };
     },
     loginFailure(state) {
         state.status = {};
@@ -63,6 +70,7 @@ const mutations = {
     logout(state) {
         state.status = {};
         state.user = null;
+        state.deleted ={};
     },
     registerRequest(state, user) {
         state.status = { registering: true };

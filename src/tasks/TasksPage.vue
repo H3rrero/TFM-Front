@@ -1,11 +1,14 @@
 <template>
     <div>
         <div class="task-container">
-            
+            <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1,'','')"  class="unassigned-task"  v-if="haveData" >
+                 <div class="title-task-data">
+                    <p>{{"Backlog de "+phaseName}}</p>
+                </div>
                 <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task" >
-                         <task v-if="task.userId == -1 && (task.phase == phaseId)" :task="task"></task>  
+                         <task v-if="task.userId == -1 && (task.phase == phaseId)" :task="task" v-on:show-data="showMenu(task)"></task>  
                     </drag>
                 </div>
             </drop>
@@ -18,14 +21,16 @@
                     <drop @dragover="asignedTask(user.id,user.firstname,user.lastname)" class="programmers-item-task">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task" >
-                               <task v-if="task.userId == user.id && task.phase == phaseId" :task="task"></task>
+                               <task v-if="task.userId == user.id && task.phase == phaseId" :task="task" v-on:show-data="showMenu(task)"></task>
                             </drag>
                         </div>
                     </drop>
                 </div>
             </div>
                 
-            
+             <transition name="slide-fade">
+                <taskdetail v-if="show" :myTask="sendTask"></taskdetail>  
+            </transition> 
         </div>
     </div>
 </template>
@@ -42,6 +47,9 @@ export default {
         usersId:[],
         userss:[],
         phaseId:-1,
+        phaseName:"",
+        show:false,
+        sendTask:{},
         haveData: false,
         userAsignedId:-1,
         assigned:"",
@@ -67,7 +75,10 @@ export default {
             fases=>{
             fases.forEach(element => {
                 if(this.isActual(element)){
+                    console.log("actual");
+                    console.log(element);
                     this.phaseId = element.id;
+                    this.phaseName = element.name;
                 }
             });
              
@@ -85,6 +96,15 @@ export default {
             }
        );
         },
+        showMenu: function (task) {
+            this.show = true;
+            console.log(task);
+            this.sendTask = task;
+        },
+         hideMenu: function () {
+            if(this.show)
+            this.show = false;
+        },
         handleDrop(data, event) {
             data.userId = this.userAsignedId;
             data.assigned = this.assigned;
@@ -101,8 +121,8 @@ export default {
             }
         },
         isActual:function (phase) {
-             let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
-             let start= Date.UTC(parseFloat(phase.yeari),parseFloat(phase.monthi),parseFloat(phase.dayi));
+             let end= new Date(phase.dateF);
+             let start= new Date(phase.dateI);
              let date = new Date();
 
              return (end>=date && start<date) ? true : false;
@@ -119,11 +139,19 @@ export default {
     height: 100%;
 }
 .unassigned-task{
-    background-color: white;
-    border: 2px solid #333399;
+    background-color: #333399;
+    border: 2px solid white;
     border-radius: 1rem;
     margin-right: 10px;
     width: 20%;
+}
+.title-task-data{
+    border-bottom: 1px solid #6B6FCE;
+    color: white;
+    line-height: 50px;
+    text-align: center;
+    font-weight: 700;
+    vertical-align: middle;
 }
 .programmers{
     background-color: white;
@@ -165,5 +193,23 @@ export default {
     height: 90%;
     background-color: #333399;
 }
-
+.mask{
+    background-color: #3D3A3F;
+    height: 100%;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 5;
+}
+.slide-fade-enter-active {
+  transition: all 2.3s ease;
+}
+.slide-fade-leave-active {
+    transition: all 2.3s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(100%);
+ 
+}
 </style>

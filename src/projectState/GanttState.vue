@@ -293,7 +293,7 @@ export default {
         },
         updateData: function () {
           console.log("fases2")
-          console.log(this.fasesg)
+          console.log(this.phases.items[0].data)
          
       this.haveData = true;
         this.stockOptions.series[0].data = this.phases.items[0].data

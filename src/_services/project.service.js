@@ -3,7 +3,9 @@ import { authHeader } from '../_helpers';
 
 export const projectService = {
     getAll,
-    getById
+    getById,
+    createProject,
+    update
 };
 
 
@@ -29,6 +31,24 @@ function getById(id) {
     };
     console.log("service projects");
     return fetch(`${config.apiUrl}/projects/${id}`, requestOptions).then(handleResponse);
+}
+
+function createProject(project) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify(project)
+    };
+    return fetch(`${config.apiUrl}/project/register`, requestOptions).then(handleResponse);
+}
+
+function update(project) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify(project)
+    };
+    return fetch(`${config.apiUrl}/projects/${project.id}`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {
