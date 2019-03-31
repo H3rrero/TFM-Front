@@ -1,7 +1,7 @@
 <template>
 <div class="container-state">
     <router-link :to="{ name: 'manusers', params: { id: selectProject, name:nameProject }}">
-        <state :image="'src/img/gestuser.png'" :title="'Gestion de usuarios del '+nameProject"></state>
+        <state :image="'src/img/gestionusuario.png'" :title="'Gestion de usuarios del '+nameProject"></state>
     </router-link>
 </div>
 
