@@ -6,6 +6,7 @@
                 <input type="text" v-model="username" name="username" class="form-control" :class="{ 'is-invalid': submitted && !username }" />
                 <p class="helper helper1">email@domain.com</p>
                 <div v-show="submitted && !username" class="invalid-feedback">Username is required</div>
+                 <div v-show="removed" class="invalid-feedback">Usuario deshabilitado</div>
             </div>
             <div class="form-group">
                 <p >Password</p>
@@ -127,14 +128,22 @@ export default {
         return {
             username: '',
             password: '',
-            submitted: false
+            submitted: false,
+            removed:false,
         }
+    },
+    updated(){
+      console.log( JSON.parse(localStorage.getItem('user')));
+      if( JSON.parse(localStorage.getItem('user'))!=undefined){
+        if( JSON.parse(localStorage.getItem('user')).deleted){
+          this.removed = true;
+        }else{
+          this.removed = false;
+        }
+      }
     },
     computed: {
         ...mapState('account', ['status'])
-    },
-    created () {
-        this.logout();
     },
     methods: {
         ...mapActions('account', ['login', 'logout']),

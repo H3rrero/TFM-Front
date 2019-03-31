@@ -3,10 +3,11 @@
         <div class="filter">
             <button class="mytask-bt" title="filtrar por tus tareas asignadas" v-bind:class="{ 'mytaskbt-selected': isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
             <button class="mytask-bt" title="filtrar por tareas retrasadas" v-bind:class="{ 'mytaskbt-selected': isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
+            <button class="mytask-bt" title="filtrar por tareas no asignadas" v-bind:class="{ 'mytaskbt-selected': isActiveNa }" v-on:click="showTaskNonAssigned()">No asignadas</button>
             <input type="text" title="filtrar por titulo o descripcion" class="mytask-input" v-model="taskTitle" >
-            <select  class="filter-user" title="Filtar or usuario asignado" v-model="selectUser" v-on:change="showTaskSelectedUser()" >
+            <select  class="filter-user" title="Filtar or usuario asignado" v-model="selectUser" v-on:change="showTaskSelectedUser(selectUser)" >
                     <option value="-1" selected>Todas</option>
-                    <option v-on:click="showTaskSelectedUser(user.id)"  v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
+                    <option   v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
             </select>
             <select  class="filter-user" title="filtrar por fase" v-model="selectPhase" v-on:change="getCurrentPhases()" >
                     <option value="-1" selected>Actual</option>
@@ -17,12 +18,15 @@
                     <i class="fas fa-plus-circle"></i>
                 </span>
             </button>
+            <div class="current-phase" title="fase actual">
+                <p>{{namePhase}}</p>
+            </div>
             <span v-if="exclamation" title="tienes mensajes importantes" v-on:click="showMessagePage()">
                  <i class="fas fa-exclamation-circle"></i>
             </span>
         </div>
         <div class="container-kanban" v-if="haveData"  >
-            <div class="mask" v-if="show || showH || showMessages" v-on:click="hideMenu();hideMenuH();hideMenuM();"></div>
+            <div class="mask" v-if="show || showH || showMessages || showNotification" v-on:click="hideMenu();hideMenuH();hideMenuM();hideMenuN();"></div>
             <div class="tasks">
                 <drop @dragover="changePhase(state.name)" class="item" v-for="state in states" :key="state.id">
                     <div class="text-container">
@@ -31,7 +35,7 @@
                         <div class="task-container">
                             <div v-for="task in tasks" :key="task.id">
                                 <drag @dragend="handleDrop" :transfer-data="task" >
-                                    <div class="task" v-bind:class="{ 'task-retard': retard.includes(task.id) }" v-if="task.state == state.name && !task.deleted &&showTaskfilter(task.id) && (isActive ? usersId.includes(task.userId):true)&&(isActiveS ? usersId.includes(task.userId):true)&& isCurrent(task.phase) && (isActiveR ? retard.includes(task.id):true )" >
+                                    <div class="task" v-bind:class="{ 'task-retard': retard.includes(task.id) }" v-if="(task.state == state.name || checkBacklog(task.userId,state.name)) && !task.deleted &&showTaskfilter(task.id) && (isActive ? usersId.includes(task.userId):true)&&(isActiveS ? usersId.includes(task.userId):true)&& isCurrent(task.phase) && (isActiveR ? retard.includes(task.id):true ) && (isActiveNa ? nonAssigned.includes(task.id):true )" >
                                         <div class="task-title">
                                             <p>{{task.title}}</p>
                                             <span   v-on:click="showMenu(task)" title="editar la tarea">
@@ -69,6 +73,9 @@
                 <messages v-if="showMessages" :message="message"></messages>  
             </transition>
             <transition name="fade">
+                <notification v-if="showNotification" v-on:close-dialog="hideMenuN"  :message="'Par poder sacar una tarea del backlog tiene que estar asignada.'"></notification>  
+            </transition>
+            <transition name="fade">
                 <changehours v-if="showH" :myTask="sendTask"></changehours>  
             </transition>
         </div>
@@ -89,8 +96,10 @@ export default {
         tasks:[],
         states:[],
         retard:[],
+        nonAssigned:[],
         phasesKb:[],
         currentPhases:[],
+        namePhase:"",
         tasksMoved:[],
         tasksCreated:[],
         exclamation:false,
@@ -101,9 +110,11 @@ export default {
         showH:false,
         isActive:false,
         isActiveR:false,
+        isActiveNa:false,
         isActiveA:false,
         isActiveS:false,
         showMessages:false,
+        showNotification:false,
         sendTask: {},
         message:{},
         usersId:[],
@@ -136,6 +147,8 @@ export default {
             );
         },
         getStates: function () {
+            console.log("localStorage.getItem('navOn')")
+            console.log(localStorage.getItem('navOn'));
           stateService.getAll().then(
             elements=>{
               this.states = elements;
@@ -183,10 +196,18 @@ export default {
                 }
             );
         },
+        checkBacklog: function (userId, stateName) {
+            if(this.isActiveNa){
+                if(userId == -1 && stateName == "Backlog")
+                    return true;
+                else
+                    return false;
+            }
+        },
         isFinish:function (phase) {
-            let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
+            let end= new Date(phase.dateF);
             let date = new Date();
-
+            
             return end<date ? true : false;
         },
          getUsers: function () {
@@ -207,21 +228,33 @@ export default {
            if(this.$route.params.id == -1 && this.selectPhase ==-1){
                 this.currentPhases = [];
                 this.phasesKb.forEach(phase => {
-                let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
-                let start= Date.UTC(parseFloat(phase.yeari),parseFloat(phase.monthi),parseFloat(phase.dayi));
+                let end= new Date(phase.dateF);
+                let start= new Date(phase.dateI);
                 let date = new Date();
 
                 if(end>=date && start<date){
                     this.currentPhases.push(phase.id)
+                    this.namePhase = phase.name;
                 }
                 });
             }else if(this.selectPhase !=-1){
                 this.currentPhases = [];
                 this.currentPhases.push(this.selectPhase);
+                this.phasesKb.forEach(phase => {
+                    if(phase.id == this.selectPhase){
+                        this.namePhase = phase.name;
+                    }
+                });
             }else{
                 this.currentPhases = [];
                 this.currentPhases.push(parseInt(this.$route.params.id));
+                this.phasesKb.forEach(phase => {
+                    if(phase.id == this.$route.params.id){
+                        this.namePhase = phase.name;
+                    }
+                });
                 this.$route.params.id = -1;
+
             }
         },
         isCurrent: function (phaseId){
@@ -236,6 +269,9 @@ export default {
                if(dateTask < date && element.state != "Terminada"){
                     this.retard.push(element.id);
                     }
+                if(element.userId == -1){
+                    this.nonAssigned.push(element.id);
+                }
             });
       
         },
@@ -262,8 +298,12 @@ export default {
             this.updateTask(task);
         },
         handleDrop(data, event) {
-            data.state = this.state;
-            this.updateTask(data);
+            if(data.userId!=-1){
+                data.state = this.state;
+                this.updateTask(data);
+            }else{
+                this.showNotification = true;
+            }
         },
         changePhase: function (state) {
             this.state = state;
@@ -279,6 +319,10 @@ export default {
         hideMenuM: function () {
             if(this.showMessages)
             this.showMessages = false;
+        },
+        hideMenuN: function () {
+            if(this.showNotification)
+            this.showNotification = false;
         },
         showTaskfilter:function (id) {
             var ret = false;
@@ -321,6 +365,13 @@ export default {
         },
         showTaskRetard: function () {
             this.isActiveR = !this.isActiveR;
+            this.isActiveA = false;   
+            this.isActive = false;
+            this.isActiveS = false;
+        },
+        showTaskNonAssigned: function () {
+            this.isActiveNa = !this.isActiveNa;
+            this.isActiveR = false;
             this.isActiveA = false;   
             this.isActive = false;
             this.isActiveS = false;
@@ -374,6 +425,12 @@ export default {
 .filter > span{
     cursor: pointer;
     font-size: 28px;
+    margin-left: auto;
+}
+.current-phase{
+    color: #333399;
+    font-size: 24px;
+    font-weight: 600;
     margin-left: auto;
 }
 .mytask-input{

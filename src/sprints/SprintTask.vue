@@ -1,5 +1,5 @@
 <template>
-   <div class="task-unassigned"  v-bind:class="{ 'taskspage-task': task.phase != -1, 'task-finish': task.state=='Terminada', 'task-not-finish': task.finish }"   >
+   <div class="task-unassigned"  v-bind:class="{ 'taskspage-task': task.phase != -1, 'task-finish': task.state=='Terminada', 'task-not-finish': task.finish }" v-on:click="showData()"  >
         <div class="taskspage-task-title">
             <p>{{this.task.title}}</p>
         </div>
@@ -14,22 +14,28 @@ export default {
     props: {
    task: Object
   },
+  methods:{
+      showData:function () {
+          this.$emit('show-data');
+      }
+  }
 };
+
 </script>
 <style scoped>
 .task-unassigned{
-    background-color: #333399;
+    background-color: white;
     border-radius: 1rem;
-    color: white;
+    color: #333399;
     margin: 0 auto;
     margin-top: 8px;
     text-align: center;
     width: 95%;
 }
 .taskspage-task{
-    background-color: white;
+    background-color: #138A00;
     border-radius: 1rem;
-    color: #333399;
+    color: white;
     margin: 0 auto;
     margin-top: 8px;
     text-align: center;

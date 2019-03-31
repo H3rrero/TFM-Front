@@ -107,7 +107,7 @@ export default {
          let estTotal = this.project.planHours;
          let realEst = this.project.planHours;
          this.fasesB.forEach(element => {
-             let end= Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf));
+             let end= new Date(element.dateF);
              let date = new Date();
              estTotal = estTotal-element.totalHours;
              realEst = realEst - element.completedHours;

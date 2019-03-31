@@ -11,6 +11,13 @@ import BurndownState from '../projectState/BurndownState'
 import BurndownSprint from '../projectState/BurndownSprint'
 import SprintPage from '../sprints/SprintPage'
 import CreateTask from '../home/CreateTask'
+import CreatePhase from '../sprints/CreatePhase'
+import AdminHome from '../admin/AdminHome'
+import ManageUsers from '../admin/ManageUsers'
+import CreateUser from '../admin/CreateUser'
+import ProjectHome from '../admin/ProjectHome'
+import CreateProject from '../admin/CreateProject'
+import UserHome from '../home/UserHome'
 
 Vue.use(Router);
 
@@ -28,21 +35,50 @@ export const router = new Router({
     { path: '/burndownSprint/:id', component:  BurndownSprint},
     { path: '/state', component:  ProjectState},
     { path: '/newTask', component:  CreateTask},
-
+    { path: '/newPhase', component:  CreatePhase},
+    { path: '/admin', component:  AdminHome},
+    { path: '/projectsadmin/:id/:name', component:  ProjectHome},
+    { path: '/manusers/:id/:name', component:  ManageUsers, name:'manusers'},    
+    { path: '/createuser/:id', component:  CreateUser}, 
+    { path: '/createproject', component:  CreateProject}, 
+    { path: '/userhome', component:  UserHome},
     // otherwise redirect to home
-    { path: '*', redirect: '/kanban/-1' }
+    { path: '*', redirect: '/admin' }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login', '/register'];
+  const adminPages = ['admin','manusers','createuser','projectsadmin','createproject'];
+  
   const authRequired = !publicPages.includes(to.path);
+  const adminRequired = adminPages.includes(to.path.split("/")[1]);
   const loggedIn = localStorage.getItem('user'); 
+  const user = JSON.parse(localStorage.getItem('user'));
+  console.log("to.path");
+  console.log(to.path.split("/"));
 
-  if (authRequired && !loggedIn) {
+  if (authRequired && !loggedIn ) {
     return next('/login');
-  }
+  }else if(!authRequired){
+    next();
+  }else if(loggedIn){
+    if(user.rol =='user' || user.rol =='manager'){
+      if(adminRequired){
+        return next('/userhome');
+      }else{
+        next();
+      }
+    }
+    if(user.rol =='admin'){
+      if(!adminRequired){
+          return next('/admin');
+      }else{
+        next();
+      }
+    }
+}
 
-  next();
+ 
 })

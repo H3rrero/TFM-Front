@@ -1,7 +1,6 @@
 <template>
      <div class="container">
-        <navigator class="navigator"></navigator>
-        <div v-if="alert.message" :class="`alert ${alert.type}`">{{alert.message}}</div>
+        <navigator v-if="account.status.loggedIn && !account.deleted.deleted" class="navigator"></navigator>
         <router-view class="content"></router-view>
     </div>
        
@@ -105,21 +104,19 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'app',
+     data(){
+       return{ 
+       removed: false,
+      
+       }
+    },
     computed: {
         ...mapState({
-            alert: state => state.alert
+             account: state => state.account,
         })
     },
     methods: {
-        ...mapActions({
-            clearAlert: 'alert/clear' 
-        })
-    },
-    watch: {
-        $route (to, from){
-            // clear alert on location change
-            this.clearAlert();
-        }
+      ...mapActions('account', ['login', 'logout']),
     } 
 };
 </script>

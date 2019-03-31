@@ -1,27 +1,31 @@
 <template>
-    <div class="menu" v-if="account.status.loggedIn">  
+    <div class="menu" >  
         <section>
-            <header>
-                <a  class="logo" target="_blank">Organizador</a>
+            <header  v-bind:class="{ 'header-admin': user.rol == 'admin'}">
+                <span v-on:click="back()" v-if="user.rol=='admin'" class="logo back" target="_blank"><i class="fas fa-arrow-circle-left"></i></span>
+                <span v-if="user.rol!='admin'" class="logo" target="_blank">{{user.firstname+ " "+user.lastname}}</span>
+                <span v-if="user.rol=='admin'" class="admin-console" target="_blank">Consola de administración</span>
                 <label for="toggle-1" class="toggle-menu"><ul><li></li> <li></li> <li></li></ul></label>
                 <input type="checkbox" id="toggle-1">
                 <nav>
                     <ul class="ul-menu">
-                        <li title="DIferentes diagramas del estado del proyecto">
+                        <li v-if="user.rol!='admin' && navOn" title="Diferentes diagramas del estado del proyecto" v-on:click="currentPage('states')" v-bind:class="{ 'active': this.states }">
                             <router-link to="/state">Estado del proyecto</router-link>
                         </li>
-                        <li title="ver kamban actual del proyecto">
-                            <router-link to="/kanban/-1">kamban</router-link>
+                        <li v-if="user.rol!='admin'  && navOn" title=" añadir tareas a un sprint" v-on:click="currentPage('phases')" v-bind:class="{ 'active': this.phases }">
+                            <router-link to="/sprints">Gestionar fases</router-link>
                         </li>
-                        <li title="asignar o reasignar las tareas">
-                            <router-link to="/tasks">Tareas</router-link>
+                         <li v-if="user.rol!='admin'  && navOn" title="asignar o reasignar las tareas" v-on:click="currentPage('tasks')" v-bind:class="{ 'active': this.tasks }">
+                            <router-link to="/tasks">Asignar tareas</router-link>
                         </li>
-                        <li title=" añadir tareas a un sprint">
-                            <router-link to="/sprints">Sprints</router-link>
+                        <li v-if="user.rol!='admin'  && navOn" title="ver kamban actual del proyecto" v-on:click="currentPage('kamban')" v-bind:class="{ 'active': this.kamban }">
+                            <router-link to="/kanban/-1">Kamban</router-link>
                         </li>
+
                         <li>
-                            <span>
-                                <i class="fas fa-user-circle"></i>
+
+                            <span v-on:click="endSession()">
+                               <i class="fas fa-sign-out-alt"></i>
                             </span>
                         </li>
                     </ul>
@@ -32,6 +36,18 @@
 </template>
 
 <style>
+.admin-console{
+    color: #333399; 
+    font-size:24px; 
+    font-weight:600; 
+}
+.header-admin{
+    display: flex;
+}
+.header-admin > .admin-console{
+    margin: 0 auto;
+    padding:20px 0px;
+}
 .logo{
     color: #333399; 
     font-size:24px; 
@@ -41,6 +57,9 @@
     padding:20px 0px;
     text-transform:uppercase; 
     }
+.back{
+    cursor: pointer;
+}
 nav{
     float:right;
     width:auto;
@@ -63,7 +82,13 @@ header > a{
     color: #333399;
     text-decoration: none;
 }
+.active{
+    background-color: #333399;
+}
+.active > a{
+    color: white;
     
+}
 li > a{
     color: #333399;
     text-decoration: none;
@@ -182,11 +207,81 @@ import { mapState, mapActions } from 'vuex'
 export default {
      name: "navigator"
     ,
+    data(){
+       return{ 
+       states: false,
+       phases:false,
+       tasks:false,
+       kamban:true,
+       checkUser:true,
+       navOn:false,
+       user:{}
+       }
+    },
    computed: {
         ...mapState({
             account: state => state.account,
             users: state => state.users.all
         })
     },
+    mounted(){
+        this.$root.$on('eventing', data => {
+            console.log("eventing")
+           this.navOn=true;
+    });
+    },
+    created(){
+    this.getUser();
+    console.log("this.$router.path")
+    console.log(this.$router.history.current.path.includes("userhome"));
+    if(this.$router.history.current.path.includes("userhome")){
+        this.navOn = false;
+    }else{
+        this.navOn=true;
+    }
+
+    },
+    methods:{
+        ...mapActions('account', ['login', 'logout']),
+        endSession: function () {
+          this.logout();  
+          this.navOn=false;
+          this.$router.push('/login');
+        },
+        getUser:function () {
+          this.user =  JSON.parse(localStorage.getItem('user'))
+        },
+        back:function () {
+          this.$router.go(-1);  
+        },
+        currentPage: function (page) {
+           
+          if(page == 'states'){
+              this.states = true;
+              this.phases = false;
+              this.tasks = false;
+              this.kamban = false;
+          }
+          else if(page == 'phases'){
+               this.states = false;
+              this.phases = true;
+              this.tasks = false;
+              this.kamban = false;
+          }
+          else if(page == 'tasks'){
+               this.states = false;
+              this.phases = false;
+              this.tasks = true;
+              this.kamban = false;
+          }
+          else if(page == 'kamban'){
+               this.states = false;
+              this.phases = false;
+              this.tasks = false;
+              this.kamban = true;
+          }
+       
+        },
+    }
 };
 </script>

@@ -41,7 +41,7 @@ function logout() {
 function register(user) {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeader(),
         body: JSON.stringify(user)
     };
 
@@ -56,7 +56,6 @@ function getAll() {
 
     return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
 }
-
 
 function getById(id) {
     const requestOptions = {

@@ -5,48 +5,54 @@
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
-                <p>Reasignar tarea:</p>
-                 <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" >
-                    <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
-                </select>
+                <p>Asignada a:</p>
+                 <div class="item-text-data">
+                    <div>
+                        <p>{{myTask.assigned}}</p>
+                    </div>
+                </div>
             </div>
              <div class="item-task-data">
-                <p>Cambiar estado:</p>
-                 <select  v-model="myTask.state" >
-                    <option v-for="state in states" :key="state.id" :value="state.name">{{state.name}}</option>
-                </select>
-            </div>
-            <div class="item-task-data">
-                <p>Descripción:</p>
-                <textarea-autosize v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
-            </div>
-            <div class="item-task-data">
-                <div class="dates">
-                    <div class="dateini">
-                        <p>Fecha Inicio:</p>
-                        <datetime v-model="myTask.dateI"></datetime>
-                    </div>
-                    <div class="dateend">
-                        <p>Fecha Fin:</p>
-                        <datetime v-model="myTask.dateF"></datetime>
+                <p>Estado:</p>
+                 <div class="item-text-data">
+                    <div>
+                        <p>{{myTask.state}}</p>
                     </div>
                 </div>
             </div>
             <div class="item-task-data">
-                <p>Horas planificadas:</p>
-                <div class="item-text-data">
+                <p>Descripción:</p>
+                 <div class="item-text-data">
                     <div>
-                        <p>{{myTask.planHours}}</p>
+                        <p>{{myTask.description}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item-task-data">
+                <div class="dates">
+                    <div class="item-text-data">
+                         <p>Fecha Inicio:</p>
+                        <div>
+                             <p>{{myTask.dateI.substr(0,myTask.dateI.indexOf('T'))}}</p>
+                        </div>
+                    </div>
+                    <div class="item-text-data left">
+                        <p>Fecha Fin:</p>
+                        <div>
+                            <p>{{myTask.dateF.substr(0,myTask.dateF.indexOf('T'))}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="item-task-data">
                  <div class="dates">
-                    <div class="dateini">
-                       <p>Añadir horas dedicadas:</p>
-                        <input value="0"  v-model="hours" type="number">    
-                    </div>
                     <div class="item-text-data">
+                         <p>Horas planificadas:</p>
+                        <div>
+                            <p>{{myTask.planHours}}</p>
+                        </div>
+                    </div>
+                    <div class="item-text-data left">
                         <span>Horas dedicadas totales:</span>
                         <div>
                             <p>{{myTask.hours}}</p>
@@ -55,21 +61,11 @@
                 </div>
                
             </div>
-
-            <div class="item-task-data">
-                <p>Dejar comentario:</p>
-                <textarea-autosize v-model="coment"></textarea-autosize>
-            </div>
             <div class="item-textarea-data">
                 <span>Comentarios:</span>
                 <div>
                     <p v-for="coment in  this.myTask.coments" :key="coment.id">{{coment}}</p>
                 </div>
-            </div>
-            <div class="item-button-data">
-                <p>{{result}}</p>
-                <a class="button" v-on:click="updateTask()">Actualizar tarea</a>
-                
             </div>
         </div>
     </div>
@@ -79,7 +75,6 @@
 
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
- import { stateService } from '../_services/states.service';
 export default {
     props: {
    myTask: Object
@@ -91,12 +86,10 @@ export default {
        hours:0,
        coment:"",
        userss:[],
-       states:[],
        }
     },
     created () {
         this.getUsers();
-        this.getStates();
     },
     methods:{
         updateTask: function () {
@@ -109,13 +102,6 @@ export default {
                     this.result = "La tarea ha sido actualizada.";
                 }
             );
-        },
-        getStates: function () {
-          stateService.getAll().then(
-            elements=>{
-              this.states = elements;
-            }
-       );
         },
         getUsers: function () {
           userService.getAll().then(
@@ -138,43 +124,6 @@ export default {
 };
 </script>
 <style scoped>
-
-.button {
-    border: 2px solid #333399;
-    border-radius: 0.3em;
-    color: #333399;
-    display: inline-block;
-    font-size: 17px;
-    margin: 0 auto;
-    overflow: hidden;
-    padding: 0.75em 2em;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    transition: all 0.2s ease-in-out;
-    width: 50% !important;
-}
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
-.button:hover {
-  background-color: #333399;
-  border-bottom: 4px solid #333399;
-  color: #fff;
-}
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
-}
 .container-task-data{
     background-color: #eee;
     display: flex;
@@ -252,6 +201,9 @@ export default {
 }
 .dateini{
     margin-right: 10px;
+}
+.left{
+    margin-left: 5px;
 }
 input, select, textarea{
     border: 2px solid #333399;

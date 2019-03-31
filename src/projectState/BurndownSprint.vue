@@ -117,8 +117,8 @@ export default {
        );
         },
         isActual:function (phase) {
-             let end= Date.UTC(parseFloat(phase.yearf),parseFloat(phase.monthf),parseFloat(phase.dayf));
-             let start= Date.UTC(parseFloat(phase.yeari),parseFloat(phase.monthi),parseFloat(phase.dayi));
+             let end= new Date(phase.dateF);
+             let start= new Date(phase.dateI);
              let date = new Date();
 
              return (end>=date && start<date) ? true : false;
@@ -131,8 +131,8 @@ export default {
             element=>{
                 let estTotal = element.totalHours;
                 let realEstTotal = element.totalHours;
-                let end=new Date(Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf)));
-                let start = new Date(Date.UTC(parseFloat(element.yeari),parseFloat(element.monthi),parseFloat(element.dayi)));
+                let end=new Date(element.dateF);
+                let start = new Date(element.dateI);
                 var diffDays = Math.round(Math.abs((start.getTime() - end.getTime())/(oneDay)))+1;
                 let time = element.totalHours/diffDays;
                 if(end < new Date() || this.isActual(element)){

@@ -27,11 +27,17 @@ const mutations = {
         for (const phase   in phases) {
             if (phases.hasOwnProperty(phase)) {
                 const element = phases[phase];
+                var ini = new Date(element.dateI);
+                var end = new Date(element.dateF);
+                console.log(element.name);
+                console.log(ini.getFullYear());
+                console.log(ini.getMonth());
+                console.log(ini.getDate());
                 series[0].data[phase] ={
-                    start: Date.UTC(parseFloat(element.yeari),parseFloat(element.monthi),parseFloat(element.dayi)),
-                    end: Date.UTC(parseFloat(element.yearf),parseFloat(element.monthf),parseFloat(element.dayf)),
-                    dateIni:parseFloat(element.yeari)+'-'+parseFloat(element.monthi)+'-'+parseFloat(element.dayi),
-                    dateEnd: parseFloat(element.yearf)+'-'+parseFloat(element.monthf)+'-'+parseFloat(element.dayf),
+                    start: Date.UTC(ini.getFullYear(),ini.getMonth(),ini.getDate()),
+                    end: Date.UTC(end.getFullYear(),end.getMonth(),end.getDate()),
+                    dateIni: element.dateI.substr(0,element.dateI.indexOf('T')),
+                    dateEnd: element.dateF.substr(0,element.dateF.indexOf('T')),
                     name:element.name,
                     completed: parseFloat (element.completed),
                     hours:element.hours,
