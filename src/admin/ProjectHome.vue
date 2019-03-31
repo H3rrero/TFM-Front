@@ -1,7 +1,7 @@
 <template>
 <div class="container-state">
     <router-link :to="{ name: 'manusers', params: { id: selectProject, name:nameProject }}">
-        <state :image="'src/img/gesuser.png'" :title="'Gestion de usuarios del '+nameProject"></state>
+        <state :image="'src/img/gestuser.png'" :title="'Gestion de usuarios del '+nameProject"></state>
     </router-link>
 </div>
 
@@ -10,7 +10,7 @@
 
  import { userService } from '../_services/user.service';
 export default {
-    data(){
+    data(){ 
        return{ 
         selectProject:this.$route.params.id,
         nameProject:this.$route.params.name,
