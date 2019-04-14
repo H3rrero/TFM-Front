@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="task-container">
-            <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
+            <div class="mask" v-if="show ||showMessage" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1,'','')"  class="unassigned-task"  v-if="haveData" >
                  <div class="title-task-data">
                     <p>{{"Backlog de "+phaseName}}</p>
@@ -31,6 +31,9 @@
              <transition name="slide-fade">
                 <taskdetail v-if="show" :myTask="sendTask"></taskdetail>  
             </transition> 
+            <transition name="fade">
+                <notification class="notification" v-if="showMessage" v-on:close-dialog="hideMenu"  :message="'No puedes asignar tareas a otros usuarios.'"></notification>  
+            </transition>
         </div>
     </div>
 </template>
@@ -49,6 +52,8 @@ export default {
         phaseId:-1,
         phaseName:"",
         show:false,
+        showMessage:false,
+        currentUser: JSON.parse(localStorage.getItem('user')),
         sendTask:{},
         haveData: false,
         userAsignedId:-1,
@@ -104,12 +109,19 @@ export default {
          hideMenu: function () {
             if(this.show)
             this.show = false;
+            if(this.showMessage)
+            this.showMessage = false;
+
         },
         handleDrop(data, event) {
-            data.userId = this.userAsignedId;
-            data.assigned = this.assigned;
-            data.state = this.phase;
-            taskService.changeTask(data);
+            if(this.currentUser.rol =='manager' || this.currentUser.id == this.userAsignedId || this.userAsignedId == -1){
+                data.userId = this.userAsignedId;
+                data.assigned = this.assigned;
+                data.state = this.phase;
+                taskService.changeTask(data);
+            }else{
+                this.showMessage = true;
+            }
         },
         asignedTask: function (id,name,lastName) {
             this.userAsignedId = id;
@@ -201,6 +213,9 @@ export default {
     top: 0;
     width: 100%;
     z-index: 5;
+}
+.notification{
+    margin-left: 40%;
 }
 .slide-fade-enter-active {
   transition: all 2.3s ease;

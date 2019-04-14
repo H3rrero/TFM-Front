@@ -12,9 +12,13 @@
             </div>
             <div class="item-task-data">
                 <p>Asignar tarea:</p>
-                 <select  v-model="myTask.userId"  >
+                 <select  v-model="myTask.userId"  v-if="user.rol=='manager'">
                      <option value="-1" selected>No asignar</option>
                     <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
+                </select>
+                <select  v-model="myTask.userId"  v-if="user.rol=='user'">
+                     <option value="-1" selected>No asignar</option>
+                     <option :value="user.id" selected>{{user.firstname + " "+ user.lastname}}</option>
                 </select>
             </div>
             <div class="item-task-data">
@@ -36,6 +40,10 @@
                 || this.myTask.dateI.trim() == '' || this.myTask.dateF.trim() == '')" v-bind:class="{ 'error': 
                 (myTask.dateI == undefined|| myTask.dateF == undefined|| 
                 this.myTask.dateI.trim() == '' || this.myTask.dateF.trim() == '')}" >Los campos fecha de inicio y fecha de fin son obligatorios.</p>
+                <p v-if="new Date(this.myTask.dateF) < new Date(this.myTask.dateI) ||
+                new Date(this.myTask.dateI) < new Date()" v-bind:class="{ 'error': 
+                new Date(this.myTask.dateF) < new Date(this.myTask.dateI) ||
+                new Date(this.myTask.dateI) < new Date()}"> La fecha de fin debe ser posterior a la de inicio, y la fecha de inicio debe ser posterior al día actual.</p>
             </div>
             <div class="item-task-data">
                  <div class="dates">
@@ -71,6 +79,7 @@ export default {
        return{ 
        haveData: false,
        userss:[],
+       user:{},
        coment:"",
        validar : false,
        taskCreated:false,
@@ -80,7 +89,7 @@ export default {
         userId:-1,
         assigned:"",
         coments:[],
-        phase:-1,
+        phase:parseInt(this.$route.params.idPhase),
         hours:0,
         planHours:0,
         state:'sin asignar'},
@@ -91,6 +100,7 @@ export default {
     },
     methods:{
         getUsers: function () {
+          this.user =  JSON.parse(localStorage.getItem('user'));
           userService.getAll().then(
             users=>{
                 users.forEach(element => {
@@ -101,6 +111,12 @@ export default {
        );
         },
         validate:function(){
+            let start = new Date(this.myTask.dateI);
+            let end = new Date(this.myTask.dateF);
+            console.log("start < new Date() ");
+            console.log(start < new Date() );
+            console.log(start);
+            console.log(new Date() );
            if(this.myTask.title == undefined||
             this.myTask.title.trim() == ""||
             this.myTask.userId == undefined||
@@ -108,6 +124,8 @@ export default {
             this.myTask.dateI == undefined||
             this.myTask.dateI.trim() == ""||
             this.myTask.dateF.trim() == ""||
+            end < start ||
+            start < new Date() ||
             this.myTask.dateF == undefined||
             this.myTask.planHours == undefined||
             this.myTask.planHours < 1 ||
