@@ -6,8 +6,12 @@
         <div class="form-task-data">
             <div class="item-task-data">
                 <p>Reasignar tarea:</p>
-                 <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" >
+                 <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='manager'" >
                     <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
+                </select>
+                <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='user'" >
+                    <option :value="myTask.userId" selected>{{myTask.assigned}}</option>
+                    <option :value="user.id" >{{user.firstname + " "+ user.lastname}}</option>
                 </select>
             </div>
              <div class="item-task-data">
@@ -31,6 +35,10 @@
                         <datetime v-model="myTask.dateF"></datetime>
                     </div>
                 </div>
+                 <p v-if="new Date(this.myTask.dateF) < new Date(this.myTask.dateI) ||
+                new Date(this.myTask.dateI) < new Date()" v-bind:class="{ 'error': 
+                new Date(this.myTask.dateF) < new Date(this.myTask.dateI) ||
+                new Date(this.myTask.dateI) < new Date()}"> La fecha de fin debe ser posterior a la de inicio, y la fecha de inicio debe ser posterior al día actual.</p>
             </div>
             <div class="item-task-data">
                 <p>Horas planificadas:</p>
@@ -56,7 +64,7 @@
                
             </div>
 
-            <div class="item-task-data">
+            <div class="item-task-data" v-if="user.rol=='manager'|| myTask.userId == user.id">
                 <p>Dejar comentario:</p>
                 <textarea-autosize v-model="coment"></textarea-autosize>
             </div>
@@ -82,10 +90,12 @@
  import { stateService } from '../_services/states.service';
 export default {
     props: {
-   myTask: Object
+   myTask: Object,
+   user:Object
   },
     data(){
        return{ 
+       valid:false,
        haveData: false,
        result: "",
        hours:0,
@@ -95,22 +105,52 @@ export default {
        }
     },
     created () {
+         console.log( this.myTask.userId );
+          console.log( this.user);
+        console.log(" myTask.userId == user.userId");
+        console.log( this.myTask.userId == this.user.userId);
         this.getUsers();
         this.getStates();
     },
     methods:{
         updateTask: function () {
-            if(isNaN(parseInt(this.hours)))
-                this.hours = 0;
-            this.myTask.hours = parseInt(this.myTask.hours) + parseInt(this.hours);
-            this.myTask.coments.push(this.coment);
-            taskService.changeTask(this.myTask).then(
-                resp => {
-                    this.result = "La tarea ha sido actualizada.";
-                }
-            );
+            if(this.validate()){
+                this.valid=false;
+                if(isNaN(parseInt(this.hours)))
+                    this.hours = 0;
+                if(this.myTask.state == 'sin asignar' && this.myTask.userId !=-1)
+                    this.myTask.state="Backlog";
+                this.myTask.hours = parseInt(this.myTask.hours) + parseInt(this.hours);
+                this.myTask.coments.push(this.coment);
+                taskService.changeTask(this.myTask).then(
+                    resp => {
+                        this.$emit('update-task');
+                        this.result = "La tarea ha sido actualizada.";
+                    }
+                );
+            }else{
+                this.valid = true;
+                this.result = "Campos erroneos.";
+            }
+        },
+        validate:function(){
+            let start = new Date(this.myTask.dateI);
+            let end = new Date(this.myTask.dateF);
+           
+           if(
+            this.myTask.dateI == undefined||
+            this.myTask.dateI.trim() == ""||
+            this.myTask.dateF.trim() == ""||
+            end < start ||
+            start < new Date()) {
+                return false;
+           }else{
+                return true;
+           }
         },
         getStates: function () {
+            console.log("this.myTask");
+            console.log(this.myTask)
           stateService.getAll().then(
             elements=>{
               this.states = elements;
@@ -118,6 +158,9 @@ export default {
        );
         },
         getUsers: function () {
+          console.log("getUsers");
+          console.log(this.user);
+          console.log(this.myTask);
           userService.getAll().then(
             users=>{
                 users.forEach(element => {
@@ -199,6 +242,9 @@ export default {
 .form-task-data{
     display: flex;
     flex-direction: column;
+}
+.error{
+    color: red;
 }
 .item-task-data{  
     margin-top: 10px;

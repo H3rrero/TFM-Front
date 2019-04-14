@@ -12,7 +12,7 @@
                         <li v-if="user.rol!='admin' && navOn" title="Diferentes diagramas del estado del proyecto" v-on:click="currentPage('states')" v-bind:class="{ 'active': this.states }">
                             <router-link to="/state">Estado del proyecto</router-link>
                         </li>
-                        <li v-if="user.rol!='admin'  && navOn" title=" añadir tareas a un sprint" v-on:click="currentPage('phases')" v-bind:class="{ 'active': this.phases }">
+                        <li v-if="user.rol=='manager'  && navOn" title=" añadir tareas a un sprint" v-on:click="currentPage('phases')" v-bind:class="{ 'active': this.phases }">
                             <router-link to="/sprints">Gestionar fases</router-link>
                         </li>
                          <li v-if="user.rol!='admin'  && navOn" title="asignar o reasignar las tareas" v-on:click="currentPage('tasks')" v-bind:class="{ 'active': this.tasks }">

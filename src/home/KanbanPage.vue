@@ -67,7 +67,7 @@
                 </drop>
             </div>
             <transition name="slide-fade">
-                <taskdata v-if="show" :myTask="sendTask"></taskdata>  
+                <taskdata v-if="show" :myTask="sendTask" :user="currentUser" v-on:update-task="getSeries" ></taskdata>  
             </transition>
             <transition name="slide-fade">
                 <messages v-if="showMessages" :message="message"></messages>  
@@ -132,7 +132,7 @@ export default {
     },
     methods: {
        getSeries: function () {
-          taskService.getAll().then(
+         taskService.getAll().then(
             taskss=>{
               this.updateData(taskss);
                this.haveData = true;
@@ -189,8 +189,10 @@ export default {
                       }, 100);  
         },
         createTask:function(counter){
+            console.log("createTask");
             taskService.createTask(this.tasksCreated[counter]).then(
                 task =>{
+                     console.log(task);
                     if(this.tasksCreated[counter+1]!=undefined)
                     this.createTask(counter+1);
                 }
@@ -222,7 +224,7 @@ export default {
        );
         },
         openNewTask:function (id) {
-            this.$router.push('/newTask');
+            this.$router.push('/newTask/'+this.selectPhase);
         },
         getCurrentPhases:function () {
            if(this.$route.params.id == -1 && this.selectPhase ==-1){
@@ -234,6 +236,7 @@ export default {
 
                 if(end>=date && start<date){
                     this.currentPhases.push(phase.id)
+                    this.selectPhase = phase.id;
                     this.namePhase = phase.name;
                 }
                 });
@@ -263,6 +266,9 @@ export default {
         updateData: function (taskss) {
             this.haveData = true;
             this.tasks = taskss;
+            this.nonAssigned = [];
+            console.log("updateData");
+            console.log(taskss);
             this.tasks.forEach(element => {
                 let dateTask = new Date(element.dateF);
                 let date = new Date();
@@ -271,12 +277,16 @@ export default {
                     }
                 if(element.userId == -1){
                     this.nonAssigned.push(element.id);
+                     console.log(this.nonAssigned);
                 }
             });
       
         },
         showMenu: function (task) {
             this.show = true;
+            console.log("showMenu")
+            console.log(task)
+            console.log(this.tasks);
             this.sendTask = task;
         },
         showMessagePage: function () {
@@ -291,6 +301,9 @@ export default {
         },
         showHours: function (task) {
             this.showH = true;
+            console.log("showHours")
+            console.log(task)
+            console.log(this.tasks);
             this.sendTask = task;
         },
         deletedTask: function (task) {
