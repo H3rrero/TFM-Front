@@ -14,16 +14,15 @@ import CreateTask from '../home/CreateTask'
 import CreatePhase from '../sprints/CreatePhase'
 import AdminHome from '../admin/AdminHome'
 import ManageUsersProject from '../admin/ManageUsersProject'
-import ManageUsers from '../admin/ManageUsers'
 import CreateUser from '../admin/CreateUser'
 import AdminProjects from '../admin/AdminProjects'
-import ManageProjects from '../admin/ManageProjects'
 import CreateProject from '../admin/CreateProject'
 import AllUsers from '../admin/AllUsers'
-import AddProgrammer from '../admin/AddProgrammer'
-import Addmanager from '../admin/Addmanager'
 import UserToProject from '../admin/UserToProject'
 import UserHome from '../home/UserHome'
+import UsersProject from '../users/UsersProject'
+import Profile from '../users/Profile'
+import ProjectData from '../project/ProjectData'
 
 Vue.use(Router);
 
@@ -44,16 +43,15 @@ export const router = new Router({
     { path: '/newPhase', component:  CreatePhase},
     { path: '/admin', component:  AdminHome},
     { path: '/projects', component:  AdminProjects},
-    { path: '/projectsadmin/:id/:name', component:  ManageProjects},
     { path: '/manusers/:id/:name', component:  ManageUsersProject, name:'manusers'},   
-    { path: '/manageusers', component:  ManageUsers}, 
+    { path: '/disableusers/:id/:name', component:  UsersProject, name:'disableusers'},   
     { path: '/createuser/:id', component:  CreateUser}, 
     { path: '/createproject', component:  CreateProject}, 
     { path: '/userslist', component:  AllUsers},
-    { path: '/addprogrammer/:id', component:  AddProgrammer, name:'addprogrammer'},
-    { path: '/addmanager/:id', component:  Addmanager, name:'addmanager'},
     { path: '/usersproject', component:  UserToProject},
     { path: '/userhome', component:  UserHome},
+    { path: '/profile', component:  Profile},
+    { path: '/projectdata/:id', component:  ProjectData},
     
     // otherwise redirect to home
     { path: '*', redirect: '/admin' }
@@ -65,7 +63,7 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/register'];
   const adminPages = ['admin','manusers','createuser','projectsadmin','createproject','projects',
                       'manageusers','userslist','usersproject','addprogrammer','addmanager'];
-  const managerPages = ['sprints'];
+  const managerPages = ['sprints','disableusers','projectdata'];
   
   const authRequired = !publicPages.includes(to.path);
   const managerRequired = managerPages.includes(to.path.split("/")[1]);

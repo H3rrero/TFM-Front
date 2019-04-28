@@ -3,7 +3,7 @@
     <router-link to="/projects">
         <state :image="'src/img/gestionusuario.png'" :title="'Gestion de proyectos'"></state>
     </router-link>
-    <router-link to="/manageusers">
+    <router-link to="/usersproject">
         <state :image="'src/img/gestionusuario.png'" :title="'Gestion de usuarios'"></state>
     </router-link>
 </div>

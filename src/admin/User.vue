@@ -1,7 +1,7 @@
 <template>
    <div class="task-unassigned"  v-bind:class="{ 'manager': user.rol == 'manager' }" v-on:click="showData()"  >
         <div class="taskspage-task-title">
-            <p>{{this.user.firstname + " "+ this.user.lastname}}</p>
+            <p>{{this.user.firstname + " "+ this.user.lastname + " / "+user.username}}</p>
         </div>
     </div>
 </template>
