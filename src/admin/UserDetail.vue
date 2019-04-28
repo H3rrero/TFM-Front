@@ -21,12 +21,18 @@
                 </div>
             </div>
             <div class="item-task-data">
-                <p>Rol:</p>
-                 <div class="item-text-data">
-                    <div>
-                        <p>{{myUser.rol}}</p>
-                    </div>
-                </div>
+                <p>* Rol:</p>
+                <select  v-model="myUser.rol" >
+                    <option value="manager">Jefe de proyecto</option>
+                    <option value="user">Programador</option>
+                </select>
+            </div>
+            <div class="item-task-data">
+                <p>{{result}}</p>
+            </div>
+            <div class="item-button-data">
+                <a class="button" v-on:click="updateUser()">Actualizar usuario</a>
+                
             </div>
         </div>
     </div>
@@ -35,6 +41,7 @@
 <script>
 
  import { projectService } from '../_services/project.service';
+  import { userService} from '../_services/user.service';
 export default {
     props: {
    myUser: Object
@@ -42,6 +49,7 @@ export default {
     data(){
        return{ 
        project:"No tiene proyecto asignado",
+       result:""
        }
     },
     created () {
@@ -59,10 +67,51 @@ export default {
             }
        );
         },
+        updateUser() {
+                userService.update(this.myUser).then(user =>{
+                    this.result = "El usuario se ha actualizado correctamente.";
+                });
+        },
     }
 };
 </script>
 <style scoped>
+.button {
+    border: 2px solid #333399;
+    border-radius: 0.3em;
+    color: #333399;
+    display: inline-block;
+    font-size: 17px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0.75em 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    width: 50% !important;
+}
+.button:before {
+  background-color: rgba(255, 255, 255, 0.5);
+  content: "";
+  height: 100%;
+  display: block;
+  left: -4.5em;
+  position: absolute;
+  top: 0;
+  transform: skewX(-45deg) translateX(0);
+  transition: none;
+  width: 3em;
+}
+.button:hover {
+  background-color: #333399;
+  border-bottom: 4px solid #333399;
+  color: #fff;
+}
+.button:hover:before {
+  transform: skewX(-45deg) translateX(13.5em);
+  transition: all 0.5s ease-in-out;
+}
 .container-task-data{
     background-color: #eee;
     display: flex;
@@ -133,6 +182,11 @@ export default {
 }
 .item-task-data *{
    width: 100%;
+}
+.item-button-data{  
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 95%;
 }
 .dates{
     display: flex;

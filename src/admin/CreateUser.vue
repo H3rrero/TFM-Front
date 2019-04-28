@@ -29,21 +29,17 @@
                  v-bind:class="{ 'error': (myUser.lastname == undefined|| myUser.lastname.trim()=='')}" >* El campo apellidos es obligatorio</p>
             </div>
             <div class="item-task-data">
-                <p>* Rol:</p>
-                <select  v-model="myUser.rol" >
-                    <option value="manager">Jefe de proyecto</option>
-                    <option value="user">Programador</option>
-                </select>
-                <p v-if="validar && (myUser.rol == undefined|| myUser.rol.trim()=='')"
-                 v-bind:class="{ 'error': (myUser.rol == undefined|| myUser.rol.trim()=='')}" >* El campo rol es obligatorio</p>
-            </div>
-            <div class="item-task-data">
                 <p v-if="userCreated" v-bind:class="{ 'correct':userCreated}">El usuario se ha añadido correctamente</p>
             </div>
-            <div class="item-button-data">
-                <a class="button" v-on:click="createUser()">Añadir usuario</a>
-                
+            <div class="buttons">
+                <div class="item-button-data">
+                    <a class="button" v-on:click="createUser()">Añadir usuario</a>
+                </div>
+                <div class="item-button-data">
+                    <a class="button-cancelar" v-on:click="cancelar()">Cancelar</a>
+                </div>
             </div>
+            
         </div>
     </div>
 </template>
@@ -85,13 +81,18 @@ export default {
                 return true;
            }
         },
+        cancelar:function () {
+            this.$router.push('/usersproject');  
+        },
         createUser:function () {
             if(this.validate()){
                 console.log("bieeen");
                 this.userCreated = true;
                 this.validar = false;
-                userService.register(this.myUser);
-                    
+                userService.register(this.myUser).then(user=>{
+                    this.$router.push('/usersproject');  
+                })
+                
             }else{
                 this.validar =true;
                 console.log("maaaaallll");
@@ -137,6 +138,48 @@ export default {
 .button:hover:before {
   transform: skewX(-45deg) translateX(13.5em);
   transition: all 0.5s ease-in-out;
+}
+.button-cancelar {
+    border: 2px solid #D52525;
+    border-radius: 0.3em;
+    color: #D52525;
+    display: inline-block;
+    font-size: 17px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0.75em 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    width: 50% !important;
+}
+.button-cancelar:before {
+  background-color: rgba(255, 255, 255, 0.5);
+  content: "";
+  height: 100%;
+  display: block;
+  left: -4.5em;
+  position: absolute;
+  top: 0;
+  transform: skewX(-45deg) translateX(0);
+  transition: none;
+  width: 3em;
+}
+.button-cancelar:hover {
+  background-color: #D52525;
+  border-bottom: 4px solid #D52525;
+  color: #fff;
+}
+.button-cancelar:hover:before {
+  transform: skewX(-45deg) translateX(13.5em);
+  transition: all 0.5s ease-in-out;
+}
+.buttons{
+    display: flex;
+    margin: 0 auto;
+    padding: 2%;
+    width: 80%;
 }
 .container-task-data{
     display: flex;

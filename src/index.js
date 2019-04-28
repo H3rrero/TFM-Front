@@ -24,6 +24,7 @@ import exporting from 'highcharts/modules/exporting';
 import Datetime from 'vue-datetime';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import { Drag, Drop } from 'vue-drag-drop';
+import JsonCSV from 'vue-json-csv';
 
 
 Highcharts.createElement('link', {
@@ -257,6 +258,7 @@ Vue.component('task',Task);
 Vue.component('user',User);
 Vue.component('sprinttask',SprintTask);
 Vue.component('state',State);
+Vue.component('downloadCsv', JsonCSV)
 
 new Vue({
     el: '#app',

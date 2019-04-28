@@ -3,25 +3,30 @@
         <section>
             <header  v-bind:class="{ 'header-admin': user.rol == 'admin'}">
                 <span v-on:click="back()" v-if="user.rol=='admin'" class="logo back" target="_blank"><i class="fas fa-arrow-circle-left"></i></span>
-                <span v-if="user.rol!='admin'" class="logo" target="_blank">{{user.firstname+ " "+user.lastname}}</span>
+                <span v-if="user.rol!='admin'" class="logo" target="_blank" v-on:click="profile()">{{user.firstname+ " "+user.lastname}}</span>
                 <span v-if="user.rol=='admin'" class="admin-console" target="_blank">Consola de administración</span>
                 <label for="toggle-1" class="toggle-menu"><ul><li></li> <li></li> <li></li></ul></label>
                 <input type="checkbox" id="toggle-1">
                 <nav>
                     <ul class="ul-menu">
                         <li v-if="user.rol!='admin' && navOn" title="Diferentes diagramas del estado del proyecto" v-on:click="currentPage('states')" v-bind:class="{ 'active': this.states }">
-                            <router-link to="/state">Estado del proyecto</router-link>
+                           <p> Estado del proyecto</p>
                         </li>
                         <li v-if="user.rol=='manager'  && navOn" title=" añadir tareas a un sprint" v-on:click="currentPage('phases')" v-bind:class="{ 'active': this.phases }">
-                            <router-link to="/sprints">Gestionar fases</router-link>
+                           <p> Gestionar fases</p>
                         </li>
                          <li v-if="user.rol!='admin'  && navOn" title="asignar o reasignar las tareas" v-on:click="currentPage('tasks')" v-bind:class="{ 'active': this.tasks }">
-                            <router-link to="/tasks">Asignar tareas</router-link>
+                           <p>Asignar tareas</p> 
                         </li>
                         <li v-if="user.rol!='admin'  && navOn" title="ver kamban actual del proyecto" v-on:click="currentPage('kamban')" v-bind:class="{ 'active': this.kamban }">
-                            <router-link to="/kanban/-1">Kamban</router-link>
+                          <p>Kamban</p> 
                         </li>
-
+                        <li v-if="user.rol=='manager'  && navOn" title="Habilitar o deshabilitar usuarios" v-on:click="currentPage('usuarios')" v-bind:class="{ 'active': this.usuarios }">
+                          <p>Usuarios</p> 
+                        </li>
+                        <li v-if="user.rol=='manager'  && navOn" title="Datos del proyecto" v-on:click="currentPage('project')" v-bind:class="{ 'active': this.project }">
+                          <p>Proyecto</p> 
+                        </li>
                         <li>
 
                             <span v-on:click="endSession()">
@@ -50,6 +55,7 @@
 }
 .logo{
     color: #333399; 
+    cursor: pointer;
     font-size:24px; 
     font-weight:600; 
     float:left;
@@ -78,27 +84,28 @@ nav{
     transition: all 0.5s ease 0s;
 }
 
-header > a{
+header > p{
     color: #333399;
     text-decoration: none;
 }
 .active{
     background-color: #333399;
 }
-.active > a{
+.active > p{
     color: white;
     
 }
-li > a{
+li > p{
     color: #333399;
     text-decoration: none;
+    cursor: pointer;
 }
 li > span{
     cursor: pointer;
     font-size: 20px;
     margin-left: 7px;
 }
-li > a:hover{
+li > p:hover{
     color:  #3399FF;
 }
 
@@ -150,7 +157,7 @@ input[type=checkbox],  label{display:none;}
     input[type=checkbox]:checked ~ nav {
         display:block;
     }
-    li > a{
+    li > p{
         color:white;
     }
     nav{
@@ -213,6 +220,8 @@ export default {
        phases:false,
        tasks:false,
        kamban:true,
+       usuarios:false,
+       project:false,
        checkUser:true,
        navOn:false,
        user:{}
@@ -254,6 +263,9 @@ export default {
         back:function () {
           this.$router.go(-1);  
         },
+        profile:function () {
+         this.$router.push('/profile');
+        },
         currentPage: function (page) {
            
           if(page == 'states'){
@@ -261,24 +273,54 @@ export default {
               this.phases = false;
               this.tasks = false;
               this.kamban = false;
+              this.usuarios = false;
+              this.project = false;
+              this.$router.push('/state');
           }
           else if(page == 'phases'){
                this.states = false;
               this.phases = true;
               this.tasks = false;
               this.kamban = false;
+              this.usuarios = false;
+              this.project = false;
+               this.$router.push('/sprints');
           }
           else if(page == 'tasks'){
                this.states = false;
               this.phases = false;
               this.tasks = true;
               this.kamban = false;
+              this.usuarios = false;
+              this.project = false;
+               this.$router.push('/tasks');
           }
           else if(page == 'kamban'){
                this.states = false;
               this.phases = false;
               this.tasks = false;
               this.kamban = true;
+              this.usuarios = false;
+              this.project = false;
+               this.$router.push('/kanban/-1');
+          }
+          else if(page == 'usuarios'){
+               this.states = false;
+              this.phases = false;
+              this.tasks = false;
+              this.kamban = false;
+              this.usuarios = true;
+            this.project = false;
+            this.$router.push('/disableusers/0/proyecto prueba');
+          }
+          else if(page == 'project'){
+               this.states = false;
+              this.phases = false;
+              this.tasks = false;
+              this.kamban = false;
+              this.usuarios = false;
+              this.project = true;
+               this.$router.push('/projectdata/0');
           }
        
         },

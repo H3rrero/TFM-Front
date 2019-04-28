@@ -4,23 +4,34 @@
             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedUser(-1)"  class="unassigned-task"  v-if="haveData" >
                  <div class="title-task-data">
-                    <p>Usuarios sin proyecto</p>
+                   <select   v-model="projectSelected">
+                        <option value="-1">Usuarios sin proyecto</option>
+                        <option v-for="project in projects" :key="project.id" :value="project.id">{{project.name}}</option>
+                    </select>
+                    <span   v-on:click="showList()" title="Mostrar lista de usuarios">
+                        <i class="fas fa-list"></i>
+                    </span> 
+                </div>
+                <div class="add-user" title="añadir usuario" v-on:click="openNewUser()">
+                    <div class="add-user-title">
+                        <p>+</p>
+                    </div>
                 </div>
                 <div v-for="user in users" :key="user.id">
                     <drag @dragend="handleDrop"  :transfer-data="user" >
-                         <user v-if="user.projectId == -1" :user="user" v-on:show-data="showMenu(user)"></user>  
+                         <user v-if="user.projectId == projectSelected && user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
                     </drag>
                 </div>
             </drop>
 
             <div class="programmers">
                 <div class="programmers-item"  v-for="project in projects" :key="project.id">
-                    <div class="programmers-item-title">
+                    <div class="programmers-item-title" v-if="!project.deleted">
                         {{project.name}}
                     </div>
-                    <drop @dragover="asignedUser(project.id)" class="programmers-item-task">
+                    <drop @dragover="asignedUser(project.id)" class="programmers-item-task"  v-if="!project.deleted">
                         <div v-for="user in users" :key="user.id">
-                            <drag @dragend="handleDrop"  :transfer-data="user" >
+                            <drag @dragend="handleDrop"  :transfer-data="user" v-if="user.rol!='admin'">
                                  <user v-if="user.projectId == project.id" :user="user" v-on:show-data="showMenu(user)"></user>
                             </drag>
                         </div>
@@ -44,6 +55,7 @@ export default {
        return{ 
         users:[],
         projects:[],
+        projectSelected:-1,
         show:false,
         currentUser: JSON.parse(localStorage.getItem('user')),
         userSelected:{},
@@ -80,10 +92,18 @@ export default {
         },
         handleDrop(data, event) {
                 data.projectId = this.projectAsignedId;
+                data.rol = "user";
+                
                 userService.update(data);
         },
         asignedUser: function (id) {
             this.projectAsignedId = id;
+        },
+        openNewUser:function () {
+            this.$router.push('/createuser/-1');
+        },
+        showList: function () {
+            this.$router.push('/userslist');
         }
     }
 };
@@ -104,10 +124,18 @@ export default {
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
     color: white;
+    display: flex;
     line-height: 50px;
     text-align: center;
     font-weight: 700;
+    margin: 0 auto;
+    margin-left: 10px;
+    margin-right: 10px;
     vertical-align: middle;
+}
+.title-task-data > span{
+    margin-left: auto;
+    cursor: pointer;
 }
 .programmers{
     background-color: white;
@@ -157,6 +185,31 @@ export default {
     top: 0;
     width: 100%;
     z-index: 5;
+}
+.add-user{
+    background-color: white;
+    border-radius: 1rem;
+    color: #333399;
+    cursor: pointer;
+    margin: 0 auto;
+    margin-top: 8px;
+    text-align: center;
+    width: 95%;
+}
+ select{
+    background-color: #333399;
+    border: 2px solid white;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: white;
+    height: 35px;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 0 15px;
+}
+.add-user-title{
+    padding: 2%;
+    font-size: 35px;
 }
 .notification{
     margin-left: 40%;

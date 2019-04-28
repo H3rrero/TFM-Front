@@ -1,21 +1,34 @@
 <template>
     <div>
         <div class="user-container">
-            <div class="users">
-                <div class="users-item" v-for="project in projects" :key="project.id">
-                   <div class="users-item-title" >
+            <div class="projects">
+                <div class="projects-item" v-for="project in projects" :key="project.id">
+                   <div class="projects-item-title" >
                         <p >{{project.name}}</p>
                         <div>
-                            <span v-on:click="deleteProject(project)" title="eliminar projecto" >
+                            <span v-on:click="deleteProject(project)" title="Deshabilitar projecto" >
                                 <i class="fas fa-trash-alt"></i>
                             </span>
                         </div>
                     </div>
-                    <div  class="users-body" v-on:click="openProjectHome(project)">
+                    <div  class="projects-body" v-on:click="openProjectHome(project)">
                         <p >{{project.description}}</p>
                     </div>
                 </div>
-                 <div class="users-item" title="Añadir un nuevo proyecto" >
+                <div class="projects-item" v-for="project in inactiveProjects" :key="project.id">
+                   <div class="projects-deleted-item-title" >
+                        <p >{{project.name}}</p>
+                        <div>
+                            <span v-on:click="restoreProject(project)" title="Habilitar el projecto" >
+                               <i class="fas fa-trash-restore"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div  class="projects-deleted-body" v-on:click="openProjectHome(project)">
+                        <p >{{project.description}}</p>
+                    </div>
+                </div>
+                 <div class="projects-item" title="Añadir un nuevo proyecto" >
                     <button class="addPhase" v-on:click="openNewProject()">+</button>
                 </div>
             </div>
@@ -30,11 +43,12 @@ export default {
     data(){
        return{ 
         projects:[],
- 
+        inactiveProjects:[]
        }
     },
     created () {
         this.getProjectsActive();
+        this.getProjectsInActive();
     },
     methods: {
        getProjectsActive: function () {
@@ -50,12 +64,12 @@ export default {
        );
         },
         getProjectsInActive: function () {
-           this.projects = [];
+           this.inactiveProjects = [];
             projectService.getAll().then(
             projectss=>{
             projectss.forEach(element => {
                 if(element.deleted){
-                    this.projects.push(element);
+                    this.inactiveProjects.push(element);
                 }
             });
             }
@@ -65,12 +79,21 @@ export default {
             this.$router.push('/createproject');
         },
          openProjectHome:function (project) {
-            this.$router.push('/projectsadmin/'+project.id+'/'+project.name);
+            this.$router.push('/manusers/'+project.id+'/'+project.name);
         },
         deleteProject:function (project) {
             project.deleted = true;
             projectService.update(project).then(project=>{
                  this.getProjectsActive();
+                 this.getProjectsInActive();
+            });
+           
+        },
+        restoreProject:function (project) {
+            project.deleted = false;
+            projectService.update(project).then(project=>{
+                 this.getProjectsActive();
+                 this.getProjectsInActive();
             });
            
         },
@@ -103,7 +126,7 @@ export default {
     flex-direction: row;
     height: 100%;
 }
-.users{
+.projects{
     background-color: white;
     border: 2px solid #333399;
     border-radius: 1rem;
@@ -116,9 +139,9 @@ export default {
     padding: 1rem;
     width: 100%;
 }
-.users-item{
+.projects-item{
     background-color: white;
-    color: #6B6FCE;
+    color: white;
     display: flex;
     flex-direction: column;
     height: 200px;
@@ -128,11 +151,11 @@ export default {
     width: 250px;
 }
 
-.users-item:hover{
+.projects-item:hover{
     transform: scale(1.03,1.03);
     transition:  0.3s ease-out;
 }
-.users-item-title{
+.projects-item-title{
     background-color: #333399;
     border-bottom: 1px solid white;
     color: white;
@@ -144,13 +167,31 @@ export default {
     padding: 0.3rem;
     text-align: center;
 }
-.users-item-title > div > span{
+.projects-deleted-item-title{
+    background-color: #D52525;
+    border-bottom: 1px solid white;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Roboto', sans-serif;
+    height: 20px;
+    justify-content: space-between;
+    padding: 0.3rem;
+    text-align: center;
+}
+.projects-item-title > div > span{
     cursor: pointer;
     font-size: 1em;
     margin-left: 7px;
     margin-right: 7px;
 }
-.users-body{
+.projects-deleted-item-title > div > span{
+    cursor: pointer;
+    font-size: 1em;
+    margin-left: 7px;
+    margin-right: 7px;
+}
+.projects-body{
     background-color: #333399;
     display: flex;
     flex-direction: column;
@@ -160,7 +201,17 @@ export default {
     text-align: center;
     cursor: pointer;
 }
-.users-body > p{
+.projects-deleted-body{
+    background-color: #D52525;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    padding-bottom: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+.projects-body > p{
     color: white;
 }
 .addPhase{
