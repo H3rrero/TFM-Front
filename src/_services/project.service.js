@@ -5,7 +5,8 @@ export const projectService = {
     getAll,
     getById,
     createProject,
-    update
+    update,
+    remove
 };
 
 
@@ -27,6 +28,15 @@ function getAll() {
 function getById(id) {
     const requestOptions = {
         method: 'GET',
+        headers: authHeader()
+    };
+    console.log("service projects");
+    return fetch(`${config.apiUrl}/projects/${id}`, requestOptions).then(handleResponse);
+}
+
+function remove(id) {
+    const requestOptions = {
+        method: 'DELETE',
         headers: authHeader()
     };
     console.log("service projects");

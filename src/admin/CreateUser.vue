@@ -1,4 +1,6 @@
 <template>
+<div>
+    <app-breadcrumbs></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Introduce los datos del usuario</p>
@@ -42,6 +44,7 @@
             
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -82,7 +85,7 @@ export default {
            }
         },
         cancelar:function () {
-            this.$router.push('/usersproject');  
+            this.$router.go(-1);  
         },
         createUser:function () {
             if(this.validate()){
@@ -90,7 +93,7 @@ export default {
                 this.userCreated = true;
                 this.validar = false;
                 userService.register(this.myUser).then(user=>{
-                    this.$router.push('/usersproject');  
+                   this.$router.go(-1);  
                 })
                 
             }else{

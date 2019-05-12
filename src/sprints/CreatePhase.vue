@@ -1,5 +1,6 @@
 <template>
     <div class="container-task-data" >  
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="title-task-data">
             <p>Introduce los datos de la fase</p>
         </div>

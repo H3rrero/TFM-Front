@@ -7,6 +7,7 @@
                 <p class="helper helper1">email@domain.com</p>
                 <div v-show="submitted && !username" class="invalid-feedback">Username is required</div>
                  <div v-show="removed" class="invalid-feedback">Usuario deshabilitado</div>
+                 <div v-show="loginErrorB" class="invalid-feedback">{{loginError}}</div>
             </div>
             <div class="form-group">
                 <p >Password</p>
@@ -130,16 +131,28 @@ export default {
             password: '',
             submitted: false,
             removed:false,
+            loginError:'',
+            loginErrorB:false,
         }
     },
     updated(){
+      console.log("usuario");
       console.log( JSON.parse(localStorage.getItem('user')));
       if( JSON.parse(localStorage.getItem('user'))!=undefined){
         if( JSON.parse(localStorage.getItem('user')).deleted){
           this.removed = true;
+          localStorage.removeItem('loginError');
         }else{
           this.removed = false;
         }
+      }
+       if( JSON.parse(localStorage.getItem('loginError'))!=undefined){
+         console.log('no entiendo nada');
+        this.loginError =  JSON.parse(localStorage.getItem('loginError')).error;
+        this.loginErrorB = true;
+      }else{
+        this.loginErrorB = false;
+        this.loginError = '';
       }
     },
     computed: {

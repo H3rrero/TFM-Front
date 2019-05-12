@@ -1,4 +1,6 @@
 <template>
+<div>
+    <app-breadcrumbs></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Introduce los datos de la tarea</p>
@@ -68,6 +70,7 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

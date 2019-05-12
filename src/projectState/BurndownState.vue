@@ -1,6 +1,7 @@
 <template>
 
 <div class="scrolling-container" v-if="haveDataCh">
+    <app-breadcrumbs></app-breadcrumbs>
   <highcharts class="container-chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 

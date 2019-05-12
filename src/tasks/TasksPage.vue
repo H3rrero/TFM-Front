@@ -1,10 +1,14 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show ||showMessage" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1,'','')"  class="unassigned-task"  v-if="haveData" >
                  <div class="title-task-data">
                     <p>{{"Backlog de "+phaseName}}</p>
+                     <span   v-on:click="showList()" title="Mostrar lista de usuarios">
+                        <i class="fas fa-list"></i>
+                    </span> 
                 </div>
                 <div v-for="task in tasks" :key="task.id">
                     <drag @dragend="handleDrop"  :transfer-data="task" >
@@ -138,6 +142,9 @@ export default {
              let date = new Date();
 
              return (end>=date && start<date) ? true : false;
+        },
+        showList: function () {
+            this.$router.push('/taskslist');
         }
       
 
@@ -160,10 +167,17 @@ export default {
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
     color: white;
+    display: flex;
     line-height: 50px;
     text-align: center;
     font-weight: 700;
+    margin: 0 auto;
+    margin-left: 10px;
+    margin-right: 10px;
     vertical-align: middle;
+}
+.title-task-data > p{
+    margin: 0 auto;
 }
 .programmers{
     background-color: white;

@@ -1,5 +1,6 @@
 <template>
 <div v-if="phases.items">
+  <app-breadcrumbs></app-breadcrumbs>
 <div class="scrolling-container" v-if="haveData">
   <highcharts class="container-gantt" :constructor-type="'ganttChart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>

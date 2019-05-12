@@ -8,6 +8,7 @@ export const userService = {
     getAll,
     getById,
     update,
+    getByProject,
     delete: _delete
 };
 
@@ -22,15 +23,20 @@ function login(username, password) {
     return fetch(`${config.apiUrl}/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            console.log("user in service");
+            console.log(user);
             // login successful if there's a jwt token in the response
             if (user.token) {
                 console.log("token: "+user.token)
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
+                localStorage.removeItem('loginError');
             }
 
             return user;
-        });
+        }).catch(function(error) {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+          });
 }
 
 function logout() {
@@ -66,6 +72,15 @@ function getById(id) {
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
 }
 
+function getByProject(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/usersbyproject/${id}`, requestOptions).then(handleResponse);
+}
+
 function update(user) {
     const requestOptions = {
         method: 'PUT',
@@ -90,15 +105,26 @@ function handleResponse(response) {
     
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+        console.log("response");
         if (!response.ok) {
-            if (response.status === 401) {
+            console.log("response");
+            console.log(response);
+            if (response.status === 401  ) {
                 console.log(response);
                 // auto logout if 401 response returned from api
                 logout();
                 location.reload(true);
             }
+            if(response.status === 429 || response.status === 400){
+                console.log("data");
+                console.log(data);
+                logout();
+                location.reload(true);
+                localStorage.setItem('loginError', JSON.stringify(data));
+            }
 
             const error = (data && data.message) || response.statusText;
+            console.log(error);
             return Promise.reject(error);
         }
 
