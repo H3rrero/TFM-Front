@@ -1,5 +1,6 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="user-container">
               <div  class="users">
                 <div class="users-item" v-for="user in users" :key="user.id">
@@ -93,7 +94,7 @@ export default {
        );
         },
         deleteUser:function (user) {
-            user.deleted = true;
+            user.projectId = -1;
             userService.update(user).then(user=>{
                 this.getUsers();
             });

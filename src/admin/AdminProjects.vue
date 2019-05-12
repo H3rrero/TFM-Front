@@ -1,12 +1,13 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="user-container">
             <div class="projects">
                 <div class="projects-item" v-for="project in projects" :key="project.id">
                    <div class="projects-item-title" >
                         <p >{{project.name}}</p>
                         <div>
-                            <span v-on:click="deleteProject(project)" title="Deshabilitar projecto" >
+                            <span v-on:click="getDataProject(project)" title="Deshabilitar projecto" >
                                 <i class="fas fa-trash-alt"></i>
                             </span>
                         </div>
@@ -39,10 +40,13 @@
 <script>
 
  import { projectService } from '../_services/project.service';
+ import { userService} from '../_services/user.service';
+ import { taskService } from '../_services/task.service';
 export default {
     data(){
        return{ 
         projects:[],
+        haveData:false,
         inactiveProjects:[]
        }
     },
@@ -75,6 +79,24 @@ export default {
             }
        );
         },
+        getDataProject:function (project) {
+               userService.getByProject(project.id).then(users=>{
+                    if(users.length > 0){
+                        this.haveData = true;
+                        this.deleteProject(project);
+                    } else {
+                        taskService.getByProject(project.id).then(tasks=>{
+                            if(tasks.length > 0){
+                                this.haveData = true;
+                               this.deleteProject(project);
+                            }else{
+                                this.haveData = false;
+                                this.deleteProject(project);
+                            }
+                        });
+                    }
+                });
+        },
          openNewProject:function (id) {
             this.$router.push('/createproject');
         },
@@ -82,12 +104,21 @@ export default {
             this.$router.push('/manusers/'+project.id+'/'+project.name);
         },
         deleteProject:function (project) {
-            project.deleted = true;
-            projectService.update(project).then(project=>{
+            
+
+            if(this.haveData){
+                project.deleted = true;
+                projectService.update(project).then(project=>{
+                    this.getProjectsActive();
+                    this.getProjectsInActive();
+                });
+            }else{
+                projectService.remove(project.id).then(projectss=>{
+                console.log(projectss);
                  this.getProjectsActive();
                  this.getProjectsInActive();
-            });
-           
+                });
+            }
         },
         restoreProject:function (project) {
             project.deleted = false;

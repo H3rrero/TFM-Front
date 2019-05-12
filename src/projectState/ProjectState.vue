@@ -1,5 +1,6 @@
 <template>
 <div class="container-state">
+    <app-breadcrumbs></app-breadcrumbs>
     <router-link to="/gantt">
         <state :image="'src/img/gantt.png'" :title="'Diagrama de Gantt'"></state>
     </router-link>

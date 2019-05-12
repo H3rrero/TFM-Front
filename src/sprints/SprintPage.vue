@@ -1,5 +1,6 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1)"  class="unassigned-task"  v-if="haveData" >

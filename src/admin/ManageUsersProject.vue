@@ -1,5 +1,6 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="user-container">
              <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedUser(-1)"  class="unassigned-task"   >
@@ -133,7 +134,7 @@ export default {
        );
         },
          openNewUser:function (id) {
-            this.$router.push('/createuser/'+this.selectProject);
+            this.$router.push('/createuserproject/'+this.selectProject);
         },
         deleteUser:function (user) {
             user.deleted = true;

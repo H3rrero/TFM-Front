@@ -3,7 +3,6 @@ import Router from 'vue-router';
 
 import KanbanPage from '../home/KanbanPage'
 import LoginPage from '../login/LoginPage'
-import RegisterPage from '../register/RegisterPage'
 import GanttState from '../projectState/GanttState'
 import ProjectState from '../projectState/ProjectState'
 import TasksPage from '../tasks/TasksPage'
@@ -18,6 +17,7 @@ import CreateUser from '../admin/CreateUser'
 import AdminProjects from '../admin/AdminProjects'
 import CreateProject from '../admin/CreateProject'
 import AllUsers from '../admin/AllUsers'
+import AllTasks from '../tasks/AllTasks'
 import UserToProject from '../admin/UserToProject'
 import UserHome from '../home/UserHome'
 import UsersProject from '../users/UsersProject'
@@ -30,28 +30,29 @@ export const router = new Router({
   mode: 'hash',
   base: '/TFM-Front/',
   routes: [
-    { path: '/kanban/:id', component: KanbanPage },
-    { path: '/tasks', component: TasksPage },
-    { path: '/sprints', component: SprintPage },
-    { path: '/login', component: LoginPage },
-    { path: '/register', component: RegisterPage },
-    { path: '/gantt', component:  GanttState},
-    { path: '/burndown', component:  BurndownState},
-    { path: '/burndownSprint/:id', component:  BurndownSprint},
-    { path: '/state', component:  ProjectState},
-    { path: '/newTask/:idPhase', component:  CreateTask},
-    { path: '/newPhase', component:  CreatePhase},
-    { path: '/admin', component:  AdminHome},
-    { path: '/projects', component:  AdminProjects},
-    { path: '/manusers/:id/:name', component:  ManageUsersProject, name:'manusers'},   
-    { path: '/disableusers/:id/:name', component:  UsersProject, name:'disableusers'},   
-    { path: '/createuser/:id', component:  CreateUser}, 
-    { path: '/createproject', component:  CreateProject}, 
-    { path: '/userslist', component:  AllUsers},
-    { path: '/usersproject', component:  UserToProject},
-    { path: '/userhome', component:  UserHome},
-    { path: '/profile', component:  Profile},
-    { path: '/projectdata/:id', component:  ProjectData},
+    { path: '/kanban/:id',name:'kamban', component: KanbanPage, meta: {breadcrumb:{label: 'Kamban',parent:'userhome'}}},
+    { path: '/tasks', component: TasksPage,name:'tasks', meta: {breadcrumb:{label: 'Asignar tareas',parent:'userhome'}}},,
+    { path: '/sprints',name:'sprints' ,component: SprintPage, meta: {breadcrumb:{label: 'Gestionar fases',parent:'userhome'}}},
+    { path: '/login', component: LoginPage},
+    { path: '/gantt', component:  GanttState, meta: {breadcrumb:{label: 'Gantt',parent:'state'}}},
+    { path: '/burndown', component:  BurndownState, meta: {breadcrumb:{label: 'Diagrama Burndown',parent:'state'}}},
+    { path: '/burndownSprint/:id', component:  BurndownSprint,meta: {breadcrumb:{label: 'Burndown por fase',parent:'state'}}},
+    { path: '/state',name:'state', component:  ProjectState, meta: {breadcrumb:{label: 'Estado del proyecto',parent:'userhome'}}},
+    { path: '/newTask/:idPhase', component:  CreateTask, meta: {breadcrumb:{label: 'Crear tarea',parent:'kamban'}}},
+    { path: '/newPhase', component:  CreatePhase, meta: {breadcrumb:{label: 'Nueva fase',parent:'sprints'}}},
+    { path: '/admin',name:'adminhome', component:  AdminHome, meta: {breadcrumb: 'Pagina de inicio'}},
+    { path: '/projects',name:'projects', component:  AdminProjects,  meta: {breadcrumb:{label: 'Gestión de proyectos',parent:'adminhome'}}},
+    { path: '/manusers/:id/:name', component:  ManageUsersProject, name:'manusers',meta: {breadcrumb:{label: 'Gestion de usuarios del proyecto',parent:'projects'}}},
+    { path: '/disableusers/:id/:name', component:  UsersProject, name:'disableusers',meta: {breadcrumb:{label: 'Usuarios',parent:'userhome'}}},
+    { path: '/createuser/:id', component:  CreateUser, meta: {breadcrumb:{label: 'Crear usuario',parent:'usersproject'}}},
+    { path: '/createuserproject/:id', component:  CreateUser, meta: {breadcrumb:{label: 'Crear usuario',parent:'manusers'}}},
+    { path: '/createproject', component:  CreateProject, meta: {breadcrumb:{label: 'crear proyecto',parent:'projects'}}},
+    { path: '/userslist', component:  AllUsers, meta: {breadcrumb:{label: 'listado de usuarios',parent:'usersproject'}}},
+    { path: '/taskslist', component:  AllTasks, meta: {breadcrumb:{label: 'estado de las tareas',parent:'tasks'}}},
+    { path: '/usersproject',name:'usersproject', component:  UserToProject, meta: {breadcrumb:{label: 'gestión de usuarios',parent:'adminhome'}}},
+    { path: '/userhome', name:'userhome', component:  UserHome, meta: {breadcrumb: 'Tus proyectos'}},
+    { path: '/profile', component:  Profile, meta: {breadcrumb: 'perfil'}},
+    { path: '/projectdata/:id', component:  ProjectData, meta: {breadcrumb:{label: 'Datos del proyecto',parent:'userhome'}}},
     
     // otherwise redirect to home
     { path: '*', redirect: '/admin' }
@@ -62,7 +63,7 @@ router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login', '/register'];
   const adminPages = ['admin','manusers','createuser','projectsadmin','createproject','projects',
-                      'manageusers','userslist','usersproject','addprogrammer','addmanager'];
+                      'manageusers','userslist','usersproject','addprogrammer','addmanager','createuserproject'];
   const managerPages = ['sprints','disableusers','projectdata'];
   
   const authRequired = !publicPages.includes(to.path);

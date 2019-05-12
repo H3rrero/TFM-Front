@@ -1,6 +1,7 @@
 <template>
 
 <div class="scrolling-container" v-if="haveDataCh">
+    <app-breadcrumbs></app-breadcrumbs>
     <select  class="filter-users" v-model="selectPhase" v-on:change="updateData()" >
         <option  v-for="phase in fasesB" :key="phase.id" :value="phase.id">{{phase.name}}</option>
     </select>

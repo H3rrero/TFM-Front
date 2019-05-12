@@ -1,5 +1,6 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="user-container">
             <div class="users">
                 <div class="users-item" v-for="project in projects" :key="project.id">

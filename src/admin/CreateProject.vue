@@ -1,5 +1,7 @@
 <template>
-    <div class="container-task-data" >  
+<div>
+    <app-breadcrumbs></app-breadcrumbs> 
+    <div class="container-task-data" > 
         <div class="title-task-data">
             <p>Introduce los datos del proyecto</p>
         </div>
@@ -15,7 +17,36 @@
                 <input v-model="myProject.description">
                 <p v-if="validar && (myProject.description == undefined|| myProject.description.trim()=='')"
                  v-bind:class="{ 'error': (myProject.description == undefined|| myProject.description.trim()=='')}" >* El campo descripción es obligatorio</p>
-            </div>       
+            </div> 
+            <div class="item-task-data">
+                 <div class="dates">
+                    <div class="dateini">
+                       <p>* Fecha inicio:</p>
+                        <datetime v-model="myProject.fechaInicio"></datetime>
+                    </div>
+                </div>
+            </div>
+            <div class="item-task-data">
+                 <div class="dates">
+                    <div class="dateini">
+                       <p>* Fecha fin:</p>
+                        <datetime v-model="myProject.fechaFin"></datetime> 
+                        <p v-if="validar &&(new Date(myProject.fechaFin) < new Date(myProject.fechaInicio) ||
+                        new Date(myProject.fechaFin) < new Date() ||
+                        new Date(myProject.fechaInicio) < new Date())" v-bind:class="{ 'error': 
+                        new Date(myProject.fechaFin) < new Date(myProject.fechaInicio) ||
+                        new Date(myProject.fechaFin) < new Date()||
+                        new Date(myProject.fechaInicio) < new Date()
+                        }"> Las fechas de inicio y fin deben ser posteriores a la fecha actual.</p>
+                        <p v-if="validar &&(myProject.fechaFin == '' ||
+                                myProject.fechaInicio == '')" v-bind:class="{ 'error': 
+                                myProject.fechaFin == '' ||
+                                myProject.fechaInicio == ''
+                        }"
+                        >Los campos fecha de inicio y fecha de fin son obligatorios.</p>
+                    </div>
+                </div>
+            </div>      
             <div class="item-task-data">
                 <p v-if="projectCreated" v-bind:class="{ 'correct':projectCreated}">El projecto se ha añadido correctamente</p>
             </div>
@@ -25,6 +56,7 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -39,6 +71,8 @@ export default {
         name:"",
         description:"",
         planHours:0,
+        fechaInicio:'',
+        fechaFin:'',
         deleted:false
         },
        }
@@ -49,7 +83,12 @@ export default {
            if(this.myProject.name == undefined||
             this.myProject.name.trim() == ""||
             this.myProject.description == undefined||
-            this.myProject.description.trim() == ""
+            this.myProject.description.trim() == ""||
+            new Date(this.myProject.fechaFin) < new Date()||
+            new Date(this.myProject.fechaInicio) < new Date() ||
+            new Date(this.myProject.fechaFin) < new Date(this.myProject.fechaInicio)||
+            this.myProject.fechaFin == '' ||
+            this.myProject.fechaInicio == ''
             ) {
                 return false;
            }else{

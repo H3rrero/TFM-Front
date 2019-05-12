@@ -5,7 +5,8 @@ export const taskService = {
     getAll,
     changeTask,
     getByPhase,
-    createTask
+    createTask,
+    getByProject
 };
 
 
@@ -39,6 +40,16 @@ function changeTask(task) {
     };
     return fetch(`${config.apiUrl}/tasks/${task.id}`, requestOptions).then(handleResponse);
 }
+
+function getByProject(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/tasksbyproject/${id}`, requestOptions).then(handleResponse);
+}
+
 function createTask(task) {
     const requestOptions = {
         method: 'POST',

@@ -25,6 +25,8 @@ import Datetime from 'vue-datetime';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import { Drag, Drop } from 'vue-drag-drop';
 import JsonCSV from 'vue-json-csv';
+import VueBreadcrumbs from 'vue-breadcrumbs';
+import Vue2Crumbs from 'vue-2-crumbs';
 
 
 Highcharts.createElement('link', {
@@ -244,6 +246,8 @@ Vue.use(VeeValidate);
 Vue.use(HighchartsVue);
 Vue.use(Datetime);
 Vue.use(VueTextareaAutosize);
+Vue.use(VueBreadcrumbs);
+Vue.use(Vue2Crumbs);
 
 Vue.component('drag', Drag);
 Vue.component('drop', Drop);

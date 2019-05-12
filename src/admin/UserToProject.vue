@@ -1,5 +1,6 @@
 <template>
     <div>
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedUser(-1)"  class="unassigned-task"  v-if="haveData" >
@@ -25,7 +26,7 @@
             </drop>
 
             <div class="programmers">
-                <div class="programmers-item"  v-for="project in projects" :key="project.id">
+                <div class="programmers-item"  v-for="project in projectsDeleted" :key="project.id">
                     <div class="programmers-item-title" v-if="!project.deleted">
                         {{project.name}}
                     </div>
@@ -55,6 +56,7 @@ export default {
        return{ 
         users:[],
         projects:[],
+        projectsDeleted:[],
         projectSelected:-1,
         show:false,
         currentUser: JSON.parse(localStorage.getItem('user')),
@@ -65,13 +67,14 @@ export default {
     created () {
         this.getUsers();
         this.getProjects();
+        console.log(this.$route)
     },
     methods: {
          getUsers: function () {
           userService.getAll().then(
             userss=>{
                     this.users = userss;
-                    this.haveData = true;
+                    
             }
        );
         },
@@ -79,6 +82,12 @@ export default {
            projectService.getAll().then(
             projectss=>{
                 this.projects = projectss;
+                this.haveData = true;
+                projectss.forEach(element => {
+                    if(!element.deleted){
+                        this.projectsDeleted.push(element);
+                    }
+                });
             }
        );
         },
@@ -207,6 +216,7 @@ export default {
     margin-top: 10px;
     padding: 0 15px;
 }
+
 .add-user-title{
     padding: 2%;
     font-size: 35px;

@@ -1,4 +1,6 @@
 <template>
+<div>
+    <app-breadcrumbs></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Datos del proyecto</p>
@@ -36,6 +38,26 @@
                 </div>
             </div>
             <div class="item-task-data">
+                 <div class="dates">
+                    <div class="dateini">
+                       <p>* Fecha inicio:</p>
+                        <datetime v-model="myProject.fechaInicio"></datetime>
+                    </div>
+                </div>
+            </div>
+            <div class="item-task-data">
+                 <div class="dates">
+                    <div class="dateini">
+                       <p>* Fecha fin:</p>
+                        <datetime v-model="myProject.fechaFin"></datetime> 
+                        <p v-if="new Date(myProject.fechaFin) < new Date(myProject.fechaInicio) ||
+                        new Date(myProject.fechaFin) < new Date()" v-bind:class="{ 'error': 
+                        new Date(myProject.fechaFin) < new Date(myProject.fechaInicio) ||
+                        new Date(myProject.fechaFin) < new Date()}"> La fecha de fin debe ser posterior a la de inicio y a la fecha actual.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item-task-data">
                 <p v-if="projectUpdated" v-bind:class="{ 'correct':projectUpdated}">El proyecto se ha actualizado correctamente</p>
             </div>
             <div class="item-button-data">
@@ -44,6 +66,7 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

@@ -16,6 +16,8 @@
     "luxon": "^1.10.0",
     "vee-validate": "^2.1.0-beta.6",
     "vue": "^2.5.16",
+    "vue-2-crumbs": "^0.5.4",
+    "vue-breadcrumbs": "^1.2.0",
     "vue-datetime": "^1.0.0-beta.10",
     "vue-drag-drop": "^1.1.4",
     "vue-json-csv": "^1.2.4",

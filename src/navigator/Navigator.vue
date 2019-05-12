@@ -258,7 +258,8 @@ export default {
           this.$router.push('/login');
         },
         getUser:function () {
-          this.user =  JSON.parse(localStorage.getItem('user'))
+            if(JSON.parse(localStorage.getItem('user')) != null)
+                this.user =  JSON.parse(localStorage.getItem('user'));
         },
         back:function () {
           this.$router.go(-1);  

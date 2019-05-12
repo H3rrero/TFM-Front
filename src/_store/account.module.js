@@ -13,15 +13,22 @@ const actions = {
         userService.login(username, password)
             .then(
                 user => {
-                    commit('loginSuccess', user);
-                    if(!user.deleted){
-                        console.log("per aqui")
-                    router.push('/TFM-Front');
-                    }else{
-                        console.log("per alla")
-                    router.push('/login');
+                    if(user.rol!='nan'){
+                        console.log("user en logun module");
+                        console.log(user);
+                        commit('loginSuccess', user);
+                        if(!user.deleted){
+                            console.log("per aqui")
+                        router.push('/TFM-Front');
+                        }else{
+                            console.log("per alla")
+                        router.push('/login');
+                        }
+                    }else if(user.rol='nan'){
+                        localStorage.setItem('loginError', JSON.stringify(user));
+                        router.push('/login');
                     }
-                },
+            },
                 error => {
                     commit('loginFailure', error);
                     dispatch('alert/error', error, { root: true });

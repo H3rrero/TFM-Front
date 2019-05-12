@@ -1,5 +1,6 @@
 <template>
     <div class="filter-kamban">
+        <app-breadcrumbs></app-breadcrumbs>
         <div class="filter">
             <button class="mytask-bt" title="filtrar por tus tareas asignadas" v-bind:class="{ 'mytaskbt-selected': isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
             <button class="mytask-bt" title="filtrar por tareas retrasadas" v-bind:class="{ 'mytaskbt-selected': isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
