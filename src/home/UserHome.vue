@@ -32,9 +32,11 @@ export default {
     },
     methods: {
        getProjectsActive: function () {
+           console.log("user");
+           console.log(JSON.parse(localStorage.getItem('user')));
            this.user =  JSON.parse(localStorage.getItem('user'));
            console.log("user");
-           console.log(user);
+           console.log(this.user);
            this.projects = [];
             userProjectService.getProjectByUser(this.user.id).then(projectss=>{
                 projectss.forEach(element => {
