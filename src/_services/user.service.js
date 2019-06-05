@@ -1,5 +1,6 @@
 import config from 'config';
 import { authHeader } from '../_helpers';
+import 'whatwg-fetch'; 
 
 export const userService = {
     login,
@@ -9,6 +10,8 @@ export const userService = {
     getById,
     update,
     getByProject,
+    getByUserAndMail,
+    checkAnswer,
     delete: _delete
 };
 
@@ -18,16 +21,11 @@ function login(username, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     };
-    console.log("login en userService");
-    console.log(requestOptions);
     return fetch(`${config.apiUrl}/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
-            console.log("user in service");
-            console.log(user);
             // login successful if there's a jwt token in the response
             if (user.token) {
-                console.log("token: "+user.token)
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
                 localStorage.removeItem('loginError');
@@ -51,7 +49,7 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
 }
 
 function getAll() {
@@ -81,6 +79,22 @@ function getByProject(id) {
     return fetch(`${config.apiUrl}/usersbyproject/${id}`, requestOptions).then(handleResponse);
 }
 
+function getByUserAndMail(user,mail) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/users/checkmail/${user}/${mail}`, requestOptions).then(handleResponse);
+}
+function checkAnswer(user,mail) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/users/checkanswer/${user}/${mail}`, requestOptions).then(handleResponse);
+}
 function update(user) {
     const requestOptions = {
         method: 'PUT',
@@ -105,26 +119,19 @@ function handleResponse(response) {
     
     return response.text().then(text => {
         const data = text && JSON.parse(text);
-        console.log("response");
         if (!response.ok) {
-            console.log("response");
-            console.log(response);
             if (response.status === 401  ) {
-                console.log(response);
                 // auto logout if 401 response returned from api
                 logout();
                 location.reload(true);
             }
             if(response.status === 429 || response.status === 400){
-                console.log("data");
-                console.log(data);
                 logout();
                 location.reload(true);
                 localStorage.setItem('loginError', JSON.stringify(data));
             }
 
             const error = (data && data.message) || response.statusText;
-            console.log(error);
             return Promise.reject(error);
         }
 

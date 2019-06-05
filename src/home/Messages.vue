@@ -48,7 +48,7 @@ export default {
 }
 .title-message-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
+    color: var(--man-color);
     line-height: 50px;
     text-align: center;
     font-weight: 700;
@@ -64,19 +64,19 @@ export default {
     width: 95%;
 }
 .message{
-    border: 2px solid #333399;
+    background: white;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     margin: 10px 0;
     padding: 5px;
-    background: white;
 }
 .message > p{
     white-space: pre-line;
 }
 .title-message{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
+    color: var(--man-color);
     line-height: 23px;
     text-align: center;
     font-weight: 400;

@@ -21,7 +21,6 @@ function getAll() {
         method: 'GET',
         headers: authHeader()
     };
-    console.log("service projects");
     return fetch(`${config.apiUrl}/projects`, requestOptions).then(handleResponse);
 }
 
@@ -30,7 +29,6 @@ function getById(id) {
         method: 'GET',
         headers: authHeader()
     };
-    console.log("service projects");
     return fetch(`${config.apiUrl}/projects/${id}`, requestOptions).then(handleResponse);
 }
 
@@ -39,7 +37,6 @@ function remove(id) {
         method: 'DELETE',
         headers: authHeader()
     };
-    console.log("service projects");
     return fetch(`${config.apiUrl}/projects/${id}`, requestOptions).then(handleResponse);
 }
 
@@ -49,7 +46,7 @@ function createProject(project) {
         headers: authHeader(),
         body: JSON.stringify(project)
     };
-    return fetch(`${config.apiUrl}/project/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/projects`, requestOptions).then(handleResponse);
 }
 
 function update(project) {
@@ -67,7 +64,6 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-                console.log(response);
                 // auto logout if 401 response returned from api
                 logout();
                 location.reload(true);

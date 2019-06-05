@@ -1,6 +1,6 @@
 <template>
 <div>
-    <app-breadcrumbs></app-breadcrumbs> 
+    <app-breadcrumbs class="admin-background"></app-breadcrumbs>
     <div class="container-task-data" > 
         <div class="title-task-data">
             <p>Introduce los datos del proyecto</p>
@@ -22,7 +22,7 @@
                  <div class="dates">
                     <div class="dateini">
                        <p>* Fecha inicio:</p>
-                        <datetime v-model="myProject.fechaInicio"></datetime>
+                        <datetime class="admin-border-2" v-model="myProject.fechaInicio"></datetime>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,6 @@ export default {
     },
     methods:{
         validate:function(){
-            console.log(this.myProject);
            if(this.myProject.name == undefined||
             this.myProject.name.trim() == ""||
             this.myProject.description == undefined||
@@ -97,25 +96,22 @@ export default {
         },
         createUser:function () {
             if(this.validate()){
-                console.log("bieeen");
                 this.projectCreated = true;
                 this.validar = false;
                 projectService.createProject(this.myProject);
-                    
+                this.$router.go(-1);  
             }else{
                 this.validar =true;
-                console.log("maaaaallll");
             }
         }
     }
 };
 </script>
 <style scoped>
-
 .button {
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 0.3em;
-    color: #333399;
+    color: var(--admin-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -127,36 +123,20 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #2194e0;
-  border-bottom: 4px solid #333399;
+  background-color: var(--admin-color);
+  border-bottom: 4px solid var(--admin-color);
   color: #fff;
 }
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
-}
 .container-task-data{
+    background-color: white;
+    border: 2px solid var(--admin-color);
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
-    width: 50%;
     margin: 0 auto;
-    background-color: white;
-    border: 2px solid #333399;
-    border-radius: 1rem;
     margin-top: 20px;
+    width: 50%;
 }
 .error{
     color: red;
@@ -168,12 +148,12 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
-    line-height: 50px;
-    text-align: center;
+    color: var(--admin-color);
     font-weight: 700;
+    line-height: 50px;
+    margin-bottom: 5px;
+    text-align: center;
     vertical-align: middle;
-        margin-bottom: 5px;
 }
 .form-task-data{
     display: flex;
@@ -195,7 +175,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -206,13 +186,12 @@ export default {
     margin-top: 7px;
 }
 .item-textarea-data{  
-    width: 95%;
     margin: 0 auto;
     margin-top: 10px;
-
+    width: 95%;
 }
 .item-textarea-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -233,7 +212,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -244,6 +223,7 @@ p{
     font-family: 'Roboto', sans-serif;
     margin-bottom: 2px;
 }
+
 @media only screen and (max-width: 980px) {
     .container-task-data{
         width: 100%;

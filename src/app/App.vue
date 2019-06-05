@@ -16,25 +16,26 @@ dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
  
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font-size: 100%;
-  vertical-align: baseline;
   background: transparent;
+  border: 0;
   font-family: 'Titillium Web', sans-serif;
+  font-size: 100%;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
 }
 .vdatetime >input{width: 100%;
   box-sizing: border-box;
-  height: 35px;
-  border: 2px solid #333399;
+  border: 2px solid  var(--admin-color);
   border-radius: 5px;
+  height: 35px;
+  margin: 10px 0;
   padding: 0 15px;
-  margin: 10px 0;}
+  }
 html{
-    height: 100%;
     background-color: #eee;
+    height: 100%;
 }
 textarea{
     resize: none;
@@ -48,8 +49,8 @@ textarea{
     fill: #E0E0E3 !important;
 }
 body {
-  line-height: 1;
   background-color: #fafafa;
+  line-height: 1;
   height: 100%;
 }
 ol, ul {
@@ -96,6 +97,16 @@ table {
 .navigator{
     grid-area: header;
    
+}
+:root {
+  --admin-color: black; 
+  --man-color: #333399;
+}
+.admin-background{
+  background-color: var(--admin-color);
+}
+.user-background{
+  background-color: var(--man-color);
 }
 </style>
 

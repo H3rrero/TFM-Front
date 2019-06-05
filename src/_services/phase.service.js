@@ -4,7 +4,8 @@ import { authHeader } from '../_helpers';
 export const phaseService = {
     getAll,
     getById,
-    createPhase
+    createPhase,
+    getByProject
 };
 
 
@@ -19,7 +20,6 @@ function getAll() {
         method: 'GET',
         headers: authHeader()
     };
-    console.log("service phases");
     return fetch(`${config.apiUrl}/phases`, requestOptions).then(handleResponse);
 }
 function getById(id) {
@@ -27,7 +27,6 @@ function getById(id) {
         method: 'GET',
         headers: authHeader()
     };
-    console.log("service phases");
     return fetch(`${config.apiUrl}/phases/${id}`, requestOptions).then(handleResponse);
 }
 function createPhase(phase) {
@@ -36,7 +35,15 @@ function createPhase(phase) {
         headers: authHeader(),
         body: JSON.stringify(phase)
     };
-    return fetch(`${config.apiUrl}/phase/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/phases`, requestOptions).then(handleResponse);
+}
+function getByProject(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/phasebyproject/${id}`, requestOptions).then(handleResponse);
 }
 function handleResponse(response) {
     
@@ -44,7 +51,6 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-                console.log(response);
                 // auto logout if 401 response returned from api
                 logout();
                 location.reload(true);

@@ -26,7 +26,7 @@ export default {
 .task-unassigned{
     background-color: white;
     border-radius: 1rem;
-    color: #333399;
+    color: var(--man-color);
     margin: 0 auto;
     margin-top: 8px;
     text-align: center;

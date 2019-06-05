@@ -1,6 +1,6 @@
 <template>
 <div v-if="phases.items">
-  <app-breadcrumbs></app-breadcrumbs>
+  <app-breadcrumbs class="user-background"></app-breadcrumbs>
 <div class="scrolling-container" v-if="haveData">
   <highcharts class="container-gantt" :constructor-type="'ganttChart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
@@ -17,6 +17,7 @@ export default {
       prueba: 'haha',
       haveData : false,
        updateArgs: [true, true, true],
+       selectProject:this.$route.params.id,
   stockOptions: {
       colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
           '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
@@ -271,12 +272,10 @@ export default {
         })
     },
     created () {
-      console.log("created porjectstate");
-        this.getAllPhases()
+        this.getAllPhases(this.selectProject);
        
     },
     mounted(){
-      console.log("mounted porjectstate");
       this.getSeries()
     },
     methods: {
@@ -285,7 +284,7 @@ export default {
             getAllPhases: 'getAll',
         }),
         getSeries: function () {
-          phaseService.getAll().then(
+          phaseService.getByProject(this.selectProject).then(
             fases=>{
               this.updateData();
              
@@ -293,8 +292,6 @@ export default {
        );
         },
         updateData: function () {
-          console.log("fases2")
-          console.log(this.phases.items[0].data)
          
       this.haveData = true;
         this.stockOptions.series[0].data = this.phases.items[0].data

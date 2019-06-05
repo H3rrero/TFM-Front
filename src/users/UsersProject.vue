@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-breadcrumbs></app-breadcrumbs>
+        <app-breadcrumbs class="user-background"></app-breadcrumbs>
         <div class="user-container">
               <div  class="users">
                 <div class="users-item" v-for="user in users" :key="user.id">
@@ -59,6 +59,7 @@
 
  import { projectService } from '../_services/project.service';
  import { userService } from '../_services/user.service';
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
@@ -76,10 +77,10 @@ export default {
     methods: {
        getUsers: function () {
            this.users = [];
-          userService.getAll().then(
+          userProjectService.getUserByProject(this.selectProject).then(
             userss=>{
             userss.forEach(element => {
-                if(element.rol!='admin' && element.projectId == this.selectProject){
+                if(element.rol!='admin' ){
                     this.users.push(element);
                 }
             });
@@ -94,11 +95,14 @@ export default {
        );
         },
         deleteUser:function (user) {
+            let projectId = this.selectProject;
             user.projectId = -1;
             userService.update(user).then(user=>{
+                userProjectService.deleteUserAndProject(user.id, projectId);
                 this.getUsers();
             });
-        },restoreUser:function (user) {
+        }
+        ,restoreUser:function (user) {
             user.deleted = false;
             userService.update(user).then(user=>{
                 this.getUsers();
@@ -109,7 +113,7 @@ export default {
 </script>
 <style scoped>
 .unassigned-task{
-    background-color: #333399;
+    background-color: var(--man-color);
     border: 2px solid white;
     border-radius: 1rem;
     margin-right: 10px;
@@ -118,7 +122,7 @@ export default {
 .add-user{
     background-color: white;
     border-radius: 1rem;
-    color: #333399;
+    color: var(--man-color);
     cursor: pointer;
     margin: 0 auto;
     margin-top: 8px;
@@ -133,12 +137,12 @@ export default {
     border-bottom: 1px solid #6B6FCE;
     color: white;
     display: flex;
-    line-height: 50px;
-    text-align: center;
     font-weight: 700;
+    line-height: 50px;
     margin: 0 auto;
     margin-left: 10px;
     margin-right: 10px;
+    text-align: center;
     vertical-align: middle;
 }
 .information{
@@ -173,7 +177,7 @@ export default {
 }
 .users{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -232,10 +236,10 @@ export default {
  background-color: #D52525;
 }
 .users-item-title-normal{
- background-color: #333399;
+ background-color: var(--man-color);
 }
 .users-body-normal{
- background-color: #333399;
+ background-color: var(--man-color);
 }
 .users-item-title > div > span{
     cursor: pointer;
@@ -252,7 +256,7 @@ export default {
     text-align: center;
 }
 .addPhase{
-    background-color: #333399;
+    background-color: var(--man-color);
     color: white;
     cursor:pointer;
     font-size: 80px;
@@ -263,7 +267,7 @@ p{
     margin-bottom: 2px;
 }
  select{
-    background-color: #333399;
+    background-color: var(--man-color);
     border: 2px solid white;
     border-radius: 5px;
     box-sizing: border-box;

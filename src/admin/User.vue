@@ -1,5 +1,5 @@
 <template>
-   <div class="task-unassigned"  v-bind:class="{ 'manager': user.rol == 'manager' }" v-on:click="showData()"  >
+   <div class="task-unassigned admin"  v-bind:class="{ 'manager': user.rol == 'manager' }" v-on:click="showData()"  >
         <div class="taskspage-task-title">
             <p>{{this.user.firstname + " "+ this.user.lastname + " / "+user.username}}</p>
         </div>
@@ -23,7 +23,6 @@ export default {
 .task-unassigned{
     background-color: white;
     border-radius: 1rem;
-    color: #333399;
     cursor: move;
     margin: 0 auto;
     margin-top: 8px;

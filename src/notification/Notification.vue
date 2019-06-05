@@ -37,8 +37,8 @@ export default {
   color:grey;
 }
 .header-not{
-    border-bottom: 1px solid #333399;
-    color: #333399;
+    border-bottom: 1px solid var(--man-color);
+    color: var(--man-color);
     display: flex;
     flex-direction: row;
     font-weight: 700;
@@ -51,7 +51,7 @@ export default {
 }
 .container-task-message{
     background-color: #eee;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     height: 150px;

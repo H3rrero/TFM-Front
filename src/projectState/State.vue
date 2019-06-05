@@ -1,5 +1,5 @@
 <template>
-    <div class="item " >
+    <div class="item " v-bind:class="{ 'admin-color': rol == 'admin','man-color': rol == 'manager'}">
             <div class="img-container">
                 <img :src="image" :alt="title">
             </div>
@@ -16,14 +16,20 @@
 export default {
     props: {
         image:"",
-        title:""
+        title:"",
+        rol:"",
   },
 };
 </script>
 <style scoped>
+.admin-color{
+    color: var(--admin-color);
+}
+.man-color{
+    color: var(--man-color);
+}
 .item{
     background-color: white;
-    color: #6B6FCE;
     display: flex;
     flex-direction: column;
     height: 330px;

@@ -1,13 +1,12 @@
 import config from 'config';
 import { authHeader } from '../_helpers';
 
-export const taskService = {
+export const userPhaseService = {
     getAll,
-    changeTask,
-    getByPhase,
-    createTask,
-    getByProject,
-    getByPhaseAndProject
+    getHoursUser,
+    changeUserPhase,
+    createUserProject,
+    getByUserAndPhase
 };
 
 
@@ -22,47 +21,38 @@ function getAll() {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/tasks`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/userPhases`, requestOptions).then(handleResponse);
 }
-function getByPhase(idPhase) {
+function getHoursUser(idUser) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/taskbyphase/${idPhase}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/userPhases/${idUser}`, requestOptions).then(handleResponse);
 }
-function changeTask(task) {
+function changeUserPhase(idUser,idPhase,userPhase) {
     const requestOptions = {
         method: 'PUT',
         headers: authHeader(),
-        body: JSON.stringify(task)
+        body: JSON.stringify(userPhase)
     };
-    return fetch(`${config.apiUrl}/tasks/${task.id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/userPhases/${idUser}/${idPhase}`, requestOptions).then(handleResponse);
 }
 
-function getByProject(id) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch(`${config.apiUrl}/taskbyproject/${id}`, requestOptions).then(handleResponse);
-}
-function getByPhaseAndProject(idProject,idPhase) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch(`${config.apiUrl}/taskbyphaseandproject/${idPhase}/${idProject}`, requestOptions).then(handleResponse);
-}
-function createTask(task) {
+function createUserProject(userPhase) {
     const requestOptions = {
         method: 'POST',
         headers: authHeader(),
-        body: JSON.stringify(task)
+        body: JSON.stringify(userPhase)
     };
-    return fetch(`${config.apiUrl}/tasks`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/userPhases`, requestOptions).then(handleResponse);
+}
+function getByUserAndPhase(idUser,idPhase) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${config.apiUrl}/userPhases/${idUser}/${idPhase}`, requestOptions).then(handleResponse);
 }
 function handleResponse(response) {
     

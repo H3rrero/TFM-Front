@@ -7,6 +7,9 @@ import App from './app/App';
 import Navigator from './navigator/Navigator';
 import State from './projectState/State';
 import TaskData from './home/TaskData';
+import RestorePass1 from './login/RestorePassword1';
+import RestorePass2 from './login/RestorePassword2';
+import RestorePass3 from './login/RestorePassword3';
 import Messages from './home/Messages';
 import Notification from './notification/Notification';
 import TaskDetail from './notification/TaskDetail';
@@ -263,6 +266,9 @@ Vue.component('user',User);
 Vue.component('sprinttask',SprintTask);
 Vue.component('state',State);
 Vue.component('downloadCsv', JsonCSV)
+Vue.component('restorestep1',RestorePass1);
+Vue.component('restorestep2',RestorePass2);
+Vue.component('restorestep3',RestorePass3);
 
 new Vue({
     el: '#app',

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <app-breadcrumbs></app-breadcrumbs>
+        <app-breadcrumbs class="admin-background"></app-breadcrumbs>
         <div class="user-container">
-            <div class="projects">
+            <div class="projects ">
                 <div class="projects-item" v-for="project in projects" :key="project.id">
-                   <div class="projects-item-title" >
+                   <div class="projects-item-title " >
                         <p >{{project.name}}</p>
                         <div>
                             <span v-on:click="getDataProject(project)" title="Deshabilitar projecto" >
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                  <div class="projects-item" title="Añadir un nuevo proyecto" >
-                    <button class="addPhase" v-on:click="openNewProject()">+</button>
+                    <button class="addPhase " v-on:click="openNewProject()">+</button>
                 </div>
             </div>
         </div>
@@ -114,7 +114,6 @@ export default {
                 });
             }else{
                 projectService.remove(project.id).then(projectss=>{
-                console.log(projectss);
                  this.getProjectsActive();
                  this.getProjectsInActive();
                 });
@@ -159,7 +158,7 @@ export default {
 }
 .projects{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -187,7 +186,7 @@ export default {
     transition:  0.3s ease-out;
 }
 .projects-item-title{
-    background-color: #333399;
+    background-color: var(--admin-color);
     border-bottom: 1px solid white;
     color: white;
     display: flex;
@@ -223,7 +222,7 @@ export default {
     margin-right: 7px;
 }
 .projects-body{
-    background-color: #333399;
+    background-color: var(--admin-color);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -246,7 +245,7 @@ export default {
     color: white;
 }
 .addPhase{
-    background-color: #333399;
+    background-color: var(--admin-color);
     color: white;
     cursor:pointer;
     font-size: 80px;

@@ -1,7 +1,7 @@
 <template>
 
 <div class="scrolling-container" v-if="haveDataCh">
-    <app-breadcrumbs></app-breadcrumbs>
+    <app-breadcrumbs class="user-background"></app-breadcrumbs>
   <highcharts class="container-chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 
@@ -21,6 +21,7 @@ export default {
         prueba: 'haha',
         haveDataCh : false,
         updateArgs: [true, true, true],
+        selectProject:this.$route.params.id,
         stockOptions: {
                 title: {
         text: 'Diagrama burndown'
@@ -87,7 +88,7 @@ export default {
     methods: {
       
         getSeries: function () {
-          phaseService.getAll().then(
+          phaseService.getByProject(this.selectProject).then(
             fases=>{
             this.fasesB=fases;
               this.getProject();
@@ -96,9 +97,9 @@ export default {
        );
         },
         getProject: function () {
-          projectService.getById(0).then(
+          projectService.getById(this.selectProject).then(
             element=>{
-            this.project=element;
+            this.project=element[0];
               this.updateData();
              
             }
@@ -112,16 +113,12 @@ export default {
              let date = new Date();
              estTotal = estTotal-element.totalHours;
              realEst = realEst - element.completedHours;
-             console.log("estTotal");
-             console.log(estTotal);
-             console.log(element)
              this.estData.push(estTotal);
              if(end < date){
                 this.realData.push(realEst);
              }
              this.stockOptions.series[0].data = this.estData;
              this.stockOptions.series[1].data = this.realData;
-             console.log( this.stockOptions.series);
          });
       this.haveDataCh = true;
       
