@@ -2,9 +2,9 @@
     <div class="menu" >  
         <section>
             <header  v-bind:class="{ 'header-admin': user.rol == 'admin'}">
-                <span v-on:click="back()" v-if="user.rol=='admin'" class="logo back" target="_blank"><i class="fas fa-arrow-circle-left"></i></span>
-                <span v-if="user.rol!='admin'" class="logo" target="_blank" v-on:click="profile()">{{user.firstname+ " "+user.lastname}}</span>
-                <span v-if="user.rol=='admin'" class="admin-console" target="_blank">Consola de administración</span>
+                <span v-on:click="back()" v-if="user.rol=='admin'" class="logo back admin" target="_blank"><i class="fas fa-arrow-circle-left"></i></span>
+                <span v-if="user.rol!='admin'" class="logo user" target="_blank" v-on:click="profile()">{{user.firstname+ " "+user.lastname}}</span>
+                <span v-if="user.rol=='admin'" class="admin-console admin" target="_blank">Consola de administración</span>
                 <label for="toggle-1" class="toggle-menu"><ul><li></li> <li></li> <li></li></ul></label>
                 <input type="checkbox" id="toggle-1">
                 <nav>
@@ -41,8 +41,10 @@
 </template>
 
 <style>
+.user{
+    color: var(--man-color);
+}
 .admin-console{
-    color: #333399; 
     font-size:24px; 
     font-weight:600; 
 }
@@ -54,7 +56,6 @@
     padding:20px 0px;
 }
 .logo{
-    color: #333399; 
     cursor: pointer;
     font-size:24px; 
     font-weight:600; 
@@ -62,7 +63,8 @@
     margin-left: 30px;
     padding:20px 0px;
     text-transform:uppercase; 
-    }
+}
+
 .back{
     cursor: pointer;
 }
@@ -85,18 +87,18 @@ nav{
 }
 
 header > p{
-    color: #333399;
+    color: var(--man-color);
     text-decoration: none;
 }
 .active{
-    background-color: #333399;
+    background-color: var(--man-color);
 }
 .active > p{
     color: white;
     
 }
 li > p{
-    color: #333399;
+    color: var(--man-color);
     text-decoration: none;
     cursor: pointer;
 }
@@ -161,7 +163,7 @@ input[type=checkbox],  label{display:none;}
         color:white;
     }
     nav{
-        background-color: #333399;
+        background-color: var(--man-color);
         color: white; 
         display:none; 
         position:absolute; 
@@ -210,7 +212,7 @@ input[type=checkbox],  label{display:none;}
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+  import { userProjectService } from '../_services/userProject.service';
 export default {
      name: "navigator"
     ,
@@ -224,6 +226,8 @@ export default {
        project:false,
        checkUser:true,
        navOn:false,
+       projectData:"",
+       selectProject:{},
        user:{}
        }
     },
@@ -235,14 +239,12 @@ export default {
     },
     mounted(){
         this.$root.$on('eventing', data => {
-            console.log("eventing")
+            this.projectData = data;
            this.navOn=true;
     });
     },
     created(){
     this.getUser();
-    console.log("this.$router.path")
-    console.log(this.$router.history.current.path.includes("userhome"));
     if(this.$router.history.current.path.includes("userhome")){
         this.navOn = false;
     }else{
@@ -268,15 +270,29 @@ export default {
          this.$router.push('/profile');
         },
         currentPage: function (page) {
-           
-          if(page == 'states'){
+           if(this.projectData.id == undefined){
+            userProjectService.getProjectByUser(this.user.id).then(projects =>{
+                projects.forEach(element => {
+                   if(element.id == "proyecto prueba") 
+                    this.currentPage2(page, element.id,element.name);
+                });
+                
+            })
+        }else{
+            this.currentPage2(page, this.projectData.id,this.projectData.name);
+        }
+         
+       
+        },
+        currentPage2: function (page,project,name) {
+             if(page == 'states'){
               this.states = true;
               this.phases = false;
               this.tasks = false;
               this.kamban = false;
               this.usuarios = false;
               this.project = false;
-              this.$router.push('/state');
+              this.$router.push(`/state/${project}`);
           }
           else if(page == 'phases'){
                this.states = false;
@@ -285,7 +301,7 @@ export default {
               this.kamban = false;
               this.usuarios = false;
               this.project = false;
-               this.$router.push('/sprints');
+               this.$router.push(`/sprints/${project}`);
           }
           else if(page == 'tasks'){
                this.states = false;
@@ -294,7 +310,7 @@ export default {
               this.kamban = false;
               this.usuarios = false;
               this.project = false;
-               this.$router.push('/tasks');
+               this.$router.push(`/tasks/${project}`);
           }
           else if(page == 'kamban'){
                this.states = false;
@@ -303,7 +319,7 @@ export default {
               this.kamban = true;
               this.usuarios = false;
               this.project = false;
-               this.$router.push('/kanban/-1');
+               this.$router.push(`/kanban/${project}`);
           }
           else if(page == 'usuarios'){
                this.states = false;
@@ -312,7 +328,7 @@ export default {
               this.kamban = false;
               this.usuarios = true;
             this.project = false;
-            this.$router.push('/disableusers/0/proyecto prueba');
+            this.$router.push(`/disableusers/${project}/${name}`);
           }
           else if(page == 'project'){
                this.states = false;
@@ -321,10 +337,9 @@ export default {
               this.kamban = false;
               this.usuarios = false;
               this.project = true;
-               this.$router.push('/projectdata/0');
+               this.$router.push(`/projectdata/${project}`);
           }
-       
-        },
+        }
     }
 };
 </script>

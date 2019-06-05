@@ -52,9 +52,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #2F96EF;
+    border: 2px solid var(--man-color);
     border-radius: 0.3em;
-    color: #2F96EF;
+    color: var(--man-color);
     cursor: pointer;
     display: inline-block;
     font-size: 17px;
@@ -67,30 +67,14 @@ export default {
     text-decoration: none;
     transition: all 0.2s ease-in-out;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  display: block;
-  height: 100%;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #2194e0;
-  border-bottom: 4px solid #1977b5;
+  background-color: var(--man-color);
+  border-bottom: 4px solid var(--man-color);
   color: #fff;
-}
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
 }
 .container-task-hours{
     background-color: #eee;
-    border: 2px solid #2F96EF;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     height: 150px;
@@ -113,7 +97,7 @@ export default {
     margin-right: 30px;
 }
 .change-hours >input{
-    border: 2px solid #2F96EF;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;

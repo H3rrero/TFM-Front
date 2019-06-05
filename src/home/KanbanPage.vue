@@ -1,6 +1,6 @@
 <template>
     <div class="filter-kamban">
-        <app-breadcrumbs></app-breadcrumbs>
+        <app-breadcrumbs class="user-background"></app-breadcrumbs>
         <div class="filter">
             <button class="mytask-bt" title="filtrar por tus tareas asignadas" v-bind:class="{ 'mytaskbt-selected': isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
             <button class="mytask-bt" title="filtrar por tareas retrasadas" v-bind:class="{ 'mytaskbt-selected': isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
@@ -89,11 +89,13 @@
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
  import { phaseService } from '../_services/phase.service';
+  import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
         currentUser: JSON.parse(localStorage.getItem('user')),
         selectUser: -1,
+        selectProject:this.$route.params.id,
         tasks:[],
         states:[],
         retard:[],
@@ -133,9 +135,10 @@ export default {
     },
     methods: {
        getSeries: function () {
-         taskService.getAll().then(
+         taskService.getByProject(this.selectProject).then(
             taskss=>{
               this.updateData(taskss);
+              this.getCurrentPhases();
                this.haveData = true;
             }
        );
@@ -148,8 +151,6 @@ export default {
             );
         },
         getStates: function () {
-            console.log("localStorage.getItem('navOn')")
-            console.log(localStorage.getItem('navOn'));
           stateService.getAll().then(
             elements=>{
               this.states = elements;
@@ -157,7 +158,7 @@ export default {
        );
         },
         getPhases: function () {
-          phaseService.getAll().then(
+          phaseService.getByProject(this.selectProject).then(
             fases=>{
             this.phasesKb=fases;
              this.getCurrentPhases();
@@ -168,7 +169,7 @@ export default {
         checkState:function () {
           this.phasesKb.forEach(element => {
               if(this.isFinish(element))
-              taskService.getByPhase(element.id).then(
+              taskService.getByPhaseAndProject(element.id,this.selectProject).then(
                   tasks =>{
                       tasks.forEach(task => {
                           if(task.state!="Terminada" && !task.finish){
@@ -190,10 +191,9 @@ export default {
                       }, 100);  
         },
         createTask:function(counter){
-            console.log("createTask");
+            if(this.tasksCreated[counter]!=undefined)
             taskService.createTask(this.tasksCreated[counter]).then(
                 task =>{
-                     console.log(task);
                     if(this.tasksCreated[counter+1]!=undefined)
                     this.createTask(counter+1);
                 }
@@ -214,7 +214,7 @@ export default {
             return end<date ? true : false;
         },
          getUsers: function () {
-          userService.getAll().then(
+          userProjectService.getUserByProject(this.selectProject).then(
             users=>{
                 users.forEach(element => {
                     this.usersId.push(element.id);
@@ -225,7 +225,7 @@ export default {
        );
         },
         openNewTask:function (id) {
-            this.$router.push('/newTask/'+this.selectPhase);
+            this.$router.push('/newTask/'+this.selectPhase+'/'+this.selectProject);
         },
         getCurrentPhases:function () {
            if(this.$route.params.id == -1 && this.selectPhase ==-1){
@@ -268,8 +268,6 @@ export default {
             this.haveData = true;
             this.tasks = taskss;
             this.nonAssigned = [];
-            console.log("updateData");
-            console.log(taskss);
             this.tasks.forEach(element => {
                 let dateTask = new Date(element.dateF);
                 let date = new Date();
@@ -278,16 +276,12 @@ export default {
                     }
                 if(element.userId == -1){
                     this.nonAssigned.push(element.id);
-                     console.log(this.nonAssigned);
                 }
             });
       
         },
         showMenu: function (task) {
             this.show = true;
-            console.log("showMenu")
-            console.log(task)
-            console.log(this.tasks);
             this.sendTask = task;
         },
         showMessagePage: function () {
@@ -302,9 +296,6 @@ export default {
         },
         showHours: function (task) {
             this.showH = true;
-            console.log("showHours")
-            console.log(task)
-            console.log(this.tasks);
             this.sendTask = task;
         },
         deletedTask: function (task) {
@@ -368,13 +359,11 @@ export default {
             this.isActiveA = false;   
             this.isActive = false;
             this.isActiveS = !this.isActiveS;
-            console.log(this.selectUser);
             if(this.selectUser < 0){
                 this.showAllTask(); 
             }
             else{
                 this.usersId = [this.selectUser];
-                console.log(this.usersId);
             }
         },
         showTaskRetard: function () {
@@ -392,7 +381,7 @@ export default {
         },
         showAllTask:function () {
             this.isActiveA = !this.isActiveA;
-            userService.getAll().then(
+            userProjectService.getUserByProject(this.selectProject).then(
             users=>{
                 users.forEach(element => {
                     this.usersId.push(element.id);
@@ -411,7 +400,7 @@ export default {
     background-color: white;
     border: none;
     border-radius: 1rem;
-    color: #333399;
+    color: var(--man-color);
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
@@ -419,7 +408,7 @@ export default {
     transition: color 1.2s ease;
 }
 .newtask-bt{
-    background-color: #333399;
+    background-color: var(--man-color);
     border: none;
     border-radius: 1rem;
     color: white;
@@ -442,7 +431,7 @@ export default {
     margin-left: auto;
 }
 .current-phase{
-    color: #333399;
+    color: var(--man-color);
     font-size: 24px;
     font-weight: 600;
     margin-left: auto;
@@ -452,7 +441,7 @@ export default {
     border: none;
     border-radius: 1rem;
     padding-left: 5px;
-    color: #333399;
+    color: var(--man-color);
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
@@ -460,18 +449,18 @@ export default {
     transition: color 1.2s ease;
 }
 .mytask-input:hover{
-    background-color: #333399;
+    background-color: var(--man-color);
     color: white;
 }
 .mytaskbt-selected{
-    background-color: #333399;
+    background-color: var(--man-color);
     color: white;
 }
 .filter-user{
     border: none;
     border-radius: 5px;
     box-sizing: border-box;
-    color: #333399;
+    color: var(--man-color);
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
     padding: 0 15px;
@@ -479,11 +468,11 @@ export default {
     transition: color 1.2s ease;
 }
 .filter-user:hover{
-    background-color:#333399;
+    background-color:var(--man-color);
     color: white;
 }
 .mytask-bt:hover{
-    background-color: #333399;
+    background-color: var(--man-color);
     color: white;
 }
 .filter-kamban{
@@ -492,7 +481,7 @@ export default {
 }
 .filter{
     background-color: #D8E1FF;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -521,9 +510,9 @@ export default {
 }
 .item{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
-    color: #333399;
+    color: var(--man-color);
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -545,7 +534,7 @@ a{
     text-decoration: none;
 }
 .task{
-    background-color: #333399;
+    background-color: var(--man-color);
     border-radius: 1rem;
     color: white;
     cursor: move;

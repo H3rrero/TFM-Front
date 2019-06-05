@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <app-breadcrumbs></app-breadcrumbs>
+    <div >
+        <app-breadcrumbs class="admin-background"></app-breadcrumbs>
         <div class="user-container">
              <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedUser(-1)"  class="unassigned-task"   >
@@ -16,13 +16,13 @@
                         <p>+</p>
                     </div>
                 </div>
-                <div v-for="user in usersUnassigned" :key="user.id">
+                <div v-for="user in usersProject[projectSelected]" :key="user.id">
                     <drag @dragend="handleDrop"  :transfer-data="user" >
-                         <user v-if="user.projectId == projectSelected && user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
+                         <user v-if="user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
                     </drag>
                 </div>
             </drop>
-            <drop @dragover="asignedUser(selectProject)" class="users">
+            <drop @dragover="asignedUser(selectProject)" class="users ">
                 <div class="users-item" v-for="user in users" :key="user.id">
                     <drag @dragend="handleDrop"  :transfer-data="user" class="users-item-drag">
                    <div class="users-item-title"  v-bind:class="{ 'users-item-title-admin': user.rol == 'manager','users-item-title-normal': user.rol != 'manager'}" >
@@ -82,18 +82,20 @@
 
  import { projectService } from '../_services/project.service';
  import { userService } from '../_services/user.service';
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
         projectAsignedId:-1,
         users:[],
-        usersUnassigned:[],
         projectSelected:-1,
         selectProject:this.$route.params.id,
         nameProject:this.$route.params.name,
         show:false,
         userSelected:{},
         projects:[],
+        haveDataProjects:false,
+        usersProject:{}
        }
     },
     created () {
@@ -103,20 +105,30 @@ export default {
     methods: {
        getUsersActive: function () {
            this.users = [];
-          userService.getAll().then(
+           this.haveDataProjects = false;
+            userProjectService.getUserWithoutProject().then(
             userss=>{
-                this.usersUnassigned=userss;
-            userss.forEach(element => {
-                if(!element.deleted && element.rol!='admin' && element.projectId == this.selectProject){
-                    this.users.push(element);
-                }
-            });
+                this.usersProject[-1]= userss;
+                    
+            }
+       );
+          userProjectService.getUserByProject(this.selectProject).then(
+            userss=>{
+                        
+                 setTimeout(() => {
+                     this.haveDataProjects = true;
+                 }, 300);
+                userss.forEach(element => {
+                    if(!element.deleted && element.rol!='admin'){
+                        this.users.push(element);
+                    }
+                });
             }
        );
         },
         getUsersInActive: function () {
            this.users = [];
-          userService.getAll().then(
+          userProjectService.getUserByProject(this.selectProject).then(
             userss=>{
             userss.forEach(element => {
                 if(element.deleted && element.rol!='admin'){
@@ -126,10 +138,19 @@ export default {
             }
        );
         },
-         getProjects: function () {
+        getProjects: function () {
+            this.usersProject = {};
+            this.haveDataProjects = false;
+            this.projects = [];
            projectService.getAll().then(
             projectss=>{
-                this.projects = projectss;
+                this.haveData = true;
+                projectss.forEach(element => {
+                    if(!element.deleted){
+                        this.projects.push(element);
+                        this.getUsersByProject(element.id);
+                    }
+                });
             }
        );
         },
@@ -137,19 +158,44 @@ export default {
             this.$router.push('/createuserproject/'+this.selectProject);
         },
         deleteUser:function (user) {
-            user.deleted = true;
+            let projectId = this.selectProject;
+            user.projectId = -1;
             userService.update(user).then(user=>{
-                this.getUsersActive();
+                userProjectService.deleteUserAndProject(user.id, projectId);
+                 this.$router.go();
             });
         },
         showDeleteUser:function (user) {
             this.getUsersInActive();
             this.$router.go();
         },handleDrop(data, event) {
+                var projectIdOld = data.projectId;
                 data.projectId = this.projectAsignedId;
                 
                 userService.update(data).then(user=>{
-                    this.getUsersActive();
+                    userProjectService.getByUserAndProject(data.id, this.projectAsignedId).then(userProject=>{
+                    
+                    if(userProject.message != null){
+                        if(this.projectAsignedId == -1){
+                            userProjectService.deleteUserAndProject(data.id,projectIdOld);
+                             this.$router.go();
+                        }else{
+                        var userProj = {
+                            user: data.id,
+                            project:data.projectId
+                        }
+                        userProjectService.createUserProject(userProj).then(user=>{
+                            this.$router.go();
+                        });
+                        
+                        }
+                    }
+                    
+
+
+                    
+                });
+                    
                 });
         }, asignedUser: function (id) {
             this.projectAsignedId = id;
@@ -163,12 +209,23 @@ export default {
         asignedUser: function (id) {
             this.projectAsignedId = id;
         },
+        getUsersByProject: function (projectId) {
+            userProjectService.getUserByProject(projectId).then(
+            userss=>{
+               if(userss.message == null)
+                   this.usersProject[projectId]=  userss;
+                else
+                    this.usersProject[projectId]=  [];
+                   
+            }
+       );
+        },
     }
 };
 </script>
 <style scoped>
 .unassigned-task{
-    background-color: #333399;
+    background-color: var(--admin-color);
     border: 2px solid white;
     border-radius: 1rem;
     margin-right: 10px;
@@ -177,7 +234,7 @@ export default {
 .add-user{
     background-color: white;
     border-radius: 1rem;
-    color: #333399;
+    color: var(--admin-color);
     cursor: pointer;
     margin: 0 auto;
     margin-top: 8px;
@@ -192,12 +249,12 @@ export default {
     border-bottom: 1px solid #6B6FCE;
     color: white;
     display: flex;
-    line-height: 50px;
-    text-align: center;
     font-weight: 700;
+    line-height: 50px;
     margin: 0 auto;
     margin-left: 10px;
     margin-right: 10px;
+    text-align: center;
     vertical-align: middle;
 }
 .information{
@@ -232,7 +289,7 @@ export default {
 }
 .users{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -285,10 +342,10 @@ export default {
  background-color: #138A00;
 }
 .users-item-title-normal{
- background-color: #333399;
+ background-color: var(--admin-color);
 }
 .users-body-normal{
- background-color: #333399;
+ background-color: var(--admin-color);
 }
 .users-item-title > div > span{
     cursor: pointer;
@@ -305,7 +362,7 @@ export default {
     text-align: center;
 }
 .addPhase{
-    background-color: #333399;
+    background-color: var(--admin-color);
     color: white;
     cursor:pointer;
     font-size: 80px;
@@ -316,7 +373,7 @@ p{
     margin-bottom: 2px;
 }
  select{
-    background-color: #333399;
+    background-color: var(--admin-color);
     border: 2px solid white;
     border-radius: 5px;
     box-sizing: border-box;

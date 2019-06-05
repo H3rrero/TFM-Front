@@ -1,7 +1,7 @@
 <template>
 
 <div class="scrolling-container" v-if="haveDataCh">
-    <app-breadcrumbs></app-breadcrumbs>
+    <app-breadcrumbs class="user-background"></app-breadcrumbs>
     <select  class="filter-users" v-model="selectPhase" v-on:change="updateData()" >
         <option  v-for="phase in fasesB" :key="phase.id" :value="phase.id">{{phase.name}}</option>
     </select>
@@ -22,6 +22,7 @@ export default {
         fasesB:[],
         taskb:[],
         selectPhase:this.$route.params.id,
+        selectProject:this.$route.params.idProject,
         realData:[],
         estData:[],
         prueba: 'haha',
@@ -92,7 +93,7 @@ export default {
     },
     methods: {
       getTasks: function () {
-          taskService.getAll().then(
+          taskService.getByProject(this.selectProject).then(
             taskss=>{
              this.taskb = taskss;
              this.updateData();
@@ -100,7 +101,7 @@ export default {
        );
         },
         getSeries: function () {
-          phaseService.getAll().then(
+          phaseService.getByProject(this.selectProject).then(
             fases=>{
             this.fasesB=fases;
               this.getProject();
@@ -109,9 +110,9 @@ export default {
        );
         },
         getProject: function () {
-          projectService.getById(0).then(
+          projectService.getById(this.selectProject).then(
             element=>{
-            this.project=element;
+            this.project=element[0];
               this.getTasks();
              
             }
@@ -129,7 +130,8 @@ export default {
             this.estData = [];
             this.realData = [];
             phaseService.getById(this.selectPhase).then(
-            element=>{
+            elements=>{
+                let element = elements[0];
                 let estTotal = element.totalHours;
                 let realEstTotal = element.totalHours;
                 let end=new Date(element.dateF);
@@ -195,7 +197,7 @@ export default {
     border: none;
     border-radius: 5px;
     box-sizing: border-box;
-    color: #333399;
+    color: var(--man-color);
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
     padding: 6px 15px;
@@ -203,7 +205,7 @@ export default {
     transition: color 1.2s ease;
 }
 .filter-users:hover{
-    background-color:#333399;
+    background-color:var(--man-color);
     color: white;
 }
 </style>

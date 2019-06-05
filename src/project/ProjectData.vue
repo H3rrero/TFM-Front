@@ -1,6 +1,6 @@
 <template>
 <div>
-    <app-breadcrumbs></app-breadcrumbs>
+    <app-breadcrumbs class="user-background"></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Datos del proyecto</p>
@@ -102,12 +102,9 @@ export default {
            projectService.getAll().then(
             projectss=>{
                projectss.forEach(element => {
-                   console.log(element);
-                   console.log(this.selectProject);
                    if(element.id == this.selectProject){
                        this.myProject = element;
                        this.json_data.push(this.myProject);
-                       console.log(this.myProject)
                    }
                });
             }
@@ -115,14 +112,12 @@ export default {
         },
         updateProject:function () {
             if(this.validate()){
-                console.log("bieeen");
                 this.projectUpdated = true;
                 this.validar = false;
                 projectService.update(this.myProject);
                     
             }else{
                 this.validar =true;
-                console.log("maaaaallll");
             }
         }
     }
@@ -131,9 +126,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 0.3em;
-    color: #333399;
+    color: var(--man-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -145,26 +140,10 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #2194e0;
-  border-bottom: 4px solid #333399;
+  background-color: var(--man-color);
+  border-bottom: 4px solid var(--man-color);
   color: #fff;
-}
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
 }
 .container-task-data{
     display: flex;
@@ -172,7 +151,7 @@ export default {
     width: 50%;
     margin: 0 auto;
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     margin-top: 20px;
 }
@@ -186,7 +165,7 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
+    color: var(--man-color);
     display: flex;
     line-height: 50px;
     text-align: center;
@@ -222,7 +201,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -239,7 +218,7 @@ export default {
 
 }
 .item-textarea-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -260,7 +239,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;

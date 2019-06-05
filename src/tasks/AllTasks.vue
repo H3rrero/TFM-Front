@@ -1,5 +1,6 @@
 <template>
     <div v-if="haveData">
+       <app-breadcrumbs class="user-background"></app-breadcrumbs>
        <div class="table-container" role="table" aria-label="Destinations">
             <div class="flex-table header" role="rowgroup">
                 <div v-on:click="sort('title')" class="flex-row first" role="columnheader">Nombre</div>
@@ -8,7 +9,15 @@
                 <div v-on:click="sort('dateI')" class="flex-row" role="columnheader">Fecha inicio</div>
                 <div v-on:click="sort('dateF')" class="flex-row first" role="columnheader">Fecha fin</div>
                 <div v-on:click="sort('planHours')" class="flex-row" role="columnheader">Horas planificadas</div>
-                <div v-on:click="sort('hours')" class="flex-row" role="columnheader">Horas dedicadas</div>
+                <div v-on:click="sort('hours')" class="flex-row last-row" role="columnheader"><p>Horas dedicadas</p> 
+                  <download-csv
+                    :data   = "json_data"
+                    name    = "filename.csv">
+                    <span>
+                        <i class="fas fa-file-csv"></i>
+                    </span>
+                  </download-csv>
+                </div>
             </div>
             <div class="flex-table row" role="rowgroup" v-for="task in sortedTasks" :key="task.id">
                 <div class="flex-row rowspan first">{{task.title}}</div>
@@ -33,7 +42,8 @@ export default {
         tasks:[],
         haveData:false,
         currentSort:'name',
-        currentSortDir:'asc'
+        currentSortDir:'asc',
+        json_data: [  ]
        }
     },
     created () {
@@ -56,6 +66,9 @@ export default {
             taskss=>{
               this.tasks = taskss;
                this.haveData = true;
+               taskss.forEach(element => {
+                  this.json_data.push(element);
+               });
             }
        );
         },sort:function(s) {
@@ -81,19 +94,19 @@ div {
   margin-right: 0.1em;
 }
 .flex-table {
+  border-left: solid 1px #d9d9d9;
   display: flex;
   flex-flow: row wrap;
-  border-left: solid 1px #d9d9d9;
   transition: 0.5s;
 }
 .flex-table:first-of-type {
-  border-top: solid 1px #333399;
-  border-left: solid 1px #333399;
+  border-top: solid 1px var(--man-color);
+  border-left: solid 1px var(--man-color);
 }
 .flex-table:first-of-type .flex-row {
-  background: #333399;
+  background: var(--man-color);
+  border-color: var(--man-color);
   color: white;
-  border-color: #333399;
 }
 .flex-table.row:nth-child(odd) .flex-row {
   background: #f4f2f1;
@@ -103,41 +116,48 @@ div {
   transition: 500ms;
 }
 .flex-row {
-  width: calc(100% / 7);
-  text-align: center;
-  padding: 0.5em 0.5em;
   border-right: solid 1px #d9d9d9;
   border-bottom: solid 1px #d9d9d9;
+  padding: 0.5em 0.5em;
+  text-align: center;
+  width: calc(100% / 7);
+}
+.last-row{
+  display: flex;
+
+}
+.last-row > p{
+  margin-right: 10px;
 }
 .rowspan {
+  align-items: flex-start;
   display: flex;
   flex-flow: row wrap;
-  align-items: flex-start;
   justify-content: center;
 }
 .column {
   display: flex;
   flex-flow: column wrap;
-  width: 50%;
   padding: 0;
+  width: 50%;
 }
 .column .flex-row {
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-  padding: 0;
   border: 0;
   border-bottom: solid 1px #d9d9d9;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0;
+  width: 100%;
 }
 .column .flex-row:hover {
   background: #f5f5f5;
   transition: 500ms;
 }
 .flex-cell {
-  width: calc(100% / 2);
+  border-right: solid 1px #d9d9d9;
   text-align: center;
   padding: 0.5em 0.5em;
-  border-right: solid 1px #d9d9d9;
+  width: calc(100% / 2);
 }
 @media all and (max-width: 767px) {
   .flex-row {

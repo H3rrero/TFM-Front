@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <app-breadcrumbs></app-breadcrumbs>
+    <div v-if="haveDataProjects">
+        <app-breadcrumbs class="admin-background"></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
-            <drop @dragover="asignedUser(-1)"  class="unassigned-task"  v-if="haveData" >
+            <drop @dragover="asignedUser(-1)"  class="unassigned-task "  v-if="haveData" >
                  <div class="title-task-data">
-                   <select   v-model="projectSelected">
+                   <select  v-model="projectSelected">
                         <option value="-1">Usuarios sin proyecto</option>
                         <option v-for="project in projects" :key="project.id" :value="project.id">{{project.name}}</option>
                     </select>
@@ -13,27 +13,27 @@
                         <i class="fas fa-list"></i>
                     </span> 
                 </div>
-                <div class="add-user" title="añadir usuario" v-on:click="openNewUser()">
+                <div class="add-user " title="añadir usuario" v-on:click="openNewUser()">
                     <div class="add-user-title">
                         <p>+</p>
                     </div>
                 </div>
-                <div v-for="user in users" :key="user.id">
+                <div v-for="user in usersProject[projectSelected]" :key="user.id">
                     <drag @dragend="handleDrop"  :transfer-data="user" >
-                         <user v-if="user.projectId == projectSelected && user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
+                         <user v-if="user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
                     </drag>
                 </div>
             </drop>
 
-            <div class="programmers">
+            <div class="programmers " >
                 <div class="programmers-item"  v-for="project in projectsDeleted" :key="project.id">
-                    <div class="programmers-item-title" v-if="!project.deleted">
+                    <div class="programmers-item-title " v-if="!project.deleted">
                         {{project.name}}
                     </div>
-                    <drop @dragover="asignedUser(project.id)" class="programmers-item-task"  v-if="!project.deleted">
-                        <div v-for="user in users" :key="user.id">
-                            <drag @dragend="handleDrop"  :transfer-data="user" v-if="user.rol!='admin'">
-                                 <user v-if="user.projectId == project.id" :user="user" v-on:show-data="showMenu(user)"></user>
+                    <drop @dragover="asignedUser(project.id)" @dragleave="projectOld(project.id)" class="programmers-item-task "  v-if="!project.deleted">
+                        <div v-for="user in usersProject[project.id]" :key="user.id">
+                            <drag  @dragend="handleDrop"  :transfer-data="user" v-if="user.rol!='admin'">
+                                 <user  :user="user" v-on:show-data="showMenu(user)"></user>
                             </drag>
                         </div>
                     </drop>
@@ -51,6 +51,7 @@
 
  import { projectService } from '../_services/project.service';
  import { userService} from '../_services/user.service';
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
@@ -58,27 +59,33 @@ export default {
         projects:[],
         projectsDeleted:[],
         projectSelected:-1,
+        projectIdOld:"",
         show:false,
+        count:0,
         currentUser: JSON.parse(localStorage.getItem('user')),
         userSelected:{},
-        haveData: false
+        haveData: false,
+        haveDataProjects:false,
+        usersProject:{}
        }
     },
     created () {
         this.getUsers();
         this.getProjects();
-        console.log(this.$route)
     },
     methods: {
          getUsers: function () {
-          userService.getAll().then(
+          userProjectService.getUserWithoutProject().then(
             userss=>{
-                    this.users = userss;
+                this.usersProject[-1]= userss;
                     
             }
        );
         },
          getProjects: function () {
+            this.usersProject = {};
+            this.projectsDeleted = [];
+            this.haveDataProjects = false;
            projectService.getAll().then(
             projectss=>{
                 this.projects = projectss;
@@ -86,6 +93,7 @@ export default {
                 projectss.forEach(element => {
                     if(!element.deleted){
                         this.projectsDeleted.push(element);
+                        this.getUsersByProject(element.id);
                     }
                 });
             }
@@ -102,18 +110,69 @@ export default {
         handleDrop(data, event) {
                 data.projectId = this.projectAsignedId;
                 data.rol = "user";
-                
-                userService.update(data);
+                userService.update(data).then(user=>{
+                userProjectService.getByUserAndProject(data.id, this.projectAsignedId).then(userProject=>{
+                        console.log("userProject.message");
+                        console.log(userProject.message);
+                    if(userProject.message != undefined){
+                        if(this.projectAsignedId == -1){
+                            console.log("saber que id ha llegado");
+                            console.log(this.projectIdOld);
+                            userProjectService.deleteUserAndProject(data.id,this.projectIdOld).then(data=>{
+                                this.count = 0;
+                                this.getUsers();
+                                this.getProjects();
+                            });
+                            
+                        }else{
+                        var userProj = {
+                            user: data.id,
+                            project:data.projectId
+                        }
+                        userProjectService.createUserProject(userProj).then(data=>{
+                            this.count = 0;
+                            this.getUsers();
+                            this.getProjects();
+                        });
+                        
+                        }
+                    }else{
+                        this.count = 0;
+                    }
+                });
+            });
         },
         asignedUser: function (id) {
             this.projectAsignedId = id;
+        },
+        projectOld: function (id) {
+            this.count++;
+            if(this.count<3){
+                this.projectIdOld = id;
+                console.log("this.projectIdOld ");
+                console.log(this.projectIdOld );
+            }
         },
         openNewUser:function () {
             this.$router.push('/createuser/-1');
         },
         showList: function () {
             this.$router.push('/userslist');
-        }
+        },
+         getUsersByProject: function (projectId) {
+            userProjectService.getUserByProject(projectId).then(
+            userss=>{
+               if(userss.message == null)
+                   this.usersProject[projectId]=  userss;
+                else
+                    this.usersProject[projectId]=  [];
+                if(this.usersProject[this.projectsDeleted[this.projectsDeleted.length-1].id ]!= undefined)
+                    setTimeout(() => {
+                        this.haveDataProjects = true;
+                    }, 100);
+            }
+       );
+        },
     }
 };
 </script>
@@ -124,7 +183,7 @@ export default {
     height: 100%;
 }
 .unassigned-task{
-    background-color: #333399;
+    background-color: var(--admin-color);
     border: 2px solid white;
     border-radius: 1rem;
     margin-right: 10px;
@@ -148,7 +207,7 @@ export default {
 }
 .programmers{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -174,7 +233,7 @@ export default {
     transition:  0.3s ease-out;
 }
 .programmers-item-title{
-    background-color: #333399;
+    background-color: var(--admin-color);
     border-bottom: 1px solid white;
     color: white;
     font-family: 'Roboto', sans-serif;
@@ -183,8 +242,8 @@ export default {
     text-align: center;
 }
 .programmers-item-task{
+    background-color: var(--admin-color);
     height: 90%;
-    background-color: #333399;
 }
 .mask{
     background-color: #3D3A3F;
@@ -196,9 +255,9 @@ export default {
     z-index: 5;
 }
 .add-user{
+    color: var(--admin-color);
     background-color: white;
     border-radius: 1rem;
-    color: #333399;
     cursor: pointer;
     margin: 0 auto;
     margin-top: 8px;
@@ -206,7 +265,7 @@ export default {
     width: 95%;
 }
  select{
-    background-color: #333399;
+    background-color: var(--admin-color);
     border: 2px solid white;
     border-radius: 5px;
     box-sizing: border-box;

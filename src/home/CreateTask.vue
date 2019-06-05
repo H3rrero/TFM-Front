@@ -1,6 +1,6 @@
 <template>
 <div>
-    <app-breadcrumbs></app-breadcrumbs>
+    <app-breadcrumbs class="user-background"></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Introduce los datos de la tarea</p>
@@ -90,9 +90,10 @@ export default {
         title:"",
         description:"",
         userId:-1,
+        projectId:this.$route.params.idProject,
         assigned:"",
         coments:[],
-        phase:parseInt(this.$route.params.idPhase),
+        phase:this.$route.params.idPhase,
         hours:0,
         planHours:0,
         state:'sin asignar'},
@@ -104,7 +105,7 @@ export default {
     methods:{
         getUsers: function () {
           this.user =  JSON.parse(localStorage.getItem('user'));
-          userService.getAll().then(
+          userService.getByProject(this.myTask.projectId).then(
             users=>{
                 users.forEach(element => {
                     this.userss = users;
@@ -116,10 +117,6 @@ export default {
         validate:function(){
             let start = new Date(this.myTask.dateI);
             let end = new Date(this.myTask.dateF);
-            console.log("start < new Date() ");
-            console.log(start < new Date() );
-            console.log(start);
-            console.log(new Date() );
            if(this.myTask.title == undefined||
             this.myTask.title.trim() == ""||
             this.myTask.userId == undefined||
@@ -145,7 +142,7 @@ export default {
                 if(this.myTask.userId != -1){
                     userService.getById(this.myTask.userId).then(
                         user =>{
-                            this.myTask.assigned = user.firstname +" "+user.lastname;
+                            this.myTask.assigned = user[0].firstname +" "+user[0].lastname;
                             this.myTask.state="Backlog";
                             this.myTask.coments.push(this.coment);
                             taskService.createTask(this.myTask);
@@ -165,9 +162,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 0.3em;
-    color: #333399;
+    color: var(--man-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -179,36 +176,20 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #2194e0;
-  border-bottom: 4px solid #333399;
+  background-color: var(--man-color);
+  border-bottom: 4px solid var(--man-color);
   color: #fff;
 }
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
-}
 .container-task-data{
+    background-color: white;
+    border: 2px solid var(--man-color);
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
-    width: 50%;
     margin: 0 auto;
-    background-color: white;
-    border: 2px solid #333399;
-    border-radius: 1rem;
     margin-top: 20px;
+    width: 50%;
 }
 .error{
     color: red;
@@ -220,12 +201,12 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
-    line-height: 50px;
-    text-align: center;
+    color: var(--man-color);
     font-weight: 700;
+    line-height: 50px;
+    margin-bottom: 5px;
+    text-align: center;
     vertical-align: middle;
-        margin-bottom: 5px;
 }
 .form-task-data{
     display: flex;
@@ -247,7 +228,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -258,13 +239,13 @@ export default {
     margin-top: 7px;
 }
 .item-textarea-data{  
-    width: 95%;
     margin: 0 auto;
     margin-top: 10px;
+    width: 95%;
 
 }
 .item-textarea-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -285,7 +266,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;

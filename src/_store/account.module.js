@@ -9,19 +9,14 @@ const state = user
 const actions = {
     login({ dispatch, commit }, { username, password }) {
         commit('loginRequest', { username });
-        console.log("login en account module");
         userService.login(username, password)
             .then(
                 user => {
                     if(user.rol!='nan'){
-                        console.log("user en logun module");
-                        console.log(user);
                         commit('loginSuccess', user);
                         if(!user.deleted){
-                            console.log("per aqui")
                         router.push('/TFM-Front');
                         }else{
-                            console.log("per alla")
                         router.push('/login');
                         }
                     }else if(user.rol='nan'){

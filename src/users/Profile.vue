@@ -100,9 +100,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1.3em;
-    color: #333399;
+    color: var(--man-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -128,7 +128,7 @@ export default {
 }
 .button:hover {
   background-color: #2194e0;
-  border-bottom: 4px solid #333399;
+  border-bottom: 4px solid var(--man-color);
   color: #fff;
 }
 .button:hover:before {
@@ -136,14 +136,14 @@ export default {
   transition: all 0.5s ease-in-out;
 }
 .container-task-data{
+    background-color: white;
+    border: 2px solid var(--man-color);
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
-    width: 50%;
     margin: 0 auto;
-    background-color: white;
-    border: 2px solid #333399;
-    border-radius: 1rem;
     margin-top: 20px;
+    width: 50%;
 }
 .error{
     color: red;
@@ -155,12 +155,12 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
-    line-height: 50px;
-    text-align: center;
+    color: var(--man-color);
     font-weight: 700;
-    vertical-align: middle;
+    line-height: 50px;
     margin-bottom: 5px;
+    text-align: center;
+    vertical-align: middle;
 }
 .form-task-data{
     display: flex;
@@ -173,7 +173,7 @@ export default {
 }
 .item-text-data > div{
     background-color: #eee;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -197,7 +197,7 @@ export default {
 
 }
 .item-textarea-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -221,7 +221,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;

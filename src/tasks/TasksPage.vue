@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-breadcrumbs></app-breadcrumbs>
+        <app-breadcrumbs class="user-background"></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show ||showMessage" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1,'','')"  class="unassigned-task"  v-if="haveData" >
@@ -47,12 +47,14 @@
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
  import { phaseService } from '../_services/phase.service';
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
         tasks:[],
         usersId:[],
         userss:[],
+        selectProject:this.$route.params.id,
         phaseId:-1,
         phaseName:"",
         show:false,
@@ -66,13 +68,23 @@ export default {
        }
     },
     created () {
+        if(this.selectProject == undefined){
+            userProjectService.getProjectByUser(this.currentUser.id).then(projects =>{
+                this.selectProject = projects[0].id;
+                this.getSeries();
+                this.getUsers();
+                this.getPhases();
+            })
+        }else{
         this.getSeries();
         this.getUsers();
         this.getPhases();
+        }
+        
     },
     methods: {
        getSeries: function () {
-          taskService.getAll().then(
+          taskService.getByProject(this.selectProject).then(
             taskss=>{
              this.haveData = true;
              this.tasks = taskss;
@@ -80,12 +92,10 @@ export default {
        );
         },
         getPhases: function () {
-          phaseService.getAll().then(
+         phaseService.getByProject(this.selectProject).then(
             fases=>{
             fases.forEach(element => {
                 if(this.isActual(element)){
-                    console.log("actual");
-                    console.log(element);
                     this.phaseId = element.id;
                     this.phaseName = element.name;
                 }
@@ -95,7 +105,7 @@ export default {
        );
         },
          getUsers: function () {
-          userService.getAll().then(
+          userProjectService.getUserByProject(this.selectProject).then(
             users=>{
                 users.forEach(element => {
                     this.usersId.push(element.id);
@@ -107,7 +117,6 @@ export default {
         },
         showMenu: function (task) {
             this.show = true;
-            console.log(task);
             this.sendTask = task;
         },
          hideMenu: function () {
@@ -158,7 +167,7 @@ export default {
     height: 100%;
 }
 .unassigned-task{
-    background-color: #333399;
+    background-color: var(--man-color);
     border: 2px solid white;
     border-radius: 1rem;
     margin-right: 10px;
@@ -181,7 +190,7 @@ export default {
 }
 .programmers{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -207,7 +216,7 @@ export default {
     transition:  0.3s ease-out;
 }
 .programmers-item-title{
-    background-color: #333399;
+    background-color: var(--man-color);
     border-bottom: 1px solid white;
     color: white;
     font-family: 'Roboto', sans-serif;
@@ -217,7 +226,7 @@ export default {
 }
 .programmers-item-task{
     height: 90%;
-    background-color: #333399;
+    background-color: var(--man-color);
 }
 .mask{
     background-color: #3D3A3F;

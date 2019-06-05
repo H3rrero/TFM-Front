@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-breadcrumbs></app-breadcrumbs>
+        <app-breadcrumbs class="user-background"></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1)"  class="unassigned-task"  v-if="haveData" >
@@ -69,7 +69,8 @@ export default {
         sendTask:{},
         haveData: false,
         phaseAsignedId:-1,
-        assigned:""
+        assigned:"",
+        selectProject:this.$route.params.id
        }
     },
     created () {
@@ -78,15 +79,16 @@ export default {
     },
     methods: {
        getPhases: function () {
-          phaseService.getAll().then(
+          phaseService.getByProject(this.selectProject).then(
             fases=>{
-            this.phasesS=fases;
+            if(fases.error== null)
+                this.phasesS=fases;
              
             }
        );
         },
         getSeries: function () {
-          taskService.getAll().then(
+          taskService.getByProject(this.selectProject).then(
             taskss=>{
              this.haveData = true;
              this.tasks = taskss;
@@ -95,7 +97,6 @@ export default {
         },
         showMenu: function (task) {
             this.show = true;
-            console.log(task);
             this.sendTask = task;
         },
          hideMenu: function () {
@@ -103,22 +104,21 @@ export default {
             this.show = false;
         },
          openNewPhase:function (id) {
-            this.$router.push('/newPhase');
+            this.$router.push(`/newPhase/${this.selectProject}`);
         },
         handleDrop(data, event) {
            
             data.phase = this.phaseAsignedId;
-            console.log(data);
             taskService.changeTask(data);
         },
         asignedTask: function (id) {
             this.phaseAsignedId = id;
         },
         openBurnDown:function (id) {
-            this.$router.push('/burndownSprint/'+id);
+            this.$router.push(`/burndownSprint/${id}/${this.selectProject}`);
         },
         openKamban:function (id) {
-            this.$router.push('/kanban/'+id);
+            this.$router.push(`/kanban/${this.selectProject}`);
         },
         isFinish:function (phase) {
              let end= new Date(phase.dateF);
@@ -144,23 +144,23 @@ export default {
     height: 100%;
 }
 .unassigned-task{
-    background-color: #333399;
+    background-color: var(--man-color);
     border: 2px solid white;
     border-radius: 1rem;
-    width: 20%;
     margin-right: 10px;
+    width: 20%;
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
     color: white;
+    font-weight: 700;
     line-height: 50px;
     text-align: center;
-    font-weight: 700;
     vertical-align: middle;
 }
 .sprints{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -192,7 +192,7 @@ export default {
     transition:  0.3s ease-out;
 }
 .sprints-item-title{
-    background-color: #333399;
+    background-color: var(--man-color);
     border-bottom: 1px solid white;
     color: white;
     display: flex;
@@ -210,7 +210,7 @@ export default {
     margin-right: 7px;
 }
 .sprints-item-task{
-    background-color: #333399;
+    background-color: var(--man-color);
     height: 100%;
     padding-bottom: 10px;
     
@@ -231,7 +231,7 @@ export default {
     z-index: 5;
 }
 .addPhase{
-    background-color: #333399;
+    background-color: var(--man-color);
     color: white;
     cursor:pointer;
     font-size: 200px;

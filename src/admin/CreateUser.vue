@@ -1,6 +1,6 @@
 <template>
 <div>
-    <app-breadcrumbs></app-breadcrumbs>
+    <app-breadcrumbs class="admin-background"></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Introduce los datos del usuario</p>
@@ -31,6 +31,24 @@
                  v-bind:class="{ 'error': (myUser.lastname == undefined|| myUser.lastname.trim()=='')}" >* El campo apellidos es obligatorio</p>
             </div>
             <div class="item-task-data">
+                <p>* Pregunta de seguridad:</p>
+                <input v-model="myUser.question">
+                <p v-if="validar && (myUser.question == undefined|| myUser.question.trim()=='')"
+                 v-bind:class="{ 'error': (myUser.question == undefined|| myUser.question.trim()=='')}" >* El campo pregunta es obligatorio</p>
+            </div>
+            <div class="item-task-data">
+                <p>* Respuesta de seguridad:</p>
+                <input v-model="myUser.answer">
+                <p v-if="validar && (myUser.answer == undefined|| myUser.answer.trim()=='')"
+                 v-bind:class="{ 'error': (myUser.answer == undefined|| myUser.answer.trim()=='')}" >* El campo respuesta es obligatorio</p>
+            </div>
+            <div class="item-task-data">
+                <p>* Correo electronico:</p>
+                <input type="email" v-model="myUser.mail">
+                <p v-if="validar && (myUser.mail == undefined|| myUser.mail.trim()=='')"
+                 v-bind:class="{ 'error': (myUser.mail == undefined|| myUser.mail.trim()=='')}" >* El campo correo es obligatorio</p>
+            </div>
+            <div class="item-task-data">
                 <p v-if="userCreated" v-bind:class="{ 'correct':userCreated}">El usuario se ha añadido correctamente</p>
             </div>
             <div class="buttons">
@@ -50,6 +68,7 @@
 <script>
 
  import { userService } from '../_services/user.service';
+import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
@@ -60,7 +79,10 @@ export default {
         password:"",
         firstname:"",
         lastname:"",
-        projectId:parseInt(this.$route.params.id),
+        question:"",
+        answer:"",
+        mail:"",
+        projectId:this.$route.params.id,
         token:"",
         deleted:false,
         rol:"user"},
@@ -68,7 +90,6 @@ export default {
     },
     methods:{
         validate:function(){
-            console.log(this.myUser);
            if(this.myUser.username == undefined||
             this.myUser.username.trim() == ""||
             this.myUser.password == undefined||
@@ -77,6 +98,12 @@ export default {
             this.myUser.firstname.trim() == ""||
             this.myUser.lastname == undefined||
             this.myUser.lastname.trim() == ""||
+            this.myUser.question == undefined||
+            this.myUser.question.trim() == ""||
+            this.myUser.answer == undefined||
+            this.myUser.answer.trim() == ""||
+            this.myUser.mail == undefined||
+            this.myUser.mail.trim() == ""||
             this.myUser.rol == undefined||
             this.myUser.rol.trim() == "") {
                 return false;
@@ -89,16 +116,19 @@ export default {
         },
         createUser:function () {
             if(this.validate()){
-                console.log("bieeen");
                 this.userCreated = true;
                 this.validar = false;
                 userService.register(this.myUser).then(user=>{
+                    var userProj = {
+                            user: user.id,
+                            project:user.projectId
+                        }
+                        userProjectService.createUserProject(userProj);
                    this.$router.go(-1);  
                 })
                 
             }else{
                 this.validar =true;
-                console.log("maaaaallll");
             }
         }
     }
@@ -107,9 +137,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 0.3em;
-    color: #333399;
+    color: var(--admin-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -121,26 +151,10 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #2194e0;
-  border-bottom: 4px solid #333399;
+  background-color: var(--admin-color);
+  border-bottom: 4px solid var(--admin-color);
   color: #fff;
-}
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
 }
 .button-cancelar {
     border: 2px solid #D52525;
@@ -157,26 +171,10 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button-cancelar:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button-cancelar:hover {
   background-color: #D52525;
   border-bottom: 4px solid #D52525;
   color: #fff;
-}
-.button-cancelar:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
 }
 .buttons{
     display: flex;
@@ -185,14 +183,14 @@ export default {
     width: 80%;
 }
 .container-task-data{
+    background-color: white;
+    border: 2px solid var(--admin-color);
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
-    width: 50%;
     margin: 0 auto;
-    background-color: white;
-    border: 2px solid #333399;
-    border-radius: 1rem;
     margin-top: 20px;
+    width: 50%;
 }
 .error{
     color: red;
@@ -204,12 +202,12 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
-    line-height: 50px;
-    text-align: center;
+    color: var(--admin-color);
     font-weight: 700;
+    line-height: 50px;
+    margin-bottom: 5px;
+    text-align: center;
     vertical-align: middle;
-        margin-bottom: 5px;
 }
 .form-task-data{
     display: flex;
@@ -231,7 +229,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -242,13 +240,13 @@ export default {
     margin-top: 7px;
 }
 .item-textarea-data{  
-    width: 95%;
     margin: 0 auto;
     margin-top: 10px;
+    width: 95%;
 
 }
 .item-textarea-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -269,7 +267,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #333399;
+    border: 2px solid var(--admin-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;

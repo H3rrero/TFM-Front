@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-breadcrumbs></app-breadcrumbs>
+       <app-breadcrumbs class="user-background"></app-breadcrumbs>
         <div class="user-container">
             <div class="users">
                 <div class="users-item" v-for="project in projects" :key="project.id">
@@ -19,6 +19,7 @@
 <script>
 
  import { projectService } from '../_services/project.service';
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     data(){
        return{ 
@@ -33,20 +34,18 @@ export default {
        getProjectsActive: function () {
            this.user =  JSON.parse(localStorage.getItem('user'))
            this.projects = [];
-            projectService.getAll().then(
-            projectss=>{
-            projectss.forEach(element => {
-                if(!element.deleted && this.user.projectId == element.id){
-                    this.projects.push(element);
-                }
-            });
-            }
-       );
+            userProjectService.getProjectByUser(this.user.id).then(projectss=>{
+                projectss.forEach(element => {
+                    if(!element.deleted){
+                        this.projects.push(element);
+                    }
+                });
+            })
         },
          openProjectHome:function (project) {
              localStorage.setItem('navOn', true);
-             this.$root.$emit('eventing', true);
-            this.$router.push('/kanban/-1');
+             this.$root.$emit('eventing', project);
+            this.$router.push(`/kanban/${project.id}`);
         },
     }
 };
@@ -60,7 +59,7 @@ export default {
 }
 .users{
     background-color: white;
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
@@ -88,7 +87,7 @@ export default {
     transition:  0.3s ease-out;
 }
 .users-item-title{
-    background-color: #333399;
+    background-color: var(--man-color);
     border-bottom: 1px solid white;
     color: white;
     display: flex;
@@ -106,7 +105,7 @@ export default {
     margin-right: 7px;
 }
 .users-body{
-    background-color: #333399;
+    background-color: var(--man-color);
     display: flex;
     flex-direction: column;
     height: 100%;

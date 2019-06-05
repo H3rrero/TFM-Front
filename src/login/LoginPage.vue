@@ -16,7 +16,7 @@
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" :disabled="status.loggingIn">Login</button>
-                <!--<router-link to="/register" class="btn btn-link">Register</router-link>-->
+                <router-link to="/forgottenpass" class="btn btn-link">¿Has olvidado la contraseña?</router-link>
             </div>
         </form>
     </div>
@@ -136,8 +136,6 @@ export default {
         }
     },
     updated(){
-      console.log("usuario");
-      console.log( JSON.parse(localStorage.getItem('user')));
       if( JSON.parse(localStorage.getItem('user'))!=undefined){
         if( JSON.parse(localStorage.getItem('user')).deleted){
           this.removed = true;
@@ -147,7 +145,6 @@ export default {
         }
       }
        if( JSON.parse(localStorage.getItem('loginError'))!=undefined){
-         console.log('no entiendo nada');
         this.loginError =  JSON.parse(localStorage.getItem('loginError')).error;
         this.loginErrorB = true;
       }else{

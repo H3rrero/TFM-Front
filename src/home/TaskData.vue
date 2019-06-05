@@ -105,10 +105,6 @@ export default {
        }
     },
     created () {
-         console.log( this.myTask.userId );
-          console.log( this.user);
-        console.log(" myTask.userId == user.userId");
-        console.log( this.myTask.userId == this.user.userId);
         this.getUsers();
         this.getStates();
     },
@@ -149,8 +145,6 @@ export default {
            }
         },
         getStates: function () {
-            console.log("this.myTask");
-            console.log(this.myTask)
           stateService.getAll().then(
             elements=>{
               this.states = elements;
@@ -158,9 +152,6 @@ export default {
        );
         },
         getUsers: function () {
-          console.log("getUsers");
-          console.log(this.user);
-          console.log(this.myTask);
           userService.getAll().then(
             users=>{
                 users.forEach(element => {
@@ -183,9 +174,9 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 0.3em;
-    color: #333399;
+    color: var(--man-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -197,26 +188,10 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  transform: skewX(-45deg) translateX(0);
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #333399;
-  border-bottom: 4px solid #333399;
+  background-color: var(--man-color);
+  border-bottom: 4px solid var(--man-color);
   color: #fff;
-}
-.button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
-  transition: all 0.5s ease-in-out;
 }
 .container-task-data{
     background-color: #eee;
@@ -233,7 +208,7 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: #333399;
+    color: var(--man-color);
     line-height: 50px;
     text-align: center;
     font-weight: 700;
@@ -262,7 +237,7 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
@@ -279,7 +254,7 @@ export default {
 
 }
 .item-textarea-data > div{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 100%;
@@ -300,7 +275,7 @@ export default {
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid #333399;
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     box-sizing: border-box;
     height: 35px;
