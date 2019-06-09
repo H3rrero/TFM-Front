@@ -33,7 +33,7 @@
             </div>
                 
              <transition name="slide-fade">
-                <taskdetail v-if="show" :myTask="sendTask"></taskdetail>  
+                <taskdetailchangeuser v-if="show" :myTask="sendTask" :project="selectProject"></taskdetailchangeuser>  
             </transition> 
             <transition name="fade">
                 <notification class="notification" v-if="showMessage" v-on:close-dialog="hideMenu"  :message="'No puedes asignar tareas a otros usuarios.'"></notification>  

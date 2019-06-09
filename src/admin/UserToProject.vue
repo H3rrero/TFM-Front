@@ -20,7 +20,7 @@
                 </div>
                 <div v-for="user in usersProject[projectSelected]" :key="user.id">
                     <drag @dragend="handleDrop"  :transfer-data="user" >
-                         <user v-if="user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
+                         <user v-if="user.rol!='admin'" :user="user" v-on:show-data="showMenu(user,projectSelected)"></user>  
                     </drag>
                 </div>
             </drop>
@@ -33,7 +33,7 @@
                     <drop @dragover="asignedUser(project.id)" @dragleave="projectOld(project.id)" class="programmers-item-task "  v-if="!project.deleted">
                         <div v-for="user in usersProject[project.id]" :key="user.id">
                             <drag  @dragend="handleDrop"  :transfer-data="user" v-if="user.rol!='admin'">
-                                 <user  :user="user" v-on:show-data="showMenu(user)"></user>
+                                 <user  :user="user" v-on:show-data="showMenu(user,project.id)"></user>
                             </drag>
                         </div>
                     </drop>
@@ -41,7 +41,7 @@
             </div>
                 
             <transition name="slide-fade">
-                <userdetail v-if="show" :myUser="userSelected"></userdetail>  
+                <userdetail v-if="show" :myUser="userSelected" :myProject="projectSend"></userdetail>  
             </transition>  
         </div>
     </div>
@@ -58,6 +58,7 @@ export default {
         users:[],
         projects:[],
         projectsDeleted:[],
+        projectSend:"",
         projectSelected:-1,
         projectIdOld:"",
         show:false,
@@ -99,9 +100,10 @@ export default {
             }
        );
         },
-        showMenu: function (user) {
+        showMenu: function (user,project) {
             this.show = true;
             this.userSelected = user;
+            this.projectSend = project;
         },
         hideMenu: function () {
             if(this.show)
