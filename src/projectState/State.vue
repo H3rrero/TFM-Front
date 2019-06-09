@@ -1,5 +1,5 @@
 <template>
-    <div class="item " v-bind:class="{ 'admin-color': rol == 'admin','man-color': rol == 'manager'}">
+    <div class="item " v-bind:class="{ 'admin-color': rol == 'admin','man-color': rol == 'manager','user-color': rol == 'user'}">
             <div class="img-container">
                 <img :src="image" :alt="title">
             </div>
@@ -22,16 +22,15 @@ export default {
 };
 </script>
 <style scoped>
-.admin-color{
-    color: var(--admin-color);
-}
-.man-color{
-    color: var(--man-color);
-}
 .item{
     background-color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     height: 330px;
     margin-left: 20px;
     margin-bottom: 20px;
@@ -39,7 +38,11 @@ export default {
 }
 .item:hover{
     color:#58BB45;
-    transform: scale(1.05,1.05);
+    -webkit-transform: scale(1.05,1.05);
+        -ms-transform: scale(1.05,1.05);
+            transform: scale(1.05,1.05);
+    -webkit-transition:  0.3s ease-out;
+    -o-transition:  0.3s ease-out;
     transition:  0.3s ease-out;
 }
 .img-container{
@@ -69,8 +72,13 @@ a{
     .item{
         background-color: white;
         color: #6B6FCE;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
         height: auto;
         margin-left: 0px;
         margin-bottom: 20px;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-breadcrumbs class="user-background"></app-breadcrumbs>
+        <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
         <div class="user-container">
               <div  class="users">
                 <div class="users-item" v-for="user in users" :key="user.id">
@@ -65,6 +65,7 @@ export default {
        return{ 
         users:[],
         usersDeleted:[],
+        currentUser:JSON.parse(localStorage.getItem('user')),
         selectProject:this.$route.params.id,
         nameProject:this.$route.params.name,
         projects:[],
@@ -115,13 +116,13 @@ export default {
 .unassigned-task{
     background-color: var(--man-color);
     border: 2px solid white;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     margin-right: 10px;
     width: 20%;
 }
 .add-user{
     background-color: white;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     color: var(--man-color);
     cursor: pointer;
     margin: 0 auto;
@@ -136,6 +137,8 @@ export default {
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
     color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     font-weight: 700;
     line-height: 50px;
@@ -147,18 +150,30 @@ export default {
 }
 .information{
     color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     margin-left: 10px;
 }
 .second{
      margin-top: 10px;
 }
 .name{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     font-size: 1em;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin-left: 10px;
 }
 .mask{
@@ -171,18 +186,31 @@ export default {
     z-index: 5;
 }
 .user-container{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     height: 100%;
 }
 .users{
     background-color: white;
     border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0 auto;
     margin-right: 10px;
     padding: 1rem;
@@ -192,8 +220,13 @@ export default {
     background-color: white;
     color: #6B6FCE;
     cursor: move;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin-left: 10px;
     margin-bottom: 10px;
     min-height: 60px;
@@ -202,24 +235,40 @@ export default {
 .users-item-drag{
     background-color: white;
     color: #6B6FCE;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     height: 100%;
     min-height: 60px;
     width: 300px;
 }
 .users-item:hover{
-    transform: scale(1.03,1.03);
+    -webkit-transform: scale(1.03,1.03);
+        -ms-transform: scale(1.03,1.03);
+            transform: scale(1.03,1.03);
+    -webkit-transition:  0.3s ease-out;
+    -o-transition:  0.3s ease-out;
     transition:  0.3s ease-out;
 }
 .users-item-title{
     border-bottom: 1px solid white;
     color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     font-family: 'Roboto', sans-serif;
     height: 20px;
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     padding: 0.3rem;
     text-align: center;
 }
@@ -248,10 +297,17 @@ export default {
     margin-right: 7px;
 }
 .users-body{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     height: 100%;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     padding-bottom: 10px;
     text-align: center;
 }
@@ -270,7 +326,8 @@ p{
     background-color: var(--man-color);
     border: 2px solid white;
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     color: white;
     height: 35px;
     margin: 0 auto;
@@ -278,13 +335,19 @@ p{
     padding: 0 15px;
 }
 .slide-fade-enter-active {
+  -webkit-transition: all 2.3s ease;
+  -o-transition: all 2.3s ease;
   transition: all 2.3s ease;
 }
 .slide-fade-leave-active {
+    -webkit-transition: all 2.3s ease;
+    -o-transition: all 2.3s ease;
     transition: all 2.3s ease;
 }
 .slide-fade-enter, .slide-fade-leave-to {
-  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+          transform: translateX(100%);
  
 }
 </style>

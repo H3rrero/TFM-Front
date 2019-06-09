@@ -1,69 +1,54 @@
 <template>
+<div>
+    <app-breadcrumbs class="admin-background"></app-breadcrumbs>
     <div class="container-task-data" > 
         <div class="title-task-data">
-            <p>Introduce tus datos</p>
+            <p>Introduce los datos del estado</p>
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
-                <p>* Nombre de usuario:</p>
-                <input v-model="myData.user">
-                <p v-if="validar && (myData.user == undefined|| myData.user.trim()=='')"
-                 v-bind:class="{ 'error': (myData.user == undefined|| myData.user.trim()=='')}" >* El campo usuario es obligatorio</p>
-            </div>
-             <div class="item-task-data">
-                <p>* Dirección de correo:</p>
-                <input v-model="myData.mail">
-                <p v-if="validar && (myData.mail == undefined|| myData.mail.trim()=='')"
-                 v-bind:class="{ 'error': (myData.mail == undefined|| myData.mail.trim()=='')}" >* El campo correo es obligatorio</p>
-            </div>      
-            <div class="item-task-data">
-                <p v-if="!validData" v-bind:class="{ 'error':!validData}">Alguno de los datos es incorrecto</p>
-            </div>
+                <p>* Nombre del estado:</p>
+                <input v-model="myState.name">
+                <p v-if="validar && (myState.name == undefined|| myState.name.trim()=='')"
+                 v-bind:class="{ 'error': (myState.name == undefined|| myState.name.trim()=='')}" >* El campo nombre es obligatorio</p>
+            </div>  
             <div class="item-button-data">
-                <a class="button" v-on:click="createUser()">Continuar</a>
-                
+                <a class="button" v-on:click="createState()">Añadir projecto</a>
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>
 
-import { userService} from '../_services/user.service';
+import { stateService } from '../_services/states.service';
 export default {
     data(){
        return{ 
        validar : false,
-       validData:true,
-       myData:{
-        user:"",
-        mail:""
+       myState:{
+        name:"",
+        projectId:this.$route.params.id,
+        order:this.$route.params.order,
         },
        }
     },
     methods:{
         validate:function(){
-           if(this.myData.user == undefined||
-            this.myData.user.trim() == ""||
-            this.myData.mail == undefined||
-            this.myData.mail.trim() == ""
+           if(this.myState.name == undefined||
+            this.myState.name.trim() == ""
             ) {
                 return false;
            }else{
                 return true;
            }
         },
-        createUser:function () {
+        createState:function () {
             if(this.validate()){
-                userService.getByUserAndMail(this.myData.user, this.myData.mail).then(data =>{
-                    if(data.result){
-                        this.validData = true;
-                        this.validar = false;
-                        this.$emit('check-user',{user:this.myData.user, question:data.question});
-                    }else{
-                        this.validar =true;
-                    }
-                });  
+                this.validar = false;
+                stateService.createState(this.myState);
+                this.$router.go(-1);  
             }else{
                 this.validar =true;
             }
@@ -89,34 +74,10 @@ export default {
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
-.button:before {
-  background-color: rgba(255, 255, 255, 0.5);
-  content: "";
-  height: 100%;
-  display: block;
-  left: -4.5em;
-  position: absolute;
-  top: 0;
-  -webkit-transform: skewX(-45deg) translateX(0);
-      -ms-transform: skewX(-45deg) translateX(0);
-          transform: skewX(-45deg) translateX(0);
-  -webkit-transition: none;
-  -o-transition: none;
-  transition: none;
-  width: 3em;
-}
 .button:hover {
-  background-color: #2194e0;
+  background-color: var(--admin-color);
   border-bottom: 4px solid var(--admin-color);
   color: #fff;
-}
-.button:hover:before {
-  -webkit-transform: skewX(-45deg) translateX(13.5em);
-      -ms-transform: skewX(-45deg) translateX(13.5em);
-          transform: skewX(-45deg) translateX(13.5em);
-  -webkit-transition: all 0.5s ease-in-out;
-  -o-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
 }
 .container-task-data{
     background-color: white;
@@ -131,7 +92,6 @@ export default {
             flex-direction: column;
     margin: 0 auto;
     margin-top: 20px;
-    padding-bottom: 2rem;
     width: 50%;
 }
 .error{
@@ -191,7 +151,6 @@ export default {
     margin: 0 auto;
     margin-top: 10px;
     width: 95%;
-
 }
 .item-textarea-data > div{
     border: 2px solid var(--admin-color);

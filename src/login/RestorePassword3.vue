@@ -35,6 +35,8 @@ export default {
     position: relative;
     text-align: center;
     text-decoration: none;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
@@ -47,7 +49,11 @@ export default {
   left: -4.5em;
   position: absolute;
   top: 0;
-  transform: skewX(-45deg) translateX(0);
+  -webkit-transform: skewX(-45deg) translateX(0);
+      -ms-transform: skewX(-45deg) translateX(0);
+          transform: skewX(-45deg) translateX(0);
+  -webkit-transition: none;
+  -o-transition: none;
   transition: none;
   width: 3em;
 }
@@ -57,15 +63,24 @@ export default {
   color: #fff;
 }
 .button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
+  -webkit-transform: skewX(-45deg) translateX(13.5em);
+      -ms-transform: skewX(-45deg) translateX(13.5em);
+          transform: skewX(-45deg) translateX(13.5em);
+  -webkit-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
 .container-task-data{
     background-color: white;
     border: 2px solid var(--admin-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin: 0 auto;
     margin-top: 20px;
     padding-bottom: 2rem;
@@ -82,8 +97,13 @@ export default {
     vertical-align: middle;
 }
 .form-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 p{
     font-family: 'Roboto', sans-serif;

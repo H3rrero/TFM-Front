@@ -1,6 +1,6 @@
 <template>
 <div v-if="phases.items">
-  <app-breadcrumbs class="user-background"></app-breadcrumbs>
+<app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
 <div class="scrolling-container" v-if="haveData">
   <highcharts class="container-gantt" :constructor-type="'ganttChart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
@@ -15,6 +15,7 @@ export default {
     return {
       fasesg:[],
       prueba: 'haha',
+      currentUser:JSON.parse(localStorage.getItem('user')),
       haveData : false,
        updateArgs: [true, true, true],
        selectProject:this.$route.params.id,
@@ -308,7 +309,7 @@ export default {
     margin: 1em auto;
 }
 .scrolling-container {
-  overflow-x: auyo;
+  overflow-x: auto;
   padding: 0.5rem;
   width: 99%;
 }

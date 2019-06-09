@@ -1,6 +1,6 @@
 <template>
 <div v-if=" haveData" >
-  <app-breadcrumbs class="user-background"></app-breadcrumbs>
+<app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
 <div class="scrolling-container" >
   <highcharts class="container-gantt" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
@@ -17,6 +17,7 @@ export default {
       hours:[],
       htest:[],
       prueba: 'haha',
+      currentUser:JSON.parse(localStorage.getItem('user')),
       haveData : false,
        updateArgs: [true, true, true],
        selectProject:this.$route.params.id,
@@ -25,7 +26,7 @@ export default {
         type: 'column'
     },
     title: {
-        text: 'Horas dedicadas por usuarios'
+        text: 'Horas dedicadas por programadores'
     },
     xAxis: {
         type: 'category'
@@ -112,7 +113,7 @@ export default {
     margin: 1em auto;
 }
 .scrolling-container {
-  overflow-x: auyo;
+  overflow-x: auto;
   padding: 0.5rem;
   width: 99%;
 }

@@ -126,9 +126,14 @@ export default {
 <style scoped>
 .container-task-data{
     background-color: #eee;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     height: 100%;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin:0;
     overflow: auto;
     position: absolute;
@@ -146,8 +151,13 @@ export default {
     vertical-align: middle;
 }
 .form-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 .item-task-data{  
     margin-top: 10px;
@@ -167,7 +177,8 @@ export default {
 .item-text-data > div{
     border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -184,7 +195,8 @@ export default {
 .item-textarea-data > div{
     border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 100%;
     margin: 10px 0;
     padding: 0 15px;
@@ -196,8 +208,13 @@ export default {
    width: 100%;
 }
 .dates{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 .dateini{
     margin-right: 10px;
@@ -208,7 +225,8 @@ export default {
 input, select, textarea{
     border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;

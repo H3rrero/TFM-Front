@@ -22,7 +22,7 @@ export default {
 <style scoped>
 .task-unassigned{
     background-color: white;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     cursor: move;
     margin: 0 auto;
     margin-top: 8px;
@@ -31,7 +31,7 @@ export default {
 }
 .manager{
     background-color: #138A00;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     color: white;
     cursor: move;
     margin: 0 auto;
@@ -41,7 +41,7 @@ export default {
 }
 .taskspage-task{
     background-color: #138A00;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     color: white;
     cursor: move;
     margin: 0 auto;
@@ -50,7 +50,11 @@ export default {
     width: 95%;
 }
 .task-unassigned:hover{
-    transform: scale(1.03,1.03);
+    -webkit-transform: scale(1.03,1.03);
+        -ms-transform: scale(1.03,1.03);
+            transform: scale(1.03,1.03);
+    -webkit-transition:  0.3s ease-out;
+    -o-transition:  0.3s ease-out;
     transition:  0.3s ease-out;
 }
 .taskspage-task-title{

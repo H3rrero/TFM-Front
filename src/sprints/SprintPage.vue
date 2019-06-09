@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-breadcrumbs class="user-background"></app-breadcrumbs>
+        <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
         <div class="task-container">
             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1)"  class="unassigned-task"  v-if="haveData" >
@@ -68,6 +68,7 @@ export default {
         show:false,
         sendTask:{},
         haveData: false,
+        currentUser:JSON.parse(localStorage.getItem('user')),
         phaseAsignedId:-1,
         assigned:"",
         selectProject:this.$route.params.id
@@ -139,14 +140,19 @@ export default {
 </script>
 <style scoped>
 .task-container{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     height: 100%;
 }
 .unassigned-task{
     background-color: var(--man-color);
     border: 2px solid white;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     margin-right: 10px;
     width: 20%;
 }
@@ -161,11 +167,19 @@ export default {
 .sprints{
     background-color: white;
     border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0 auto;
     margin-right: 10px;
     padding: 1rem;
@@ -174,8 +188,13 @@ export default {
 .sprints-item{
     background-color: white;
     color: #6B6FCE;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin-left: 10px;
     margin-bottom: 10px;
     min-height: 50px;
@@ -188,18 +207,29 @@ export default {
     border: 3px solid #138A00;
 }
 .sprints-item:hover{
-    transform: scale(1.03,1.03);
+    -webkit-transform: scale(1.03,1.03);
+        -ms-transform: scale(1.03,1.03);
+            transform: scale(1.03,1.03);
+    -webkit-transition:  0.3s ease-out;
+    -o-transition:  0.3s ease-out;
     transition:  0.3s ease-out;
 }
 .sprints-item-title{
     background-color: var(--man-color);
     border-bottom: 1px solid white;
     color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     font-family: 'Roboto', sans-serif;
     height: 20px;
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     padding: 0.3rem;
     text-align: center;
 }
@@ -238,13 +268,19 @@ export default {
     height: 100%;
 }
 .slide-fade-enter-active {
+  -webkit-transition: all 2.3s ease;
+  -o-transition: all 2.3s ease;
   transition: all 2.3s ease;
 }
 .slide-fade-leave-active {
+    -webkit-transition: all 2.3s ease;
+    -o-transition: all 2.3s ease;
     transition: all 2.3s ease;
 }
 .slide-fade-enter, .slide-fade-leave-to {
-  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+          transform: translateX(100%);
  
 }
 </style>

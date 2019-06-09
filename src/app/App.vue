@@ -26,7 +26,8 @@ table, caption, tbody, tfoot, thead, tr, th, td {
   vertical-align: baseline;
 }
 .vdatetime >input{width: 100%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   border: 2px solid  var(--admin-color);
   border-radius: 5px;
   height: 35px;
@@ -80,33 +81,58 @@ table {
   border-spacing: 0;
 }
 .container{
+    display: -ms-grid;
     display: grid;
-    grid-template-areas:
+        grid-template-areas:
        'header '
         'content '
         ' footer ';
+    -ms-grid-rows: 0.5fr 10px 8fr 10px 1fr;
     grid-template-rows: 0.5fr 8fr 1fr;
     grid-gap: 10px;
     height: 100%;
     background-color: #eee;
 }
 .content{
+    -ms-grid-row: 3;
+    -ms-grid-column: 1;
     grid-area: content;
     height: 100%;
 }
 .navigator{
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
     grid-area: header;
    
 }
 :root {
-  --admin-color: black; 
+  --admin-color: #003666; 
   --man-color: #333399;
+  --user-color: #371777;
 }
 .admin-background{
   background-color: var(--admin-color);
 }
-.user-background{
+.man-background{
   background-color: var(--man-color);
+}
+.user-background{
+  background-color: var(--user-color);
+}
+.admin-color{
+    color: var(--admin-color);
+}
+.man-color{
+    color: var(--man-color);
+}
+.user-color{
+    color: var(--user-color);
+}
+.man-border{
+    border: 2px solid var(--man-color);
+}
+.user-border{
+    border: 2px solid var(--user-color);
 }
 </style>
 

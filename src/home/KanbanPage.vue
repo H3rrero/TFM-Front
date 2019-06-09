@@ -1,25 +1,25 @@
 <template>
     <div class="filter-kamban">
-        <app-breadcrumbs class="user-background"></app-breadcrumbs>
-        <div class="filter">
-            <button class="mytask-bt" title="filtrar por tus tareas asignadas" v-bind:class="{ 'mytaskbt-selected': isActive }" v-on:click="showTaskCurrentUser()">Mis tareas</button>
-            <button class="mytask-bt" title="filtrar por tareas retrasadas" v-bind:class="{ 'mytaskbt-selected': isActiveR }" v-on:click="showTaskRetard()">Retrasadas</button>
-            <button class="mytask-bt" title="filtrar por tareas no asignadas" v-bind:class="{ 'mytaskbt-selected': isActiveNa }" v-on:click="showTaskNonAssigned()">No asignadas</button>
-            <input type="text" title="filtrar por titulo o descripcion" class="mytask-input" v-model="taskTitle" >
+        <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
+        <div class="filter" v-bind:class="{ 'user-border': currentUser.rol=='user','man-border': currentUser.rol=='manager'}" >
+            <button class="mytask-bt" title="filtrar por tus tareas asignadas" v-bind:class="{ 'mytaskbt-selected': isActive,'user-color': currentUser.rol=='user','man-color': currentUser.rol=='manager'}" v-on:click="showTaskCurrentUser()">Mis tareas</button>
+            <button class="mytask-bt" title="filtrar por tareas retrasadas" v-bind:class="{ 'mytaskbt-selected': isActiveR,'user-color': currentUser.rol=='user','man-color': currentUser.rol=='manager' }" v-on:click="showTaskRetard()">Retrasadas</button>
+            <button class="mytask-bt" title="filtrar por tareas no asignadas" v-bind:class="{ 'mytaskbt-selected': isActiveNa,'user-color': currentUser.rol=='user','man-color': currentUser.rol=='manager' }" v-on:click="showTaskNonAssigned()">No asignadas</button>
+            <input type="text" title="filtrar por titulo o descripcion" class="mytask-input" v-bind:class="{'user-color': currentUser.rol=='user','man-color': currentUser.rol=='manager'}" v-model="taskTitle" >
             <select  class="filter-user" title="Filtar or usuario asignado" v-model="selectUser" v-on:change="showTaskSelectedUser(selectUser)" >
                     <option value="-1" selected>Todas</option>
                     <option   v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
             </select>
-            <select  class="filter-user" title="filtrar por fase" v-model="selectPhase" v-on:change="getCurrentPhases()" >
+            <select  class="filter-user" title="filtrar por fase" v-bind:class="{'user-color': currentUser.rol=='user','man-color': currentUser.rol=='manager'}" v-model="selectPhase" v-on:change="getCurrentPhases()" >
                     <option value="-1" selected>Actual</option>
                     <option   v-for="phase in phasesKb" :key="phase.id" :value="phase.id">{{phase.name}}</option>
             </select>
-            <button class="newtask-bt plus" title="añadir nueva tarea" v-on:click="openNewTask()">
+            <button class="newtask-bt plus" v-bind:class="{'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager'}" title="añadir nueva tarea" v-on:click="openNewTask()">
                 <span>
                     <i class="fas fa-plus-circle"></i>
                 </span>
             </button>
-            <div class="current-phase" title="fase actual">
+            <div class="current-phase" v-bind:class="{'user-color': currentUser.rol=='user','man-color': currentUser.rol=='manager'}" title="fase actual">
                 <p>{{namePhase}}</p>
             </div>
             <span v-if="exclamation" title="tienes mensajes importantes" v-on:click="showMessagePage()">
@@ -29,14 +29,14 @@
         <div class="container-kanban" v-if="haveData"  >
             <div class="mask" v-if="show || showH || showMessages || showNotification" v-on:click="hideMenu();hideMenuH();hideMenuM();hideMenuN();"></div>
             <div class="tasks">
-                <drop @dragover="changePhase(state.name)" class="item" v-for="state in states" :key="state.id">
+                <drop @dragover="changePhase(state.name)" class="item"  v-bind:class="{ 'user-border user-color': currentUser.rol=='user','man-border man-color': currentUser.rol=='manager'}" v-for="state in states" :key="state.id">
                     <div class="text-container">
                             <p>{{state.name}}</p>
                         </div>
                         <div class="task-container">
                             <div v-for="task in tasks" :key="task.id">
                                 <drag @dragend="handleDrop" :transfer-data="task" >
-                                    <div class="task" v-bind:class="{ 'task-retard': retard.includes(task.id) }" v-if="(task.state == state.name || checkBacklog(task.userId,state.name)) && !task.deleted &&showTaskfilter(task.id) && (isActive ? usersId.includes(task.userId):true)&&(isActiveS ? usersId.includes(task.userId):true)&& isCurrent(task.phase) && (isActiveR ? retard.includes(task.id):true ) && (isActiveNa ? nonAssigned.includes(task.id):true )" >
+                                    <div class="task" v-bind:class="{ 'task-retard': retard.includes(task.id),'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" v-if="(task.state == state.name || checkBacklog(task.userId,state.name)) && !task.deleted &&showTaskfilter(task.id) && (isActive ? usersId.includes(task.userId):true)&&(isActiveS ? usersId.includes(task.userId):true)&& isCurrent(task.phase) && (isActiveR ? retard.includes(task.id):true ) && (isActiveNa ? nonAssigned.includes(task.id):true )" >
                                         <div class="task-title">
                                             <p>{{task.title}}</p>
                                             <span   v-on:click="showMenu(task)" title="editar la tarea">
@@ -151,7 +151,7 @@ export default {
             );
         },
         getStates: function () {
-          stateService.getAll().then(
+          stateService.getByProject(this.selectProject).then(
             elements=>{
               this.states = elements;
             }
@@ -216,9 +216,13 @@ export default {
          getUsers: function () {
           userProjectService.getUserByProject(this.selectProject).then(
             users=>{
+                console.log(users);
                 users.forEach(element => {
+                    if(element != null){
+                        console.log(element);
                     this.usersId.push(element.id);
-                    this.userss = users;
+                    this.userss.push(element);
+                    }
                 });
              
             }
@@ -395,27 +399,35 @@ export default {
     }
 };
 </script>
-<style scoped>
-.mytask-bt{
+ <style  scoped>
+
+
+.mytask-bt{/*color*/
     background-color: white;
     border: none;
-    border-radius: 1rem;
-    color: var(--man-color);
+    border-radius: 0.5rem;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
+    -webkit-transition: background-color 1s ease;
+    -o-transition: background-color 1s ease;
     transition: background-color 1s ease;
+    -webkit-transition: color 1.2s ease;
+    -o-transition: color 1.2s ease;
     transition: color 1.2s ease;
 }
 .newtask-bt{
-    background-color: var(--man-color);
     border: none;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     color: white;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
+    -webkit-transition: background-color 1s ease;
+    -o-transition: background-color 1s ease;
     transition: background-color 1s ease;
+    -webkit-transition: color 1.2s ease;
+    -o-transition: color 1.2s ease;
     transition: color 1.2s ease;
 }
 .plus{
@@ -431,7 +443,6 @@ export default {
     margin-left: auto;
 }
 .current-phase{
-    color: var(--man-color);
     font-size: 24px;
     font-weight: 600;
     margin-left: auto;
@@ -439,32 +450,37 @@ export default {
 .mytask-input{
      background-color: white;
     border: none;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     padding-left: 5px;
-    color: var(--man-color);
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
+    -webkit-transition: background-color 1s ease;
+    -o-transition: background-color 1s ease;
     transition: background-color 1s ease;
+    -webkit-transition: color 1.2s ease;
+    -o-transition: color 1.2s ease;
     transition: color 1.2s ease;
 }
 .mytask-input:hover{
-    background-color: var(--man-color);
     color: white;
 }
 .mytaskbt-selected{
-    background-color: var(--man-color);
     color: white;
 }
 .filter-user{
     border: none;
     border-radius: 5px;
-    box-sizing: border-box;
-    color: var(--man-color);
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
     padding: 0 15px;
+    -webkit-transition: background-color 1s ease;
+    -o-transition: background-color 1s ease;
     transition: background-color 1s ease;
+    -webkit-transition: color 1.2s ease;
+    -o-transition: color 1.2s ease;
     transition: color 1.2s ease;
 }
 .filter-user:hover{
@@ -476,46 +492,76 @@ export default {
     color: white;
 }
 .filter-kamban{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction:column;
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+        -ms-flex-direction:column;
+            flex-direction:column;
 }
 .filter{
     background-color: #D8E1FF;
-    border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     height: 35px;
     margin: 0 auto;
     padding: 0.5rem;
-    width: 87%;
+    width: 97%;
 }
 .container-kanban{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     height: 100%;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0 auto;
     margin-top: 10px;
-    width: 95%;
+    width: 98%;
 }
 .tasks{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     height: 100%;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0 auto;
-    width: 95%;
+    width: 100%;
     z-index: 1;
 }
 .item{
     background-color: white;
-    border: 2px solid var(--man-color);
-    border-radius: 1rem;
-    color: var(--man-color);
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1;
+}
+.tasks .item:nth-child(n+2) {
     margin-left: 10px;
 }
 .item:hover{
@@ -534,8 +580,7 @@ a{
     text-decoration: none;
 }
 .task{
-    background-color: var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     color: white;
     cursor: move;
     margin: 0 auto;
@@ -546,11 +591,17 @@ a{
     background-color: #FF4646;
 }
 .task:hover{
+    -webkit-transition:  0.5s ease-out;
+    -o-transition:  0.5s ease-out;
     transition:  0.5s ease-out;
-    transform: scale(1.1,1.1);
+    -webkit-transform: scale(1.1,1.1);
+        -ms-transform: scale(1.1,1.1);
+            transform: scale(1.1,1.1);
 }
 .task-title{
     border-bottom: 1px solid black;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     padding: 2%;
 
@@ -568,27 +619,51 @@ a{
     margin-right: 5px;
 }
 .task-body{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     margin-top: 10px;
-    flex-direction: column;
-    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 .assigned{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     margin-left: 10px;
 }
 .time{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     margin-top: 30px;
 
 }
 .name{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     font-size: 1em;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin-left: 10px;
 }
 .mask{
@@ -601,13 +676,19 @@ a{
     z-index: 5;
 }
 .slide-fade-enter-active {
+  -webkit-transition: all 2.3s ease;
+  -o-transition: all 2.3s ease;
   transition: all 2.3s ease;
 }
 .slide-fade-leave-active {
+    -webkit-transition: all 2.3s ease;
+    -o-transition: all 2.3s ease;
     transition: all 2.3s ease;
 }
 .slide-fade-enter, .slide-fade-leave-to {
-  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+          transform: translateX(100%);
  
 }
 p{
