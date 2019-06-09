@@ -13,12 +13,11 @@
                 </div>
             </div>
              <div class="item-task-data">
-                <p>Proyecto:</p>
-                 <div class="item-text-data">
-                    <div>
-                        <p>{{project}}</p>
-                    </div>
-                </div>
+                <p>Cambiar proyecto:</p>
+                 <select class="admin-border"  v-model="project" >
+                     <option value="-1">Eliminar del proyecto</option>
+                    <option v-for="project in projects" :key="project.id" :value="project.id">{{project.name}}</option>
+                </select>
             </div>
             <div class="item-task-data">
                 <p>* Rol:</p>
@@ -31,7 +30,7 @@
                 <p>{{result}}</p>
             </div>
             <div class="item-button-data">
-                <a class="button" v-on:click="updateUser()">Actualizar usuario</a>
+                <a class="button" v-on:click="changeProject()">Actualizar usuario</a>
                 
             </div>
         </div>
@@ -41,36 +40,55 @@
 <script>
 
  import { projectService } from '../_services/project.service';
-  import { userService} from '../_services/user.service';
+ import { userService} from '../_services/user.service';
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     props: {
-   myUser: Object
+   myUser: Object,
+   myProject:String
   },
     data(){
        return{ 
-       project:"No tiene proyecto asignado",
+       projects:[],
+       project:-1,
        result:""
        }
     },
     created () {
-        this.getProject();
+        this.getProjects();
     },
     methods:{
-        getProject: function () {
+        getProjects: function () {
            projectService.getAll().then(
             projectss=>{
-            projectss.forEach(element => {
-                if(element.id == this.myUser.projectId){
-                    this.project = element.name;
-                }
-            });
+                this.projects = projectss;
             }
        );
         },
-        updateUser() {
-                userService.update(this.myUser).then(user =>{
-                    this.result = "El usuario se ha actualizado correctamente.";
+        changeProject() {
+                this.myUser.projectId = this.project;
+                this.myUser.rol = "user";
+                userService.update(this.myUser).then(user=>{
+                userProjectService.getByUserAndProject(this.myUser.id, this.project).then(userProject=>{
+                    if(userProject.message != undefined){
+                        if(this.project == -1){
+                            userProjectService.deleteUserAndProject(this.myUser.id,this.myProject).then(data=>{
+                                this.result = "usuario actualizado";
+                            });
+                            
+                        }else{
+                        var userProj = {
+                            user: this.myUser.id,
+                            project:this.myUser.projectId
+                        }
+                        userProjectService.createUserProject(userProj).then(data=>{
+                             this.result = "usuario actualizado";
+                        });
+                        
+                        }
+                    }
                 });
+            });
         },
     }
 };

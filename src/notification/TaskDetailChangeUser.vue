@@ -1,11 +1,11 @@
 <template>
-    <div v-bind:class="{ 'container-task-data': !isSafari,'container-task-data-safari': isSafari }">  
-        <div class="title-task-data" v-bind:class="{ 'user-color': user.rol=='user','man-color': user.rol=='manager' }">
+    <div class="container-task-data" >  
+        <div class="title-task-data">
             <p>{{this.myTask.title}}</p>
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
-                <p>Reasignar tarea:</p>
+                <p>Asignada a:</p>
                  <select v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }"  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='manager'" >
                     <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
                 </select>
@@ -15,62 +15,57 @@
                 </select>
             </div>
              <div class="item-task-data">
-                <p>Cambiar estado:</p>
-                 <select v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="myTask.state" >
-                    <option v-for="state in states" :key="state.id" :value="state.name">{{state.name}}</option>
-                </select>
+                <p>Estado:</p>
+                 <div class="item-text-data">
+                    <div>
+                        <p>{{myTask.state}}</p>
+                    </div>
+                </div>
             </div>
             <div class="item-task-data">
                 <p>Descripción:</p>
-                <textarea-autosize v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
+                 <div class="item-text-data">
+                    <div>
+                        <p>{{myTask.description}}</p>
+                    </div>
+                </div>
             </div>
             <div class="item-task-data">
                 <div class="dates">
-                    <div class="dateini">
-                        <p>Fecha Inicio:</p>
-                        <datetime v-model="myTask.dateI"></datetime>
+                    <div class="item-text-data">
+                         <p>Fecha Inicio:</p>
+                        <div>
+                             <p>{{myTask.dateI.substr(0,myTask.dateI.indexOf('T'))}}</p>
+                        </div>
                     </div>
-                    <div class="dateend">
+                    <div class="item-text-data left">
                         <p>Fecha Fin:</p>
-                        <datetime v-model="myTask.dateF"></datetime>
-                    </div>
-                </div>
-                 <p v-if="new Date(this.myTask.dateF) < new Date(this.myTask.dateI) ||
-                new Date(this.myTask.dateI) < new Date()" v-bind:class="{ 'error': 
-                new Date(this.myTask.dateF) < new Date(this.myTask.dateI) ||
-                new Date(this.myTask.dateI) < new Date()}"> La fecha de fin debe ser posterior a la de inicio, y la fecha de inicio debe ser posterior al día actual.</p>
-            </div>
-            <div class="item-task-data">
-                <p>Horas planificadas:</p>
-                <div class="item-text-data">
-                    <div v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
-                        <p>{{myTask.planHours}}</p>
+                        <div>
+                            <p>{{myTask.dateF.substr(0,myTask.dateF.indexOf('T'))}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="item-task-data">
                  <div class="dates">
-                    <div class="dateini">
-                       <p>Añadir horas dedicadas:</p>
-                        <input v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" value="0"  v-model="hours" type="number">    
-                    </div>
                     <div class="item-text-data">
+                         <p>Horas planificadas:</p>
+                        <div>
+                            <p>{{myTask.planHours}}</p>
+                        </div>
+                    </div>
+                    <div class="item-text-data left">
                         <span>Horas dedicadas totales:</span>
-                        <div v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
+                        <div>
                             <p>{{myTask.hours}}</p>
                         </div>
                     </div>
                 </div>
                
             </div>
-
-            <div class="item-task-data" v-if="user.rol=='manager'|| myTask.userId == user.id">
-                <p>Dejar comentario:</p>
-                <textarea-autosize v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="coment"></textarea-autosize>
-            </div>
             <div class="item-textarea-data">
                 <span>Comentarios:</span>
-                <div v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
+                <div>
                     <p v-for="coment in  this.myTask.coments" :key="coment.id">{{coment}}</p>
                 </div>
             </div>
@@ -87,78 +82,35 @@
 
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
- import { stateService } from '../_services/states.service';
- const { detect } = require('detect-browser');
-const browser = detect();
+ import { userProjectService } from '../_services/userProject.service';
 export default {
     props: {
    myTask: Object,
-   user:Object
+   project:String
   },
     data(){
        return{ 
-       isSafari:false,
-       valid:false,
        haveData: false,
        result: "",
        hours:0,
        coment:"",
+       user:  JSON.parse(localStorage.getItem('user')),
        userss:[],
-       states:[]
        }
     },
     created () {
         this.getUsers();
-        this.getStates();
-        if(browser.name== "safari"){
-            this.isSafari = true;
-        }
     },
     methods:{
         updateTask: function () {
-            if(this.validate()){
-                this.valid=false;
-                if(isNaN(parseInt(this.hours)))
-                    this.hours = 0;
-                if(this.myTask.state == 'sin asignar' && this.myTask.userId !=-1)
-                    this.myTask.state="Backlog";
-                this.myTask.hours = parseInt(this.myTask.hours) + parseInt(this.hours);
-                this.myTask.coments.push(this.coment);
-                taskService.changeTask(this.myTask).then(
-                    resp => {
-                        this.$emit('update-task');
-                        this.result = "La tarea ha sido actualizada.";
-                    }
-                );
-            }else{
-                this.valid = true;
-                this.result = "Campos erroneos.";
-            }
-        },
-        validate:function(){
-            let start = new Date(this.myTask.dateI);
-            let end = new Date(this.myTask.dateF);
-           
-           if(
-            this.myTask.dateI == undefined||
-            this.myTask.dateI.trim() == ""||
-            this.myTask.dateF.trim() == ""||
-            end < start ||
-            start < new Date()) {
-                return false;
-           }else{
-                return true;
-           }
-        },
-        getStates: function () {
-          stateService.getByProject(this.myTask.projectId).then(
-            elements=>{
-              this.states = elements;
-            }
-       );
+            taskService.changeTask(this.myTask).then(
+                resp => {
+                    this.result = "La tarea ha sido actualizada.";
+                }
+            );
         },
         getUsers: function () {
-          userService.getAll().then(
+           userProjectService.getUserByProject(this.project).then(
             users=>{
                 users.forEach(element => {
                     this.userss = users;
@@ -177,8 +129,7 @@ export default {
     }
 };
 </script>
- <style  scoped>
-
+<style scoped>
 .button {
     border-radius: 0.3em;
     display: inline-block;
@@ -219,6 +170,7 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
+    color: var(--man-color);
     line-height: 50px;
     text-align: center;
     font-weight: 700;
@@ -232,9 +184,6 @@ export default {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-}
-.error{
-    color: red;
 }
 .item-task-data{  
     margin-top: 10px;
@@ -252,6 +201,7 @@ export default {
 
 }
 .item-text-data > div{
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -269,6 +219,7 @@ export default {
 
 }
 .item-textarea-data > div{
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -294,7 +245,11 @@ export default {
 .dateini{
     margin-right: 10px;
 }
+.left{
+    margin-left: 5px;
+}
 input, select, textarea{
+    border: 2px solid var(--man-color);
     border-radius: 5px;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -310,23 +265,5 @@ p{
     .container-task-data{
         width: 80%;
     }
-}
-.container-task-data-safari{
-    background-color: #eee;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    height: 100%;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    margin:0;
-    overflow: auto;
-    position: absolute;
-    right: 0;
-    top:0;
-    width: 70%;
-    z-index: 99;
 }
 </style>

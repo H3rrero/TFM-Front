@@ -2,7 +2,7 @@
     <div>
         <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
         <div class="task-container">
-            <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
+            <div class="mask" v-if="show || showChange" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedTask(-1)"  class="unassigned-task"  v-if="haveData" >
                 <div class="title-task-data">
                     <p>Tareas sin asignar a una fase</p>
@@ -31,14 +31,14 @@
                     <drop @dragover="asignedTask(phase.id)" class="sprints-item-task" v-if="!isFinish(phase)">
                         <div v-for="task in tasks" :key="task.id">
                             <drag @dragend="handleDrop"  :transfer-data="task" v-if="task.state!='Terminada'">
-                               <sprinttask v-if="task.phase == phase.id" :task="task" class="move" v-on:show-data="showMenu(task)"></sprinttask>
+                               <sprinttask v-if="task.phase == phase.id" :task="task" class="move" v-on:show-data="showMenu(task,phase)"></sprinttask>
                             </drag>
-                            <sprinttask v-if="task.phase == phase.id && task.state=='Terminada'" :task="task" class="not-move" v-on:show-data="showMenu(task)"></sprinttask>
+                            <sprinttask v-if="task.phase == phase.id && task.state=='Terminada'" :task="task" class="not-move" v-on:show-data="showMenu(task,phase)"></sprinttask>
                         </div>
                     </drop>
                     <div  class="sprints-item-task" v-if="isFinish(phase)">
                         <div v-for="task in tasks" :key="task.id">
-                            <sprinttask v-if="task.phase == phase.id" :task="task" class="not-move" v-on:show-data="showMenu(task)"></sprinttask>
+                            <sprinttask v-if="task.phase == phase.id" :task="task" class="not-move" v-on:show-data="showMenu(task,phase)"></sprinttask>
                         </div>
                     </div>
                 </div>
@@ -49,6 +49,9 @@
             <transition name="slide-fade">
                 <taskdetail v-if="show" :myTask="sendTask"></taskdetail>  
             </transition>  
+            <transition name="slide-fade">
+                <taskdetailchangephase v-if="showChange" :myTask="sendTask"  :project="selectProject"></taskdetailchangephase>  
+            </transition>
         </div>
     </div>
 </template>
@@ -66,6 +69,7 @@ export default {
         usersId:[],
         userss:[],
         show:false,
+        showChange:false,
         sendTask:{},
         haveData: false,
         currentUser:JSON.parse(localStorage.getItem('user')),
@@ -96,13 +100,23 @@ export default {
             }
        );
         },
-        showMenu: function (task) {
-            this.show = true;
+        showMenu: function (task,phase) {
+            if(this.isFinish(phase)){
+                this.show = true;
+            }else{
+                if(task.state=='Terminada'){
+                    this.show = true;
+                }else{
+                    this.showChange = true;
+                }
+            }
             this.sendTask = task;
         },
          hideMenu: function () {
             if(this.show)
             this.show = false;
+            if( this.showChange)
+             this.showChange = false;
         },
          openNewPhase:function (id) {
             this.$router.push(`/newPhase/${this.selectProject}`);
@@ -255,7 +269,7 @@ export default {
     background-color: #3D3A3F;
     height: 100%;
     opacity: 0.8;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 5;

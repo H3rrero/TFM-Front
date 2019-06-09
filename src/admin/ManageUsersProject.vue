@@ -18,7 +18,7 @@
                 </div>
                 <div v-for="user in usersProject[projectSelected]" :key="user.id">
                     <drag @dragend="handleDrop"  :transfer-data="user" >
-                         <user v-if="user.rol!='admin'" :user="user" v-on:show-data="showMenu(user)"></user>  
+                         <user v-if="user.rol!='admin'" :user="user" v-on:show-data="showMenu(user,projectSelected)"></user>  
                     </drag>
                 </div>
             </drop>
@@ -33,7 +33,7 @@
                             </span>
                         </div>
                     </div>
-                    <div  class="users-body"  v-bind:class="{ 'users-body-admin': user.rol == 'manager','users-body-normal': user.rol != 'manager'}" v-on:click="showMenu(user)">
+                    <div  class="users-body"  v-bind:class="{ 'users-body-admin': user.rol == 'manager','users-body-normal': user.rol != 'manager'}" v-on:click="showMenu(user,selectProject)">
                         <div class="information">
                             <div class="icon">
                                 <span style="font-size: 1em;">
@@ -72,7 +72,7 @@
                 </div>
             </drop>
             <transition name="slide-fade">
-                <userdetail v-if="show" :myUser="userSelected"></userdetail>  
+                <userdetail v-if="show" :myUser="userSelected" :myProject="projectSend"></userdetail>  
             </transition>  
         </div>
     </div>
@@ -93,6 +93,7 @@ export default {
         nameProject:this.$route.params.name,
         show:false,
         userSelected:{},
+        projectSend:"",
         projects:[],
         haveDataProjects:false,
         usersProject:{}
@@ -199,9 +200,10 @@ export default {
                 });
         }, asignedUser: function (id) {
             this.projectAsignedId = id;
-        },showMenu: function (user) {
+        },showMenu: function (user,project) {
             this.show = true;
             this.userSelected = user;
+            this.projectSend = project;
         },hideMenu: function () {
             if(this.show)
             this.show = false;
