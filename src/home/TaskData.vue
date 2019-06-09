@@ -204,7 +204,6 @@ export default {
         -ms-flex-direction: column;
             flex-direction: column;
     margin:0;
-    overflow: auto;
     position: absolute;
     right: 0;
     top:0;
