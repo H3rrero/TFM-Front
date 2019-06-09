@@ -304,4 +304,11 @@ p{
         width: 80%;
     }
 }
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+
+    .container-task-data{
+        width: 70%;
+    }
+}}
 </style>
