@@ -24,15 +24,23 @@
 
 <style>
 .menu-login{
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    flex-direction:row; 
-    justify-content: center;
+    -webkit-box-orient:horizontal;
+    -webkit-box-direction:normal;
+        -ms-flex-direction:row;
+            flex-direction:row; 
+    -webkit-box-pack: center; 
+        -ms-flex-pack: center; 
+            justify-content: center;
 }
 form {
   background-color: #fff;
   border: solid 1px #ddd;
   border-radius: 0.5em;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   display: block;
   font-family: 'Source Sans Pro', sans-serif;
   left: 50%;
@@ -41,14 +49,17 @@ form {
   padding: 2.25em;
   position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   width: 100%;
 }
 form input[type='email'], form input[type="text"], form input[type='password'] {
   background-color: #f3fafd;
   border: solid 2px #217093;
   border-radius: 4px;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   color: #353538;
   display: block;
   font-family: inherit;
@@ -57,13 +68,18 @@ form input[type='email'], form input[type="text"], form input[type='password'] {
   height: 65px;
   margin: 0;
   padding: 0 1em 0;
+  -webkit-transition: border-color 0.25s ease-out, -webkit-box-shadow 0.2s linear;
+  transition: border-color 0.25s ease-out, -webkit-box-shadow 0.2s linear;
+  -o-transition: box-shadow 0.2s linear, border-color 0.25s ease-out;
   transition: box-shadow 0.2s linear, border-color 0.25s ease-out;
+  transition: box-shadow 0.2s linear, border-color 0.25s ease-out, -webkit-box-shadow 0.2s linear;
   width: 100%;
   -webkit-appearance: none;
 }
 form input[type='email']:focus, form input[type="text"]:focus, form input[type='password']:focus {
   border: solid 2px #4eb8dd;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, .1);
+  -webkit-box-shadow: 0px 2px 10px rgba(0, 0, 0, .1);
+          box-shadow: 0px 2px 10px rgba(0, 0, 0, .1);
   outline: none;
 }
 form input[type='email'], form input[type="text"] {
@@ -73,8 +89,10 @@ form button {
   background-color: #4eb8dd;
   border: none;
   border-radius: 4px;
-  box-sizing: border-box;
-  box-shadow: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   color: #fff;
   display: block;
   font-size: 1.55em;
@@ -84,6 +102,8 @@ form button {
   margin: 0;
   margin-top: 10px;
   padding: 0.65em 1em 1em;
+  -webkit-transition: background-color 0.2s ease-out;
+  -o-transition: background-color 0.2s ease-out;
   transition: background-color 0.2s ease-out;
   width: 100%;
 }
@@ -111,13 +131,23 @@ form  .helper1 {
   opacity: 0.65;
   pointer-events: none;
   top: 35px;
-  transform: translate(1.4em, 2.6em) scale(1);
-  transform-origin: 0 0;
+  -webkit-transform: translate(1.4em, 2.6em) scale(1);
+      -ms-transform: translate(1.4em, 2.6em) scale(1);
+          transform: translate(1.4em, 2.6em) scale(1);
+  -webkit-transform-origin: 0 0;
+      -ms-transform-origin: 0 0;
+          transform-origin: 0 0;
+  -webkit-transition: opacity 0.2s linear, -webkit-transform 0.2s ease-out;
+  transition: opacity 0.2s linear, -webkit-transform 0.2s ease-out;
+  -o-transition: transform 0.2s ease-out, opacity 0.2s linear;
   transition: transform 0.2s ease-out, opacity 0.2s linear;
+  transition: transform 0.2s ease-out, opacity 0.2s linear, -webkit-transform 0.2s ease-out;
 }
 form  .helper {
   opacity: 1;
-  transform: translate(1.4em, 2em) scale(0.65);
+  -webkit-transform: translate(1.4em, 2em) scale(0.65);
+      -ms-transform: translate(1.4em, 2em) scale(0.65);
+          transform: translate(1.4em, 2em) scale(0.65);
 }
 </style>
 

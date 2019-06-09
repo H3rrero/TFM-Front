@@ -1,6 +1,6 @@
 <template>
 <div v-if=" haveData" >
-  <app-breadcrumbs class="user-background"></app-breadcrumbs>
+<app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
   <select  class="filter-users" v-model="selectPhase" v-on:change="getSeries()" >
         <option  v-for="phase in fasesB" :key="phase.id" :value="phase.id">{{phase.name}}</option>
     </select>
@@ -22,6 +22,7 @@ export default {
       htest:[],
       fasesB:[],
       selectPhase:"",
+      currentUser:JSON.parse(localStorage.getItem('user')),
       prueba: 'haha',
       haveData : false,
       updateArgs: [true, true, true],
@@ -32,7 +33,7 @@ export default {
         type: 'column'
     },
     title: {
-        text: 'Horas dedicadas por usuarios'
+        text: 'Horas dedicadas por programadores'
     },
     xAxis: {
         type: 'category'
@@ -130,7 +131,7 @@ export default {
     margin: 1em auto;
 }
 .scrolling-container {
-  overflow-x: auyo;
+  overflow-x: auto;
   padding: 0.5rem;
   width: 99%;
 }

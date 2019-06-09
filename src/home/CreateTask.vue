@@ -1,31 +1,31 @@
 <template>
 <div>
-    <app-breadcrumbs class="user-background"></app-breadcrumbs>
-    <div class="container-task-data" >  
-        <div class="title-task-data">
+    <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
+    <div class="container-task-data" v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">  
+        <div class="title-task-data" v-bind:class="{ 'user-color': user.rol=='user',' man-color': user.rol=='manager' }">
             <p>Introduce los datos de la tarea</p>
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
                 <p>* Titulo:</p>
-                <input v-model="myTask.title">
+                <input v-model="myTask.title" v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
                 <p v-if="validar && (myTask.title == undefined|| myTask.title.trim()=='')"
                  v-bind:class="{ 'error': (myTask.title == undefined|| myTask.title.trim()=='')}" >* El campo titulo es obligatorio</p>
             </div>
             <div class="item-task-data">
                 <p>Asignar tarea:</p>
-                 <select  v-model="myTask.userId"  v-if="user.rol=='manager'">
+                 <select  v-model="myTask.userId"  v-if="user.rol=='manager'" v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
                      <option value="-1" selected>No asignar</option>
                     <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
                 </select>
-                <select  v-model="myTask.userId"  v-if="user.rol=='user'">
+                <select  v-model="myTask.userId"  v-if="user.rol=='user'" v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
                      <option value="-1" selected>No asignar</option>
                      <option :value="user.id" selected>{{user.firstname + " "+ user.lastname}}</option>
                 </select>
             </div>
             <div class="item-task-data">
                 <p>Descripción:</p>
-                <textarea-autosize v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
+                <textarea-autosize v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
             </div>
             <div class="item-task-data">
                 <div class="dates">
@@ -51,7 +51,7 @@
                  <div class="dates">
                     <div class="dateini">
                        <p>* Horas planificadas:</p>
-                        <input value="0"  v-model="myTask.planHours" type="number">  
+                        <input v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" value="0"  v-model="myTask.planHours" type="number">  
                         <p v-if="validar && (myTask.planHours == undefined|| myTask.planHours < 1)" v-bind:class="{ 'error': 
                         (myTask.planHours == undefined|| myTask.planHours < 1)}" >El campo horas planificadas tiene que tener mínimo 1 hora.</p>  
                     </div>
@@ -59,13 +59,13 @@
             </div>
             <div class="item-task-data">
                 <p>Dejar comentario:</p>
-                <input v-model="coment">
+                <input v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="coment">
             </div>
             <div class="item-task-data">
                 <p v-if="taskCreated" v-bind:class="{ 'correct':taskCreated}">La tarea se ha añadido correctamente, la puedes encontrar en la pestaña sprints</p>
             </div>
             <div class="item-button-data">
-                <a class="button" v-on:click="createTask()">Añadir tarea</a>
+                <a class="button" v-bind:class="{ 'user-border user-color': user.rol=='user',' man-border man-color': user.rol=='manager' }" v-on:click="createTask()">Añadir tarea</a>
                 
             </div>
         </div>
@@ -85,6 +85,7 @@ export default {
        user:{},
        coment:"",
        validar : false,
+       currentUser:JSON.parse(localStorage.getItem('user')),
        taskCreated:false,
        myTask:{
         title:"",
@@ -162,9 +163,7 @@ export default {
 <style scoped>
 
 .button {
-    border: 2px solid var(--man-color);
     border-radius: 0.3em;
-    color: var(--man-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -173,6 +172,8 @@ export default {
     position: relative;
     text-align: center;
     text-decoration: none;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
@@ -183,10 +184,14 @@ export default {
 }
 .container-task-data{
     background-color: white;
-    border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin: 0 auto;
     margin-top: 20px;
     width: 50%;
@@ -201,7 +206,6 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: var(--man-color);
     font-weight: 700;
     line-height: 50px;
     margin-bottom: 5px;
@@ -209,8 +213,13 @@ export default {
     vertical-align: middle;
 }
 .form-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 .item-task-data{  
     margin-top: 10px;
@@ -222,53 +231,26 @@ export default {
     margin-top: 40px;
     width: 95%;
 }
-.item-text-data{  
-    margin: 0 auto;
-    width: 95%;
 
-}
-.item-text-data > div{
-    border: 2px solid var(--man-color);
-    border-radius: 5px;
-    box-sizing: border-box;
-    height: 35px;
-    margin: 10px 0;
-    padding: 0 15px;
-}
-.item-text-data > div >p{
-    margin-top: 7px;
-}
-.item-textarea-data{  
-    margin: 0 auto;
-    margin-top: 10px;
-    width: 95%;
-
-}
-.item-textarea-data > div{
-    border: 2px solid var(--man-color);
-    border-radius: 5px;
-    box-sizing: border-box;
-    height: 100%;
-    margin: 10px 0;
-    padding: 0 15px;
-}
-.item-textarea-data > div >p{
-    margin-top: 7px;
-}
 .item-task-data *{
    width: 100%;
 }
 .dates{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 .dateini{
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -282,8 +264,13 @@ p{
         width: 100%;
     }
     .dates{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
     }
 }
 </style>

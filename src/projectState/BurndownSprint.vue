@@ -1,7 +1,7 @@
 <template>
 
 <div class="scrolling-container" v-if="haveDataCh">
-    <app-breadcrumbs class="user-background"></app-breadcrumbs>
+    <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
     <select  class="filter-users" v-model="selectPhase" v-on:change="updateData()" >
         <option  v-for="phase in fasesB" :key="phase.id" :value="phase.id">{{phase.name}}</option>
     </select>
@@ -21,6 +21,7 @@ export default {
         project:{},
         fasesB:[],
         taskb:[],
+        currentUser:JSON.parse(localStorage.getItem('user')),
         selectPhase:this.$route.params.id,
         selectProject:this.$route.params.idProject,
         realData:[],
@@ -189,19 +190,24 @@ export default {
     margin: 1em auto;
 }
 .scrolling-container {
-  overflow-x: auyo;
+  overflow-x: auto;
   padding: 0.5rem;
   width: 99%;
 }
 .filter-users{
     border: none;
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     color: var(--man-color);
     font-family: 'Roboto', sans-serif;
     margin-left: 10px;
     padding: 6px 15px;
+    -webkit-transition: background-color 1s ease;
+    -o-transition: background-color 1s ease;
     transition: background-color 1s ease;
+    -webkit-transition: color 1.2s ease;
+    -o-transition: color 1.2s ease;
     transition: color 1.2s ease;
 }
 .filter-users:hover{

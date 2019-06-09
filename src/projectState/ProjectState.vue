@@ -1,20 +1,20 @@
 <template>
 <div class="container-state">
-    <app-breadcrumbs class="user-background"></app-breadcrumbs>
+    <app-breadcrumbs v-bind:class="{ 'user-background': user.rol=='user','man-background': user.rol=='manager' }" ></app-breadcrumbs>
     <div v-on:click="currentPage('gantt')">
-        <state :rol="'manager'" :image="'src/img/gantt.png'" :title="'Diagrama de Gantt'"></state>
+        <state :rol="user.rol" :image="'src/img/gantt.png'" :title="'Diagrama de Gantt'"></state>
     </div>
     <div v-on:click="currentPage('burndown')" >
-        <state :rol="'manager'"  :image="'src/img/vg.png'" :title="'Diagrama valor ganado'"></state>
+        <state :rol="user.rol" :image="'src/img/vg.png'" :title="'Diagrama valor ganado'"></state>
     </div>
     <div v-on:click="currentPage('burndownSprint')" >
-        <state :rol="'manager'"  :image="'src/img/vg.png'" :title="'Diagrama valor ganado por sprint'"></state>
+        <state :rol="user.rol"  :image="'src/img/vg.png'" :title="'Diagrama valor ganado por sprint'"></state>
     </div>
     <div v-on:click="currentPage('hoursChart')" >
-        <state :rol="'manager'"  :image="'src/img/vg.png'" :title="'Diagrama horas y usuarios'"></state>
+        <state :rol="user.rol"  :image="'src/img/vg.png'" :title="'Diagrama horas y usuarios'"></state>
     </div>
     <div v-on:click="currentPage('hoursSprint')" >
-        <state  :rol="'manager'" :image="'src/img/vg.png'" :title="'Diagrama horas y usuarios'"></state>
+        <state  :rol="user.rol" :image="'src/img/vg.png'" :title="'Diagrama horas y usuarios'"></state>
     </div>
 </div>
 
@@ -26,6 +26,7 @@ export default {
        return{ 
         selectProject:this.$route.params.id,
         phase:"",
+        user:JSON.parse(localStorage.getItem('user'))
        }
     }, created () {
         this.getPhases();
@@ -62,10 +63,18 @@ export default {
 
 <style scoped>
 .container-state{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0 auto;
 }
 .container-state a{
@@ -73,10 +82,18 @@ export default {
 }
 @media only screen and (max-width: 980px) {
     .container-state{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        justify-content: center;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
         margin: 0 auto;
         width: 100%;
     }

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <app-breadcrumbs class="user-background"></app-breadcrumbs>
+    <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
     <div class="container-task-data" >  
         <div class="title-task-data">
             <p>Datos del proyecto</p>
@@ -77,6 +77,7 @@ export default {
        return{ 
        validar : false,
        projectUpdated:false,
+       currentUser:JSON.parse(localStorage.getItem('user')),
        selectProject:this.$route.params.id,
        myProject:{},
        json_data: [  ]
@@ -137,6 +138,8 @@ export default {
     position: relative;
     text-align: center;
     text-decoration: none;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
@@ -146,13 +149,18 @@ export default {
   color: #fff;
 }
 .container-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     width: 50%;
     margin: 0 auto;
     background-color: white;
     border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     margin-top: 20px;
 }
 .error{
@@ -166,6 +174,8 @@ export default {
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
     color: var(--man-color);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     line-height: 50px;
     text-align: center;
@@ -182,8 +192,13 @@ export default {
     margin-right: 10px;
 }
 .form-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 .item-task-data{  
     margin-top: 10px;
@@ -203,7 +218,8 @@ export default {
 .item-text-data > div{
     border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -220,7 +236,8 @@ export default {
 .item-textarea-data > div{
     border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 100%;
     margin: 10px 0;
     padding: 0 15px;
@@ -232,8 +249,13 @@ export default {
    width: 100%;
 }
 .dates{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 .dateini{
     margin-right: 10px;
@@ -241,7 +263,8 @@ export default {
 input, select, textarea{
     border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -255,8 +278,13 @@ p{
         width: 100%;
     }
     .dates{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
     }
 }
 </style>

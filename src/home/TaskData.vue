@@ -1,28 +1,28 @@
 <template>
     <div class="container-task-data" >  
-        <div class="title-task-data">
+        <div class="title-task-data" v-bind:class="{ 'user-color': user.rol=='user','man-color': user.rol=='manager' }">
             <p>{{this.myTask.title}}</p>
         </div>
         <div class="form-task-data">
             <div class="item-task-data">
                 <p>Reasignar tarea:</p>
-                 <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='manager'" >
+                 <select v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }"  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='manager'" >
                     <option v-for="user in userss" :key="user.id" :value="user.id">{{user.firstname +" "+user.lastname}}</option>
                 </select>
-                <select  v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='user'" >
+                <select v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="myTask.userId" v-on:change="showTaskSelectedUser()" v-if="user.rol=='user'" >
                     <option :value="myTask.userId" selected>{{myTask.assigned}}</option>
                     <option :value="user.id" >{{user.firstname + " "+ user.lastname}}</option>
                 </select>
             </div>
              <div class="item-task-data">
                 <p>Cambiar estado:</p>
-                 <select  v-model="myTask.state" >
+                 <select v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="myTask.state" >
                     <option v-for="state in states" :key="state.id" :value="state.name">{{state.name}}</option>
                 </select>
             </div>
             <div class="item-task-data">
                 <p>Descripción:</p>
-                <textarea-autosize v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
+                <textarea-autosize v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="myTask.description" placeholder="add multiple lines"></textarea-autosize>
             </div>
             <div class="item-task-data">
                 <div class="dates">
@@ -43,7 +43,7 @@
             <div class="item-task-data">
                 <p>Horas planificadas:</p>
                 <div class="item-text-data">
-                    <div>
+                    <div v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
                         <p>{{myTask.planHours}}</p>
                     </div>
                 </div>
@@ -52,11 +52,11 @@
                  <div class="dates">
                     <div class="dateini">
                        <p>Añadir horas dedicadas:</p>
-                        <input value="0"  v-model="hours" type="number">    
+                        <input v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" value="0"  v-model="hours" type="number">    
                     </div>
                     <div class="item-text-data">
                         <span>Horas dedicadas totales:</span>
-                        <div>
+                        <div v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
                             <p>{{myTask.hours}}</p>
                         </div>
                     </div>
@@ -66,17 +66,17 @@
 
             <div class="item-task-data" v-if="user.rol=='manager'|| myTask.userId == user.id">
                 <p>Dejar comentario:</p>
-                <textarea-autosize v-model="coment"></textarea-autosize>
+                <textarea-autosize v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }" v-model="coment"></textarea-autosize>
             </div>
             <div class="item-textarea-data">
                 <span>Comentarios:</span>
-                <div>
+                <div v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
                     <p v-for="coment in  this.myTask.coments" :key="coment.id">{{coment}}</p>
                 </div>
             </div>
             <div class="item-button-data">
                 <p>{{result}}</p>
-                <a class="button" v-on:click="updateTask()">Actualizar tarea</a>
+                <a class="button" v-bind:class="{ 'user-border user-color': user.rol=='user',' man-border man-color': user.rol=='manager' }" v-on:click="updateTask()">Actualizar tarea</a>
                 
             </div>
         </div>
@@ -101,7 +101,7 @@ export default {
        hours:0,
        coment:"",
        userss:[],
-       states:[],
+       states:[]
        }
     },
     created () {
@@ -171,12 +171,10 @@ export default {
     }
 };
 </script>
-<style scoped>
+ <style  scoped>
 
 .button {
-    border: 2px solid var(--man-color);
     border-radius: 0.3em;
-    color: var(--man-color);
     display: inline-block;
     font-size: 17px;
     margin: 0 auto;
@@ -185,6 +183,8 @@ export default {
     position: relative;
     text-align: center;
     text-decoration: none;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
@@ -195,9 +195,14 @@ export default {
 }
 .container-task-data{
     background-color: #eee;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     height: 100%;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin:0;
     overflow: auto;
     position: absolute;
@@ -208,15 +213,19 @@ export default {
 }
 .title-task-data{
     border-bottom: 1px solid #6B6FCE;
-    color: var(--man-color);
     line-height: 50px;
     text-align: center;
     font-weight: 700;
     vertical-align: middle;
 }
 .form-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 .error{
     color: red;
@@ -237,9 +246,9 @@ export default {
 
 }
 .item-text-data > div{
-    border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -254,9 +263,9 @@ export default {
 
 }
 .item-textarea-data > div{
-    border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 100%;
     margin: 10px 0;
     padding: 0 15px;
@@ -268,16 +277,21 @@ export default {
    width: 100%;
 }
 .dates{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 .dateini{
     margin-right: 10px;
 }
 input, select, textarea{
-    border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;

@@ -3,29 +3,29 @@
         <section>
             <header  v-bind:class="{ 'header-admin': user.rol == 'admin'}">
                 <span v-on:click="back()" v-if="user.rol=='admin'" class="logo back admin" target="_blank"><i class="fas fa-arrow-circle-left"></i></span>
-                <span v-if="user.rol!='admin'" class="logo user" target="_blank" v-on:click="profile()">{{user.firstname+ " "+user.lastname}}</span>
-                <span v-if="user.rol=='admin'" class="admin-console admin" target="_blank">Consola de administración</span>
+                <span v-if="user.rol!='admin'" class="logo"  v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}" target="_blank" v-on:click="profile()">{{user.firstname+ " "+user.lastname}}</span>
+                <span v-if="user.rol=='admin'" class="admin-console  admin-color" target="_blank">Consola de administración</span>
                 <label for="toggle-1" class="toggle-menu"><ul><li></li> <li></li> <li></li></ul></label>
                 <input type="checkbox" id="toggle-1">
                 <nav>
                     <ul class="ul-menu">
-                        <li v-if="user.rol!='admin' && navOn" title="Diferentes diagramas del estado del proyecto" v-on:click="currentPage('states')" v-bind:class="{ 'active': this.states }">
-                           <p> Estado del proyecto</p>
+                        <li v-if="user.rol!='admin' && navOn" title="Diferentes diagramas del estado del proyecto" v-on:click="currentPage('states')" v-bind:class="{ 'active': this.states,'user-background': (user.rol=='user' && this.states),'man-background': (user.rol=='manager' && this.states)}">
+                           <p v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}"> Estado del proyecto</p>
                         </li>
-                        <li v-if="user.rol=='manager'  && navOn" title=" añadir tareas a un sprint" v-on:click="currentPage('phases')" v-bind:class="{ 'active': this.phases }">
-                           <p> Gestionar fases</p>
+                        <li v-if="user.rol=='manager'  && navOn" title=" añadir tareas a un sprint" v-on:click="currentPage('phases')" v-bind:class="{ 'active': this.phases,'user-background': (user.rol=='user' && this.phases),'man-background': (user.rol=='manager' && this.phases)}">
+                           <p  v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}"> Gestionar fases</p>
                         </li>
-                         <li v-if="user.rol!='admin'  && navOn" title="asignar o reasignar las tareas" v-on:click="currentPage('tasks')" v-bind:class="{ 'active': this.tasks }">
-                           <p>Asignar tareas</p> 
+                         <li v-if="user.rol!='admin'  && navOn" title="asignar o reasignar las tareas" v-on:click="currentPage('tasks')" v-bind:class="{ 'active': this.tasks,'user-background': (user.rol=='user' && this.tasks),'man-background': (user.rol=='manager' && this.tasks)}">
+                           <p  v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}">Asignar tareas</p> 
                         </li>
-                        <li v-if="user.rol!='admin'  && navOn" title="ver kamban actual del proyecto" v-on:click="currentPage('kamban')" v-bind:class="{ 'active': this.kamban }">
-                          <p>Kamban</p> 
+                        <li v-if="user.rol!='admin'  && navOn" title="ver kamban actual del proyecto" v-on:click="currentPage('kamban')" v-bind:class="{ 'active': this.kamban,'user-background': (user.rol=='user' && this.kamban),'man-background': (user.rol=='manager' && this.kamban) }">
+                          <p  v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}">Kamban</p> 
                         </li>
-                        <li v-if="user.rol=='manager'  && navOn" title="Habilitar o deshabilitar usuarios" v-on:click="currentPage('usuarios')" v-bind:class="{ 'active': this.usuarios }">
-                          <p>Usuarios</p> 
+                        <li v-if="user.rol=='manager'  && navOn" title="Habilitar o deshabilitar usuarios" v-on:click="currentPage('usuarios')" v-bind:class="{ 'active': this.usuarios,'user-background': (user.rol=='user' && this.usuarios),'man-background': (user.rol=='manager' && this.usuarios)}">
+                          <p  v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}">Usuarios</p> 
                         </li>
-                        <li v-if="user.rol=='manager'  && navOn" title="Datos del proyecto" v-on:click="currentPage('project')" v-bind:class="{ 'active': this.project }">
-                          <p>Proyecto</p> 
+                        <li v-if="user.rol=='manager'  && navOn" title="Datos del proyecto" v-on:click="currentPage('project')" v-bind:class="{ 'active': this.project,'user-background': (user.rol=='user' && this.project),'man-background': (user.rol=='manager' && this.project)}">
+                          <p  v-bind:class="{'user-color': user.rol=='user','man-color': user.rol=='manager'}">Proyecto</p> 
                         </li>
                         <li>
 
@@ -41,14 +41,13 @@
 </template>
 
 <style>
-.user{
-    color: var(--man-color);
-}
 .admin-console{
     font-size:24px; 
     font-weight:600; 
 }
 .header-admin{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 .header-admin > .admin-console{
@@ -76,22 +75,25 @@ nav{
     background-color: white;
 }
 .ul-menu{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 .ul-menu > li {
     display: inline-block;
     font-size: 18px;
     padding: 25px 20px;
+    -webkit-transition: all 0.5s ease 0s;
+    -o-transition: all 0.5s ease 0s;
     transition: all 0.5s ease 0s;
 }
 
 header > p{
-    color: var(--man-color);
     text-decoration: none;
-}
-.active{
-    background-color: var(--man-color);
 }
 .active > p{
     color: white;
@@ -172,9 +174,16 @@ input[type=checkbox],  label{display:none;}
         z-index: 80;
     }
     .ul-menu{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
-        justify-content: right;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        -webkit-box-pack: right;
+            -ms-flex-pack: right;
+                justify-content: right;
     }
 
 }

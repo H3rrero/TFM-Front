@@ -26,6 +26,9 @@ import UserHome from '../home/UserHome'
 import UsersProject from '../users/UsersProject'
 import Profile from '../users/Profile'
 import ProjectData from '../project/ProjectData'
+import ProjectHome from '../admin/ProjectHome'
+import ChangeStates from '../admin/ChangeStates'
+import CreateState from '../admin/CreateState'
 
 
 Vue.use(Router);
@@ -49,7 +52,9 @@ export const router = new Router({
     { path: '/newPhase/:id', component:  CreatePhase, meta: {breadcrumb:{label: 'Nueva fase',parent:'sprints'}}},
     { path: '/admin',name:'adminhome', component:  AdminHome, meta: {breadcrumb: 'Pagina de inicio'}},
     { path: '/projects',name:'projects', component:  AdminProjects,  meta: {breadcrumb:{label: 'Gestión de proyectos',parent:'adminhome'}}},
-    { path: '/manusers/:id/:name', component:  ManageUsersProject, name:'manusers',meta: {breadcrumb:{label: 'Gestion de usuarios del proyecto',parent:'projects'}}},
+    { path: '/manusers/:id/:name', component:  ManageUsersProject, name:'manusers',meta: {breadcrumb:{label: 'Gestion de usuarios del proyecto',parent:'projecthome'}}},
+    { path: '/manstates/:id/:name', component:  ChangeStates, name:'manstates',meta: {breadcrumb:{label: 'Gestion de estados del proyecto',parent:'projecthome'}}},
+    { path: '/manprojects/:id/:name', component:  ProjectHome, name:'projecthome',meta: {breadcrumb:{label: 'Gestion del projecto',parent:'projects'}}},
     { path: '/disableusers/:id/:name', component:  UsersProject, name:'disableusers',meta: {breadcrumb:{label: 'Usuarios',parent:'userhome'}}},
     { path: '/createuser/:id', component:  CreateUser, meta: {breadcrumb:{label: 'Crear usuario',parent:'usersproject'}}},
     { path: '/createuserproject/:id', component:  CreateUser, meta: {breadcrumb:{label: 'Crear usuario',parent:'manusers'}}},
@@ -60,6 +65,7 @@ export const router = new Router({
     { path: '/userhome', name:'userhome', component:  UserHome, meta: {breadcrumb: 'Tus proyectos'}},
     { path: '/profile', component:  Profile, meta: {breadcrumb: 'Perfil'}},
     { path: '/projectdata/:id', component:  ProjectData, meta: {breadcrumb:{label: 'Datos del proyecto',parent:'userhome'}}},
+    { path: '/createstate/:id/:order', component:  CreateState, name:'createState',meta: {breadcrumb:{label: 'Crear estado',parent:'manstates'}}},
     
     // otherwise redirect to home
     { path: '*', redirect: '/admin' }
@@ -70,7 +76,8 @@ router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login', '/register','/forgottenpass'];
   const adminPages = ['admin','manusers','createuser','projectsadmin','createproject','projects',
-                      'manageusers','userslist','usersproject','addprogrammer','addmanager','createuserproject'];
+                      'manageusers','userslist','usersproject','addprogrammer','addmanager',
+                      'createuserproject','manprojects','manstates','createstate'];
   const managerPages = ['sprints','disableusers','projectdata'];
   
   const authRequired = !publicPages.includes(to.path);

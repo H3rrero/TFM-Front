@@ -83,7 +83,8 @@ export default {
 </script>
 <style scoped>
 div {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 .table-container {
   display: block;
@@ -95,8 +96,15 @@ div {
 }
 .flex-table {
   border-left: solid 1px #d9d9d9;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-transition: 0.5s;
+  -o-transition: 0.5s;
   transition: 0.5s;
 }
 .flex-table:first-of-type {
@@ -113,6 +121,8 @@ div {
 }
 .flex-table:hover {
   background: #f5f5f5;
+  -webkit-transition: 500ms;
+  -o-transition: 500ms;
   transition: 500ms;
 }
 .flex-row {
@@ -123,6 +133,8 @@ div {
   width: calc(100% / 7);
 }
 .last-row{
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 
 }
@@ -130,27 +142,48 @@ div {
   margin-right: 10px;
 }
 .rowspan {
-  align-items: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 .column {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: column wrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
   padding: 0;
   width: 50%;
 }
 .column .flex-row {
   border: 0;
   border-bottom: solid 1px #d9d9d9;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
   padding: 0;
   width: 100%;
 }
 .column .flex-row:hover {
   background: #f5f5f5;
+  -webkit-transition: 500ms;
+  -o-transition: 500ms;
   transition: 500ms;
 }
 .flex-cell {
@@ -197,5 +230,4 @@ div {
     width: 100%;
   }
 }
-
 </style>

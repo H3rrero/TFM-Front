@@ -28,7 +28,6 @@ export default {
 };
 </script>
 <style scoped>
-
 .button {
     text-decoration: none;
     margin-left: auto; 
@@ -39,8 +38,13 @@ export default {
 .header-not{
     border-bottom: 1px solid var(--man-color);
     color: var(--man-color);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     font-weight: 700;
     line-height: 33px;
     text-align: center;
@@ -52,10 +56,15 @@ export default {
 .container-task-message{
     background-color: #eee;
     border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     height: 150px;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     padding: 6px;
     position: absolute;
     width: 400px;

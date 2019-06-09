@@ -84,6 +84,8 @@ export default {
     position: relative;
     text-align: center;
     text-decoration: none;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
     width: 50% !important;
 }
@@ -98,7 +100,11 @@ export default {
   left: -4.5em;
   position: absolute;
   top: 0;
-  transform: skewX(-45deg) translateX(0);
+  -webkit-transform: skewX(-45deg) translateX(0);
+      -ms-transform: skewX(-45deg) translateX(0);
+          transform: skewX(-45deg) translateX(0);
+  -webkit-transition: none;
+  -o-transition: none;
   transition: none;
   width: 3em;
 }
@@ -108,15 +114,24 @@ export default {
   color: #fff;
 }
 .button:hover:before {
-  transform: skewX(-45deg) translateX(13.5em);
+  -webkit-transform: skewX(-45deg) translateX(13.5em);
+      -ms-transform: skewX(-45deg) translateX(13.5em);
+          transform: skewX(-45deg) translateX(13.5em);
+  -webkit-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
 .container-task-data{
     background-color: white;
     border: 2px solid var(--admin-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin: 0 auto;
     margin-top: 20px;
     padding-bottom: 2rem;
@@ -140,8 +155,13 @@ export default {
     vertical-align: middle;
 }
 .form-task-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 .item-task-data{  
     margin-top: 10px;
@@ -161,7 +181,8 @@ export default {
 .item-text-data > div{
     border: 2px solid var(--admin-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -178,7 +199,8 @@ export default {
 .item-textarea-data > div{
     border: 2px solid var(--admin-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 100%;
     margin: 10px 0;
     padding: 0 15px;
@@ -190,8 +212,13 @@ export default {
    width: 100%;
 }
 .dates{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
 }
 .dateini{
     margin-right: 10px;
@@ -199,7 +226,8 @@ export default {
 input, select, textarea{
     border: 2px solid var(--admin-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     height: 35px;
     margin: 10px 0;
     padding: 0 15px;
@@ -214,8 +242,13 @@ p{
         width: 100%;
     }
     .dates{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        flex-direction: column;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
     }
 }
 </style>

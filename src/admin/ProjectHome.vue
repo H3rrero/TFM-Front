@@ -2,15 +2,37 @@
 <div>
     <app-breadcrumbs class="admin-background"></app-breadcrumbs>
 <div class="container-state">
-    <router-link to="/projects">
-        <state :rol="'admin'" :image="'src/img/gestionusuario.png'" :title="'Gestion de proyectos'"></state>
-    </router-link>
-    <router-link to="/usersproject">
-        <state :rol="'admin'" :image="'src/img/gestionusuario.png'" :title="'Gestion de usuarios'"></state>
-    </router-link> 
+    <div v-on:click="openManUsers()" >
+        <state :rol="'admin'" :image="'src/img/gestionusuario.png'" :title="'Gestion de usuarios del proyecto'"></state>
+    </div>
+    <div v-on:click="openStatesHome()" >
+        <state :rol="'admin'" :image="'src/img/gestionusuario.png'" :title="'Gestion de estados del proyecto'"></state>
+    </div> 
 </div>
 </div>
 </template>
+<script>
+
+ import { projectService } from '../_services/project.service';
+ import { userService } from '../_services/user.service';
+ import { userProjectService } from '../_services/userProject.service';
+export default {
+    data(){
+       return{ 
+        selectProject:this.$route.params.id,
+        nameProject:this.$route.params.name,
+       }
+    },
+    methods: {
+        openManUsers:function (project) {
+            this.$router.push('/manusers/'+this.selectProject+'/'+this.nameProject);
+        },
+        openStatesHome:function (project) {
+            this.$router.push('/manstates/'+this.selectProject+'/'+this.nameProject);
+        },
+    }
+};
+</script>
 <style scoped>
 .container-state{
     display: -webkit-box;

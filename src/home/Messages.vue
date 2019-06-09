@@ -2,8 +2,8 @@
     <div class="container-message-data" >  
         <div class="form-message-data">
             <div class="item-message-data">
-                <div class="message">
-                    <p class="title-message">{{message.title}}</p>
+                <div class="message" v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }">
+                    <p class="title-message" v-bind:class="{ 'user-color': user.rol=='user',' man-color': user.rol=='manager' }">{{message.title}}</p>
                     <p>{{message.body}}</p>
                 </div>
             </div>
@@ -35,9 +35,14 @@ export default {
 <style scoped>
 .container-message-data{
     background-color: #eee;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     height: 100%;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     margin:0;
     overflow: auto;
     position: absolute;
@@ -46,17 +51,14 @@ export default {
     width: 500px;
     z-index: 99;
 }
-.title-message-data{
-    border-bottom: 1px solid #6B6FCE;
-    color: var(--man-color);
-    line-height: 50px;
-    text-align: center;
-    font-weight: 700;
-    vertical-align: middle;
-}
 .form-message-data{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 .item-message-data{  
     margin-top: 10px;
@@ -65,9 +67,9 @@ export default {
 }
 .message{
     background: white;
-    border: 2px solid var(--man-color);
     border-radius: 5px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     margin: 10px 0;
     padding: 5px;
 }
@@ -76,7 +78,6 @@ export default {
 }
 .title-message{
     border-bottom: 1px solid #6B6FCE;
-    color: var(--man-color);
     line-height: 23px;
     text-align: center;
     font-weight: 400;

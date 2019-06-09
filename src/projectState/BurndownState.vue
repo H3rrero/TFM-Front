@@ -1,7 +1,7 @@
 <template>
 
 <div class="scrolling-container" v-if="haveDataCh">
-    <app-breadcrumbs class="user-background"></app-breadcrumbs>
+    <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
   <highcharts class="container-chart" :constructor-type="'chart'" :updateArgs="updateArgs" :options="stockOptions"></highcharts>
 </div>
 
@@ -18,6 +18,7 @@ export default {
         fasesB:[],
         realData:[],
         estData:[],
+        currentUser:JSON.parse(localStorage.getItem('user')),
         prueba: 'haha',
         haveDataCh : false,
         updateArgs: [true, true, true],
@@ -134,7 +135,7 @@ export default {
     margin: 1em auto;
 }
 .scrolling-container {
-  overflow-x: auyo;
+  overflow-x: auto;
   padding: 0.5rem;
   width: 99%;
 }

@@ -1,13 +1,13 @@
 <template>
     <div>
-       <app-breadcrumbs class="user-background"></app-breadcrumbs>
+       <app-breadcrumbs v-bind:class="{ 'user-background': user.rol=='user','man-background': user.rol=='manager' }" ></app-breadcrumbs>
         <div class="user-container">
-            <div class="users">
+            <div class="users" v-bind:class="{ 'user-border': user.rol=='user',' man-border': user.rol=='manager' }"> 
                 <div class="users-item" v-for="project in projects" :key="project.id">
-                   <div class="users-item-title" >
+                   <div class="users-item-title" v-bind:class="{ 'user-background': user.rol=='user',' man-background': user.rol=='manager' }">
                         <p >{{project.name}}</p>
                     </div>
-                    <div  class="users-body" v-on:click="openProjectHome(project)">
+                    <div  class="users-body"  v-bind:class="{ 'user-background': user.rol=='user',' man-background': user.rol=='manager' }" v-on:click="openProjectHome(project)">
                         <p >{{project.description}}</p>
                     </div>
                 </div>
@@ -57,18 +57,30 @@ export default {
 <style scoped>
 
 .user-container{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     height: 100%;
 }
 .users{
     background-color: white;
-    border: 2px solid var(--man-color);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin: 0 auto;
     margin-right: 10px;
     padding: 1rem;
@@ -77,8 +89,13 @@ export default {
 .users-item{
     background-color: white;
     color: #6B6FCE;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     height: 200px;
     margin-left: 10px;
     margin-bottom: 10px;
@@ -87,18 +104,28 @@ export default {
 }
 
 .users-item:hover{
-    transform: scale(1.03,1.03);
+    -webkit-transform: scale(1.03,1.03);
+        -ms-transform: scale(1.03,1.03);
+            transform: scale(1.03,1.03);
+    -webkit-transition:  0.3s ease-out;
+    -o-transition:  0.3s ease-out;
     transition:  0.3s ease-out;
 }
 .users-item-title{
-    background-color: var(--man-color);
     border-bottom: 1px solid white;
     color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
     font-family: 'Roboto', sans-serif;
     height: 20px;
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     padding: 0.3rem;
     text-align: center;
 }
@@ -109,11 +136,17 @@ export default {
     margin-right: 7px;
 }
 .users-body{
-    background-color: var(--man-color);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     height: 100%;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     padding-bottom: 10px;
     text-align: center;
     cursor: pointer;
