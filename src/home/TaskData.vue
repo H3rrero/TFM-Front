@@ -322,11 +322,11 @@ p{
         -ms-flex-direction: column;
             flex-direction: column;
     margin:0;
-    overflow: 70%;
+    overflow: auto;
     position: absolute;
     right: 0;
     top:0;
-    width: 500px;
+    width: 70%;
     z-index: 99;
 }
 </style>
