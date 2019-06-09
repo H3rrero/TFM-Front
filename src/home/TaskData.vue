@@ -312,6 +312,21 @@ p{
     }
 }
 .container-task-data-safari{
-        width: 70%;
+    background-color: #eee;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin:0;
+    overflow: 70%;
+    position: absolute;
+    right: 0;
+    top:0;
+    width: 500px;
+    z-index: 99;
 }
 </style>
