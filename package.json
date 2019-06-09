@@ -11,6 +11,7 @@
   "dependencies": {
     "autoprefixer": "^9.6.0",
     "axios": "^0.18.0",
+    "detect-browser": "^4.5.0",
     "express": "^4.16.4",
     "highcharts": "^7.0.2",
     "highcharts-vue": "^1.2.0",
@@ -23,6 +24,7 @@
     "vue": "^2.5.16",
     "vue-2-crumbs": "^0.5.4",
     "vue-breadcrumbs": "^1.2.0",
+    "vue-browser-detect-plugin": "^0.1.2",
     "vue-datetime": "^1.0.0-beta.10",
     "vue-drag-drop": "^1.1.4",
     "vue-json-csv": "^1.2.4",

@@ -1,5 +1,5 @@
 <template>
-    <div class="container-task-data" >  
+    <div v-bind:class="{ 'container-task-data': !isSafari,'container-task-data-safari': isSafari }">  
         <div class="title-task-data" v-bind:class="{ 'user-color': user.rol=='user','man-color': user.rol=='manager' }">
             <p>{{this.myTask.title}}</p>
         </div>
@@ -88,6 +88,8 @@
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
  import { stateService } from '../_services/states.service';
+ const { detect } = require('detect-browser');
+const browser = detect();
 export default {
     props: {
    myTask: Object,
@@ -95,6 +97,7 @@ export default {
   },
     data(){
        return{ 
+       isSafari:false,
        valid:false,
        haveData: false,
        result: "",
@@ -107,6 +110,9 @@ export default {
     created () {
         this.getUsers();
         this.getStates();
+        if(browser.name== "safari"){
+            this.isSafari = true;
+        }
     },
     methods:{
         updateTask: function () {
@@ -204,6 +210,7 @@ export default {
         -ms-flex-direction: column;
             flex-direction: column;
     margin:0;
+    overflow: auto;
     position: absolute;
     right: 0;
     top:0;
@@ -304,11 +311,7 @@ p{
         width: 80%;
     }
 }
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-
-    .container-task-data{
+.container-task-data-safari{
         width: 70%;
-    }
-}}
+}
 </style>
