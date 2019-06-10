@@ -181,9 +181,10 @@ export default {
             this.isLoading = true;
             this.spinner = true;
             userService.update(user).then(user=>{
-                userProjectService.deleteUserAndProject(user.id, projectId);
-                this.getUsersActive();
+                userProjectService.deleteUserAndProject(user.id, projectId).then(data=>{
+                    this.getUsersActive();
                 this.getProjects();
+                });
             });
         }
         ,handleDrop(data, event) {
