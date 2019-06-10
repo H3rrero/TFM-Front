@@ -17,10 +17,12 @@
         <div class="form-task-data">
             <div class="item-task-data">
                 <p>Nombre:</p>
-                <input v-model="myProject.name">
-                <p v-if="validar && (myProject.name == undefined|| myProject.name.trim()=='')"
-                 v-bind:class="{ 'error': (myProject.name == undefined|| myProject.name.trim()=='')}" >* El campo nombre es obligatorio</p>
-            </div>
+                <div class="item-text-data">
+                    <div>
+                        <p>{{myProject.name}}</p>
+                    </div>
+                </div>
+                </div>
             <div class="item-task-data">
                 <p>Descripción:</p>
                 <input v-model="myProject.description">

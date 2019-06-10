@@ -1,8 +1,11 @@
 <template>
     <div >
         <app-breadcrumbs class="admin-background"></app-breadcrumbs>
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"></loading>
         <div class="user-container">
-             <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
+             <div class="mask" v-if="show || spinner" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedUser(-1)"  class="unassigned-task"   >
                  <div class="title-task-data">
                     <select   v-model="projectSelected">
@@ -72,7 +75,7 @@
                 </div>
             </drop>
             <transition name="slide-fade">
-                <userdetail v-if="show" :myUser="userSelected" :myProject="projectSend"></userdetail>  
+                <userdetail v-if="show" :myUser="userSelected" :myProject="projectSend" v-on:start-spinner="startSpinner()" v-on:stop-spinner="stopSpinner()"></userdetail>  
             </transition>  
         </div>
     </div>
@@ -83,6 +86,11 @@
  import { projectService } from '../_services/project.service';
  import { userService } from '../_services/user.service';
  import { userProjectService } from '../_services/userProject.service';
+  import Vue from 'vue';
+ // Import component
+ import Loading from 'vue-loading-overlay';
+ // Init plugin
+Vue.use(Loading);
 export default {
     data(){
        return{ 
@@ -96,16 +104,23 @@ export default {
         projectSend:"",
         projects:[],
         haveDataProjects:false,
-        usersProject:{}
+        usersProject:{},
+        isLoading: false,
+        fullPage: true,
+        spinner:false,
        }
     },
     created () {
         this.getUsersActive();
         this.getProjects();
     },
+    components: {
+            Loading
+        },
     methods: {
        getUsersActive: function () {
            this.users = [];
+           this.usersProject = {};
            this.haveDataProjects = false;
             userProjectService.getUserWithoutProject().then(
             userss=>{
@@ -115,7 +130,9 @@ export default {
        );
           userProjectService.getUserByProject(this.selectProject).then(
             userss=>{
-                        
+                   this.isLoading = false;
+                this.spinner = false; 
+                this.show = false;    
                  setTimeout(() => {
                      this.haveDataProjects = true;
                  }, 300);
@@ -163,30 +180,40 @@ export default {
             user.projectId = -1;
             userService.update(user).then(user=>{
                 userProjectService.deleteUserAndProject(user.id, projectId);
-                 this.$router.go();
+                this.isLoading = true;
+                this.spinner = true;
+                this.getUsersActive();
+                this.getProjects();
             });
-        },
-        showDeleteUser:function (user) {
-            this.getUsersInActive();
-            this.$router.go();
-        },handleDrop(data, event) {
+        }
+        ,handleDrop(data, event) {
                 var projectIdOld = data.projectId;
                 data.projectId = this.projectAsignedId;
                 
                 userService.update(data).then(user=>{
                     userProjectService.getByUserAndProject(data.id, this.projectAsignedId).then(userProject=>{
-                    
+                    console.log("userProject");
+                    console.log(userProject);
                     if(userProject.message != null){
                         if(this.projectAsignedId == -1){
-                            userProjectService.deleteUserAndProject(data.id,projectIdOld);
-                             this.$router.go();
+                            userProjectService.deleteUserAndProject(data.id,projectIdOld).then(data =>{
+                                console.log("deleted");
+                                console.log(data);
+                                this.isLoading = true;
+                                this.spinner = true;
+                                this.getUsersActive();
+                                this.getProjects();
+                            });
                         }else{
                         var userProj = {
                             user: data.id,
                             project:data.projectId
                         }
                         userProjectService.createUserProject(userProj).then(user=>{
-                            this.$router.go();
+                            this.isLoading = true;
+                            this.spinner = true;
+                            this.getUsersActive();
+                            this.getProjects();
                         });
                         
                         }
@@ -203,13 +230,21 @@ export default {
         },showMenu: function (user,project) {
             this.show = true;
             this.userSelected = user;
-            this.projectSend = project;
+            this.projectSend = project+"";
         },hideMenu: function () {
             if(this.show)
             this.show = false;
         },
         asignedUser: function (id) {
             this.projectAsignedId = id;
+        },
+        startSpinner: function () {
+            this.isLoading = true;
+            this.spinner = true;
+        },
+        stopSpinner: function () {
+             this.getUsersActive();
+            this.getProjects();
         },
         getUsersByProject: function (projectId) {
             userProjectService.getUserByProject(projectId).then(
@@ -293,7 +328,7 @@ export default {
     background-color: #3D3A3F;
     height: 100%;
     opacity: 0.8;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 5;
@@ -456,5 +491,40 @@ p{
       -ms-transform: translateX(100%);
           transform: translateX(100%);
  
+}
+.vld-overlay {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  align-items: center;
+  display: none;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1
+}
+
+.vld-overlay.is-active {
+  display: flex
+}
+
+.vld-overlay.is-full-page {
+  z-index: 999;
+  position: fixed
+}
+
+.vld-overlay .vld-background {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: #fff;
+  opacity: 0.5
+}
+
+.vld-overlay .vld-icon, .vld-parent {
+  position: relative
 }
 </style>

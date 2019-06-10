@@ -165,8 +165,8 @@ input[type=checkbox],  label{display:none;}
         color:white;
     }
     nav{
-        background-color: var(--man-color);
-        color: white; 
+        background-color: white;
+        color: var(--man-color); 
         display:none; 
         position:absolute; 
         right: 0px; 

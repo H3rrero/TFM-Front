@@ -180,7 +180,7 @@ export default {
     background-color: #3D3A3F;
     height: 100%;
     opacity: 0.8;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 5;
