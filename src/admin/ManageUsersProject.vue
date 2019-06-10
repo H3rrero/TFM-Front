@@ -178,10 +178,10 @@ export default {
         deleteUser:function (user) {
             let projectId = this.selectProject;
             user.projectId = -1;
+            this.isLoading = true;
+            this.spinner = true;
             userService.update(user).then(user=>{
                 userProjectService.deleteUserAndProject(user.id, projectId);
-                this.isLoading = true;
-                this.spinner = true;
                 this.getUsersActive();
                 this.getProjects();
             });
@@ -191,6 +191,8 @@ export default {
                 data.projectId = this.projectAsignedId;
                 
                 userService.update(data).then(user=>{
+                    this.isLoading = true;
+                    this.spinner = true;
                     userProjectService.getByUserAndProject(data.id, this.projectAsignedId).then(userProject=>{
                     console.log("userProject");
                     console.log(userProject);
@@ -199,8 +201,6 @@ export default {
                             userProjectService.deleteUserAndProject(data.id,projectIdOld).then(data =>{
                                 console.log("deleted");
                                 console.log(data);
-                                this.isLoading = true;
-                                this.spinner = true;
                                 this.getUsersActive();
                                 this.getProjects();
                             });
@@ -210,13 +210,14 @@ export default {
                             project:data.projectId
                         }
                         userProjectService.createUserProject(userProj).then(user=>{
-                            this.isLoading = true;
-                            this.spinner = true;
                             this.getUsersActive();
                             this.getProjects();
                         });
                         
                         }
+                    }else{
+                        this.isLoading = false;
+                        this.spinner = false;
                     }
                     
 

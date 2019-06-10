@@ -129,11 +129,11 @@ export default {
                 data.projectId = this.projectAsignedId;
                 data.rol = "user";
                 userService.update(data).then(user=>{
+                    this.isLoading = true;
+                    this.spinner = true;
                 userProjectService.getByUserAndProject(data.id, this.projectAsignedId).then(userProject=>{
                         console.log("userProject.message");
                         console.log(userProject.message);
-                        this.isLoading = true;
-                        this.spinner = true;
                     if(userProject.message != undefined){
                         if(this.projectAsignedId == -1){
                             console.log("saber que id ha llegado");
