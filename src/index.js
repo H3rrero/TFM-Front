@@ -33,7 +33,6 @@ import JsonCSV from 'vue-json-csv';
 import VueBreadcrumbs from 'vue-breadcrumbs';
 import Vue2Crumbs from 'vue-2-crumbs';
 
-
 Highcharts.createElement('link', {
     href: 'https://fonts.googleapis.com/css?family=Roboto',
     rel: 'stylesheet',

@@ -1,5 +1,8 @@
 <template>
-    <div class="container-task-data" >  
+    <div class="container-task-data" > 
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"></loading> 
         <div class="title-task-data">
             <p>{{this.myUser.firstname + " " + this.myUser.lastname}}</p>
         </div>
@@ -42,6 +45,11 @@
  import { projectService } from '../_services/project.service';
  import { userService} from '../_services/user.service';
  import { userProjectService } from '../_services/userProject.service';
+ import Vue from 'vue';
+ // Import component
+ import Loading from 'vue-loading-overlay';
+ // Init plugin
+ Vue.use(Loading);
 export default {
     props: {
    myUser: Object,
@@ -51,9 +59,15 @@ export default {
        return{ 
        projects:[],
        project:-1,
-       result:""
+       result:"",
+       isLoading: false,
+       fullPage: true,
+       spinner:false,
        }
     },
+    components: {
+            Loading
+        },
     created () {
         this.getProjects();
     },
@@ -70,9 +84,11 @@ export default {
                 this.myUser.rol = "user";
                 userService.update(this.myUser).then(user=>{
                 userProjectService.getByUserAndProject(this.myUser.id, this.project).then(userProject=>{
+                     this.$emit('start-spinner');
                     if(userProject.message != undefined){
                         if(this.project == -1){
                             userProjectService.deleteUserAndProject(this.myUser.id,this.myProject).then(data=>{
+                               this.$emit('stop-spinner');
                                 this.result = "usuario actualizado";
                             });
                             
@@ -82,10 +98,13 @@ export default {
                             project:this.myUser.projectId
                         }
                         userProjectService.createUserProject(userProj).then(data=>{
+                            this.$emit('stop-spinner');
                              this.result = "usuario actualizado";
                         });
                         
                         }
+                    }else{
+                        this.$emit('stop-spinner');
                     }
                 });
             });
@@ -236,5 +255,40 @@ p{
     .container-task-data{
         width: 80%;
     }
+}
+.vld-overlay {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  align-items: center;
+  display: none;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1
+}
+
+.vld-overlay.is-active {
+  display: flex
+}
+
+.vld-overlay.is-full-page {
+  z-index: 999;
+  position: fixed
+}
+
+.vld-overlay .vld-background {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: #fff;
+  opacity: 0.5
+}
+
+.vld-overlay .vld-icon, .vld-parent {
+  position: relative
 }
 </style>

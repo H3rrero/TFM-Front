@@ -1,8 +1,11 @@
 <template>
     <div v-if="haveDataProjects">
         <app-breadcrumbs class="admin-background"></app-breadcrumbs>
+        <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="fullPage"></loading>
         <div class="task-container">
-            <div class="mask" v-if="show" v-on:click="hideMenu();"></div>
+            <div class="mask" v-if="show || spinner" v-on:click="hideMenu();"></div>
             <drop @dragover="asignedUser(-1)"  class="unassigned-task "  v-if="haveData" >
                  <div class="title-task-data">
                    <select  v-model="projectSelected">
@@ -41,7 +44,7 @@
             </div>
                 
             <transition name="slide-fade">
-                <userdetail v-if="show" :myUser="userSelected" :myProject="projectSend"></userdetail>  
+                <userdetail v-if="show" :myUser="userSelected" :myProject="projectSend" v-on:start-spinner="startSpinner()" v-on:stop-spinner="stopSpinner()"></userdetail>  
             </transition>  
         </div>
     </div>
@@ -52,6 +55,11 @@
  import { projectService } from '../_services/project.service';
  import { userService} from '../_services/user.service';
  import { userProjectService } from '../_services/userProject.service';
+ import Vue from 'vue';
+ // Import component
+ import Loading from 'vue-loading-overlay';
+ // Init plugin
+Vue.use(Loading);
 export default {
     data(){
        return{ 
@@ -67,9 +75,15 @@ export default {
         userSelected:{},
         haveData: false,
         haveDataProjects:false,
-        usersProject:{}
+        usersProject:{},
+        isLoading: false,
+        fullPage: true,
+        spinner:false,
        }
     },
+    components: {
+            Loading
+        },
     created () {
         this.getUsers();
         this.getProjects();
@@ -91,6 +105,8 @@ export default {
             projectss=>{
                 this.projects = projectss;
                 this.haveData = true;
+                this.isLoading = false;
+                this.spinner = false;
                 projectss.forEach(element => {
                     if(!element.deleted){
                         this.projectsDeleted.push(element);
@@ -103,7 +119,7 @@ export default {
         showMenu: function (user,project) {
             this.show = true;
             this.userSelected = user;
-            this.projectSend = project;
+            this.projectSend = project+"";
         },
         hideMenu: function () {
             if(this.show)
@@ -116,6 +132,8 @@ export default {
                 userProjectService.getByUserAndProject(data.id, this.projectAsignedId).then(userProject=>{
                         console.log("userProject.message");
                         console.log(userProject.message);
+                        this.isLoading = true;
+                        this.spinner = true;
                     if(userProject.message != undefined){
                         if(this.projectAsignedId == -1){
                             console.log("saber que id ha llegado");
@@ -124,7 +142,7 @@ export default {
                                 this.count = 0;
                                 this.getUsers();
                                 this.getProjects();
-                            });
+                            }); 
                             
                         }else{
                         var userProj = {
@@ -139,6 +157,8 @@ export default {
                         
                         }
                     }else{
+                        this.isLoading = false;
+                        this.spinner = false;
                         this.count = 0;
                     }
                 });
@@ -160,6 +180,14 @@ export default {
         },
         showList: function () {
             this.$router.push('/userslist');
+        },
+        startSpinner: function () {
+            this.isLoading = true;
+            this.spinner = true;
+        },
+        stopSpinner: function () {
+            this.getUsers();
+            this.getProjects();
         },
          getUsersByProject: function (projectId) {
             userProjectService.getUserByProject(projectId).then(
@@ -275,7 +303,7 @@ export default {
     background-color: #3D3A3F;
     height: 100%;
     opacity: 0.8;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 5;
@@ -325,5 +353,40 @@ export default {
       -ms-transform: translateX(100%);
           transform: translateX(100%);
  
+}
+.vld-overlay {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  align-items: center;
+  display: none;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1
+}
+
+.vld-overlay.is-active {
+  display: flex
+}
+
+.vld-overlay.is-full-page {
+  z-index: 999;
+  position: fixed
+}
+
+.vld-overlay .vld-background {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: #fff;
+  opacity: 0.5
+}
+
+.vld-overlay .vld-icon, .vld-parent {
+  position: relative
 }
 </style>
