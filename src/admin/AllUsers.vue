@@ -16,10 +16,6 @@
                         <div class="flex-cell" role="cell">{{project.name}}</div>
                         <div class="flex-cell" role="cell">{{user.rol}}</div>
                     </div>
-                    <div class="flex-row" >
-                        <div class="flex-cell" role="cell">Proyecto de prueba 2</div>
-                        <div class="flex-cell" role="cell">{{user.rol}}</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -27,7 +23,7 @@
 </template>
 
 <script>
- import { projectService } from '../_services/project.service';
+ import { userProjectService } from '../_services/userProject.service';
  import { userService } from '../_services/user.service';
 export default {
     data(){
@@ -45,17 +41,16 @@ export default {
             userss=>{
                 userss.forEach(user => {
                     if(user.rol != 'admin'){
-                         projectService.getAll().then(
+                         userProjectService.getProjectByUser(user.id).then(
                             projectss=>{
                                 
                                 let projects=[];
                                 projectss.forEach(element => {
-                                    if(element.id == user.projectId){
                                         projects.push(element);
                                         user.projects = projects;
                                         this.haveData = true;
                                         this.users.push(user);
-                                    }
+                                    
                                 });
                                 
                             }
@@ -63,19 +58,6 @@ export default {
                         
                     }
                 });
-            }
-       );
-        },getProject: function (id) {
-            
-           projectService.getAll().then(
-            projectss=>{
-                let projects=[];
-                projectss.forEach(element => {
-                    if(element.id == id){
-                        projects.push(element);
-                    }
-                });
-                return projects;
             }
        );
         },

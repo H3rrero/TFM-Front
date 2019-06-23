@@ -75,14 +75,15 @@ export default {
     methods:{
         changePassword:function () {
             if(this.showPass){
-                if(this.currentPassword != this.user.password || this.password != this.confirmPasswrod){
+                console.log(this.user.password)
+                if( this.password != this.confirmPasswrod){
                     this.result="Alguno de los datos no es correcto";
                     this.error=true;
                     this.success=false;
                 }
-                if(this.currentPassword == this.user.password && this.password == this.confirmPasswrod){
+                if( this.password == this.confirmPasswrod){
                     this.user.password = this.password;
-                    userService.update(this.user).then(user=>{
+                    userService.updatePass(this.user).then(user=>{
                        this.result="La contraseña se ha actualizado.";
                         this.error=false;
                         this.success=true;

@@ -11,10 +11,10 @@
         <state :rol="user.rol"  :image="'src/img/vg.png'" :title="'Diagrama valor ganado por sprint'"></state>
     </div>
     <div v-on:click="currentPage('hoursChart')" >
-        <state :rol="user.rol"  :image="'src/img/vg.png'" :title="'Diagrama horas y usuarios'"></state>
+        <state :rol="user.rol"  :image="'src/img/horas.PNG'" :title="'Diagrama horas y usuarios'"></state>
     </div>
     <div v-on:click="currentPage('hoursSprint')" >
-        <state  :rol="user.rol" :image="'src/img/vg.png'" :title="'Diagrama horas y usuarios'"></state>
+        <state  :rol="user.rol" :image="'src/img/horas.PNG'" :title="'Diagrama horas y usuarios'"></state>
     </div>
 </div>
 
