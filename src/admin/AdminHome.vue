@@ -3,10 +3,10 @@
     <app-breadcrumbs class="admin-background"></app-breadcrumbs>
 <div class="container-state">
     <router-link to="/projects">
-        <state :rol="'admin'" :image="'src/img/projects.png'" :title="'Gestion de proyectos'"></state>
+        <state :rol="'admin'" :image="'src/img/projects.PNG'" :title="'Gestion de proyectos'"></state>
     </router-link>
     <router-link to="/usersproject">
-        <state :rol="'admin'" :image="'src/img/users.png'" :title="'Gestion de usuarios'"></state>
+        <state :rol="'admin'" :image="'src/img/users.PNG'" :title="'Gestion de usuarios'"></state>
     </router-link> 
 </div>
 </div>
