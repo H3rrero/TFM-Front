@@ -88,6 +88,7 @@
  import { taskService } from '../_services/task.service';
  import { userService} from '../_services/user.service';
  import { stateService } from '../_services/states.service';
+ import { userProjectService } from '../_services/userProject.service';
  const { detect } = require('detect-browser');
 const browser = detect();
 export default {
@@ -158,10 +159,12 @@ export default {
        );
         },
         getUsers: function () {
-          userService.getAll().then(
+          userProjectService.getUserByProject(this.myTask.projectId).then(
             users=>{
                 users.forEach(element => {
-                    this.userss = users;
+                    if(element.rol != "admin"){
+                    this.userss.push(element);
+                    }
                 });
              
             }

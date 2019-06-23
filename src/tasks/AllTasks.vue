@@ -1,7 +1,7 @@
 <template>
     <div v-if="haveData">
-       <app-breadcrumbs class="user-background"></app-breadcrumbs>
-       <div class="table-container" role="table" aria-label="Destinations">
+       <app-breadcrumbs v-bind:class="{ 'user-background': currentUser.rol=='user','man-background': currentUser.rol=='manager' }" ></app-breadcrumbs>
+        <div class="table-container" role="table" aria-label="Destinations">
             <div class="flex-table header" role="rowgroup">
                 <div v-on:click="sort('title')" class="flex-row first" role="columnheader">Nombre</div>
                 <div v-on:click="sort('assigned')" class="flex-row" role="columnheader">Asignada</div>
@@ -19,7 +19,7 @@
                   </download-csv>
                 </div>
             </div>
-            <div class="flex-table row" role="rowgroup" v-for="task in sortedTasks" :key="task.id">
+            <div class="flex-table row"  role="rowgroup" v-for="task in sortedTasks" :key="task.id">
                 <div class="flex-row rowspan first">{{task.title}}</div>
                 <div class="flex-row rowspan ">{{task.assigned}}</div>
                 <div class="flex-row rowspan first">{{task.state}}</div>
@@ -43,6 +43,7 @@ export default {
         haveData:false,
         currentSort:'name',
         currentSortDir:'asc',
+        currentUser: JSON.parse(localStorage.getItem('user')),
         json_data: [  ]
        }
     },

@@ -6,7 +6,7 @@
         <state :rol="'admin'" :image="'src/img/gestionusuario.png'" :title="'Gestion de usuarios del proyecto'"></state>
     </div>
     <div v-on:click="openStatesHome()" >
-        <state :rol="'admin'" :image="'src/img/gestionusuario.png'" :title="'Gestion de estados del proyecto'"></state>
+        <state :rol="'admin'" :image="'src/img/estados.png'" :title="'Gestion de estados del proyecto'"></state>
     </div> 
 </div>
 </div>

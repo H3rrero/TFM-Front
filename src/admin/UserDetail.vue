@@ -81,7 +81,6 @@ export default {
         },
         changeProject() {
                 this.myUser.projectId = this.project;
-                this.myUser.rol = "user";
                 userService.update(this.myUser).then(user=>{
                 userProjectService.getByUserAndProject(this.myUser.id, this.project).then(userProject=>{
                      this.$emit('start-spinner');

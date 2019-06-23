@@ -108,8 +108,11 @@ export default {
           userProjectService.getUserByProject(this.selectProject).then(
             users=>{
                 users.forEach(element => {
-                    this.usersId.push(element.id);
-                    this.userss = users;
+                    console.log(element);
+                    if(element.rol != "admin"){
+                        this.usersId.push(element.id);
+                        this.userss.push(element);
+                    }
                 });
              
             }
