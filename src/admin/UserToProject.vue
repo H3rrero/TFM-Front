@@ -199,7 +199,7 @@ export default {
                 if(this.usersProject[this.projectsDeleted[this.projectsDeleted.length-1].id ]!= undefined)
                     setTimeout(() => {
                         this.haveDataProjects = true;
-                    }, 100);
+                    }, 300);
             }
        );
         },

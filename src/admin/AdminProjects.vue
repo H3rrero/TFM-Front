@@ -1,7 +1,7 @@
 <template>
     <div>
         <app-breadcrumbs class="admin-background"></app-breadcrumbs>
-        <div class="user-container">
+        <div class="user-container" v-if="haveData">
             <div class="projects ">
                 <div class="projects-item" v-for="project in projects" :key="project.id">
                    <div class="projects-item-title " >
@@ -57,8 +57,10 @@ export default {
     methods: {
        getProjectsActive: function () {
            this.projects = [];
+           console.log("hola");
             projectService.getAll().then(
             projectss=>{
+                this.haveData = true;
             projectss.forEach(element => {
                 if(!element.deleted){
                     this.projects.push(element);
@@ -82,15 +84,12 @@ export default {
         getDataProject:function (project) {
                userService.getByProject(project.id).then(users=>{
                     if(users.length > 0){
-                        this.haveData = true;
                         this.deleteProject(project);
                     } else {
                         taskService.getByProject(project.id).then(tasks=>{
                             if(tasks.length > 0){
-                                this.haveData = true;
-                               this.deleteProject(project);
+                                this.deleteProject(project);
                             }else{
-                                this.haveData = false;
                                 this.deleteProject(project);
                             }
                         });
