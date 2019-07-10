@@ -99,7 +99,7 @@ export default {
                 this.projectCreated = true;
                 this.validar = false;
                 projectService.createProject(this.myProject);
-                this.$router.go(-1);  
+                this.$router.push(`/projects`);  
             }else{
                 this.validar =true;
             }

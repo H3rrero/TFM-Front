@@ -4,7 +4,7 @@
             <div class="form-group">
                 <p >Username</p>
                 <input type="text" v-model="username" name="username" class="form-control" :class="{ 'is-invalid': submitted && !username }" />
-                <p class="helper helper1">email@domain.com</p>
+                <p class="helper helper1">usuario</p>
                 <div v-show="submitted && !username" class="invalid-feedback">Username is required</div>
                  <div v-show="removed" class="invalid-feedback">Usuario deshabilitado</div>
                  <div v-show="loginErrorB" class="invalid-feedback">{{loginError}}</div>

@@ -123,7 +123,9 @@ export default {
                             user: user.id,
                             project:user.projectId
                         }
-                        userProjectService.createUserProject(userProj);
+                        if(userProj.project != "-1"){
+                            userProjectService.createUserProject(userProj);
+                        }
                    this.$router.go(-1);  
                 })
                 
