@@ -15,7 +15,7 @@
     "express": "^4.16.4",
     "highcharts": "^7.0.2",
     "highcharts-vue": "^1.2.0",
-    "luxon": "^1.10.0",
+    "luxon": "^2.5.2",
     "mini-css-extract-plugin": "^0.7.0",
     "postcss-cssnext": "^3.1.0",
     "postcss-preset-env": "^6.6.0",
